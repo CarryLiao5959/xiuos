@@ -1,13 +1,5 @@
 SRC_FILES := sleep.c
 
-ifeq ($(CONFIG_BSP_USING_AUDIO),y)
-  SRC_DIR += audio
-endif
-
-ifeq ($(CONFIG_BSP_USING_CAMERA),y)
-  SRC_DIR += camera
-endif
-
 ifeq ($(CONFIG_BSP_USING_DMA),y)
   SRC_DIR += dma
 endif
@@ -20,20 +12,12 @@ ifeq ($(CONFIG_BSP_USING_I2C),y)
   SRC_DIR += i2c
 endif
 
-ifeq ($(CONFIG_BSP_USING_I2S),y)
-  SRC_DIR += i2s
-endif
-
 ifeq ($(CONFIG_BSP_USING_PLIC),y)
   SRC_DIR += plic
 endif
 
 ifeq ($(CONFIG_BSP_USING_RTC),y)
   SRC_DIR += rtc
-endif
-
-ifeq ($(CONFIG_BSP_USING_SECURITY),y)
-  SRC_DIR += security
 endif
 
 ifeq ($(CONFIG_BSP_USING_SPI),y)

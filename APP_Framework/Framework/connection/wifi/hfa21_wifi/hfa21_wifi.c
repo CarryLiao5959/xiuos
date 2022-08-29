@@ -474,6 +474,7 @@ static int Hfa21WifiIoctl(struct Adapter *adapter, int cmd, void *args)
     serial_cfg.serial_bit_order = BIT_ORDER_LSB;
     serial_cfg.serial_invert_mode = NRZ_NORMAL;
 #ifdef ADAPTER_HFA21_DRIVER_EXT_PORT
+    serial_cfg.is_ext_uart = 1;
     serial_cfg.ext_uart_no = ADAPTER_HFA21_DRIVER_EXT_PORT;
     serial_cfg.port_configure = PORT_CFG_INIT;
 #endif

@@ -59,6 +59,7 @@ static int BC28UartOpen(struct Adapter *adapter)
 
     /*aiit board use ch438, so it needs more serial configuration*/
 #ifdef ADAPTER_BC28_DRIVER_EXTUART
+    cfg.is_ext_uart = 1;
     cfg.ext_uart_no         = ADAPTER_BC28_DRIVER_EXT_PORT;
     cfg.port_configure      = PORT_CFG_INIT;
 #endif

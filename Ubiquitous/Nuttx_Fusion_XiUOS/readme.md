@@ -16,7 +16,7 @@ git submodule update Ubiquitous/Nuttx_Fusion_XiUOS/apps
 git submodule update Ubiquitous/Nuttx_Fusion_XiUOS/nuttx
 ```
 
-执行完成后在Ubiquitous/Nuttx目录下，apps和nuttx的代码都被下载下来，当前的版本是nuttx-10.2.0版本。
+执行完成后在Ubiquitous/Nuttx目录下，apps和nuttx的代码都被下载下来，当前的版本是nuttx-10.3.0版本。
 
 ## 2、感 - 传感器框架支持Nuttx
 
@@ -286,7 +286,7 @@ make  menuconfig
 
 ##### 开启Nuttx Support CLOCK_MONOTONIC
 
-进入RTOS Features > Clocks and Timers，勾选上Support CLOCK_MONOTONIC
+如果是Nuttx10.3以下的操作系统，需要进入RTOS Features > Clocks and Timers，勾选上Support CLOCK_MONOTONIC
 
 ##### 使用I2C外设--以hs300x温度传感器为例说明配置过程：
 

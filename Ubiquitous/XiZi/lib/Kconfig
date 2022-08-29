@@ -1,11 +1,8 @@
 menu "Lib"
 
-
-
 menuconfig LIB
     bool "Enable libc APIs from toolchain"
     default y
-
 
     if LIB 
         config LIB_POSIX
@@ -13,11 +10,17 @@ menuconfig LIB
             default y
     endif
 
+    choice 
+        prompt "select libc"
+        default LIB_NEWLIB
 
+        config LIB_NEWLIB
+            bool "use newlib as libc realization."
 
+        config LIB_MUSLLIB
+            bool "use musllib as libc realization."
+    endchoice
 
 source "$KERNEL_DIR/lib/libcpp/Kconfig"
-
-source "$KERNEL_DIR/lib/newlib/Kconfig"
 
 endmenu

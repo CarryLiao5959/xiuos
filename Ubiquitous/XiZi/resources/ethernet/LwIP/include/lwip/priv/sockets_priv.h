@@ -37,11 +37,11 @@
 #ifndef LWIP_HDR_SOCKETS_PRIV_H
 #define LWIP_HDR_SOCKETS_PRIV_H
 
-#include "lwip/opt.h"
+// #include "lwip/opt.h"
 
 #if LWIP_SOCKET /* don't build if not configured for use in lwipopts.h */
 
-#include "lwip/err.h"
+// #include "lwip/errno.h"
 #include "lwip/sockets.h"
 #include "lwip/sys.h"
 

@@ -1,0 +1,126 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+if ARCH_BOARD_XIDATONG_RISCV64
+
+menuconfig BSP_USING_CH438
+    bool "Using CH438 device"
+    default n
+
+if BSP_USING_CH438
+config CH438_EXTUART0
+    bool "Using Ch438 Port 0"
+    default n
+
+menu "Ch438 Port 0 Configuration"
+    depends on CH438_EXTUART0
+
+    config CH438_EXTUART0_BAUD
+        int "Ch438 Port 0 Baud Rate."
+        default 115200
+        ---help---
+            The configured BAUD of the CH438 EXTUART0.
+endmenu
+
+config CH438_EXTUART1
+    bool "Using Ch438 Port 1"
+    default n
+
+menu "Ch438 Port 1 Configuration"
+    depends on CH438_EXTUART1
+
+    config CH438_EXTUART1_BAUD
+        int "Ch438 Port 1 Baud Rate."
+        default 115200
+        ---help---
+            The configured BAUD of the CH438 EXTUART1.
+endmenu
+
+config CH438_EXTUART2
+    bool "Using Ch438 Port 2"
+    default n
+
+menu "Ch438 Port 2 Configuration"
+    depends on CH438_EXTUART2
+
+    config CH438_EXTUART2_BAUD
+        int "Ch438 Port 2 Baud Rate."
+        default 115200
+        ---help---
+            The configured BAUD of the CH438 EXTUART2.
+endmenu
+
+config CH438_EXTUART3
+    bool "Using Ch438 Port 3"
+    default n
+
+menu "Ch438 Port 3 Configuration"
+    depends on CH438_EXTUART3
+
+    config CH438_EXTUART3_BAUD
+        int "Ch438 Port 3 Baud Rate."
+        default 115200
+        ---help---
+            The configured BAUD of the CH438 EXTUART3.
+endmenu
+
+config CH438_EXTUART4
+    bool "Using Ch438 Port 4"
+    default n
+
+menu "Ch438 Port 4 Configuration"
+    depends on CH438_EXTUART4
+
+    config CH438_EXTUART4_BAUD
+        int "Ch438 Port 4 Baud Rate."
+        default 115200
+        ---help---
+            The configured BAUD of the CH438 EXTUART4.
+endmenu
+
+config CH438_EXTUART5
+    bool "Using Ch438 Port 5"
+    default n
+
+menu "Ch438 Port 5 Configuration"
+    depends on CH438_EXTUART5
+
+    config CH438_EXTUART5_BAUD
+        int "Ch438 Port 5 Baud Rate."
+        default 115200
+        ---help---
+            The configured BAUD of the CH438 EXTUART5.
+endmenu
+
+config CH438_EXTUART6
+    bool "Using Ch438 Port 6"
+    default n
+
+menu "Ch438 Port 6 Configuration"
+    depends on CH438_EXTUART6
+
+    config CH438_EXTUART6_BAUD
+        int "Ch438 Port 6 Baud Rate."
+        default 115200
+        ---help---
+            The configured BAUD of the CH438 EXTUART6.
+endmenu
+
+config CH438_EXTUART7
+    bool "Using Ch438 Port 7"
+    default n
+
+menu "Ch438 Port 7 Configuration"
+    depends on CH438_EXTUART7
+
+    config CH438_EXTUART7_BAUD
+        int "Ch438 Port 7 Baud Rate."
+        default 115200
+        ---help---
+            The configured BAUD of the CH438 EXTUART7.
+endmenu
+
+endif # BSP_USING_CH438
+endif # ARCH_BOARD_XIDATONG_RISCV64

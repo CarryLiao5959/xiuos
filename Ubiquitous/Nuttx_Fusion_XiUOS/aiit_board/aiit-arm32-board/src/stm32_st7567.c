@@ -22,7 +22,7 @@
 * @file stm32_st7567.c
 * @brief nuttx source code
 *                https://github.com/apache/incubator-nuttx.git
-* @version 10.2.0 
+* @version 10.3.0 
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -44,9 +44,7 @@
 #include <nuttx/lcd/lcd.h>
 #include <nuttx/lcd/st7567.h>
 
-#include "arm_arch.h"
 #include "arm_internal.h"
-
 #include "stm32_gpio.h"
 #include "stm32_spi.h"
 #include "aiit-arm32-board.h"

@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <xizi.h>
 #include <iot-vfs.h>
 #include <iot-vfs_posix.h>
@@ -573,7 +574,8 @@ int write(int fd, const void *buf, size_t len)
     return ret;
 }
 
-int ioctl(int fd, int cmd, void *args)
+#ifndef LIB_MUSLLIB
+int ioctl(int fd, int cmd, ...)
 {
     int ret;
     struct FileDescriptor *fdp;
@@ -589,7 +591,10 @@ int ioctl(int fd, int cmd, void *args)
         return -1;
     }
 
-    ret = fdp->mntp->fs->ioctl(fdp, cmd, args);
+    va_list ap;
+    va_start(ap, cmd);
+    ret = fdp->mntp->fs->ioctl(fdp, cmd, (void*)va_arg(ap, long));
+    va_end(ap);
     if (ret < 0) {
         SYS_ERR("%s: ioctl file failed\n", __func__);
         KUpdateExstatus(ret);
@@ -598,6 +603,7 @@ int ioctl(int fd, int cmd, void *args)
 
     return ret;
 }
+#endif
 
 off_t lseek(int fd, off_t offset, int whence)
 {

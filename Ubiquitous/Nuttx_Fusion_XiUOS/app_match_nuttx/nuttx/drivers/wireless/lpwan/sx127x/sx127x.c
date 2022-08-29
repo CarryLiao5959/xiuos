@@ -22,7 +22,7 @@
 * @file sx127x.c
 * @brief nuttx source code
 *                 https://github.com/apache/incubator-nuttx-apps
-* @version 10.2.0 
+* @version 10.3.0 
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -957,7 +957,7 @@ static ssize_t sx127x_write(FAR struct file *filep, FAR const char *buffer,
       return ret;
     }
 
-  wlinfo("buflen=%d \n", buflen);
+  wlinfo("buflen=%d\n", buflen);
 
   /* Change mode to STANDBY */
 
@@ -3795,7 +3795,7 @@ static bool sx127x_channel_scan(FAR struct sx127x_dev_s *dev,
 
   /* Get start time */
 
-  clock_gettime(CLOCK_REALTIME, &tstart);
+  clock_systime_timespec(&tstart);
 
   /* Initialize min/max */
 
@@ -3806,7 +3806,7 @@ static bool sx127x_channel_scan(FAR struct sx127x_dev_s *dev,
     {
       /* Get time now */
 
-      clock_gettime(CLOCK_REALTIME, &tnow);
+      clock_systime_timespec(&tnow);
 
       /* Check RSSI */
 
@@ -4170,7 +4170,7 @@ static int sx127x_calibration(FAR struct sx127x_dev_s *dev, uint32_t freq)
   ret = sx127x_modulation_set(dev, SX127X_MODULATION_FSK);
   if (ret < 0)
     {
-      wlerr("ERROR: can't change modulation to FSK \n");
+      wlerr("ERROR: can't change modulation to FSK\n");
       goto errout;
     }
 
@@ -4277,7 +4277,7 @@ static int sx127x_init(FAR struct sx127x_dev_s *dev)
   ret = sx127x_calibration(dev, SX127X_FREQ_CALIBRATION);
   if (ret < 0)
     {
-      wlerr("ERROR: calibration failed \n");
+      wlerr("ERROR: calibration failed\n");
     }
 
   /* Set default modulation */

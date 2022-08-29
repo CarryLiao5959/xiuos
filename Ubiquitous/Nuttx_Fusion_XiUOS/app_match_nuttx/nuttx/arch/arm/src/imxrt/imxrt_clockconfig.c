@@ -18,13 +18,22 @@
  *
  ****************************************************************************/
 
+/**
+* @file imxrt_clockconfig.c
+* @brief nuttx source code
+*                https://github.com/apache/incubator-nuttx.git
+* @version 10.3.0 
+* @author AIIT XUOS Lab
+* @date 2022-03-23
+*/
+
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
 #include <nuttx/config.h>
 
-#include "arm_arch.h"
+#include "arm_internal.h"
 #include <arch/board/board.h>
 #include "hardware/imxrt_ccm.h"
 #include "hardware/imxrt_dcdc.h"

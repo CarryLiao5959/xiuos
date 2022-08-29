@@ -28,7 +28,7 @@
 #include "sysctl.h"
 #include "hardware_uart.h"
 #include "utils.h"
-#include "atomic.h"
+#include "bsp_atomic.h"
 
 #define __UART_BRATE_CONST  16
 

@@ -25,14 +25,16 @@ int read(int fd, void *buf, size_t len);
 int write(int fd, const void *buf, size_t len);
 #endif
 
-int open(const char *path, int flags, ...);
+
+
+int open(const char* path, int flags, ...);
 int close(int fd);
-int ioctl(int fd, int cmd, void *args);
+int ioctl(int fd, int cmd, ...);
 off_t lseek(int fd, off_t offset, int whence);
 int rename(const char *from, const char *to);
 int unlink(const char *path);
-int stat(const char *path, struct stat *buf);
-int fstat(int fd, struct stat *buf);
+// int stat(const char *path, struct stat *buf);
+// int fstat(int fd, struct stat *buf);
 int fsync(int fd);
 int ftruncate(int fd, off_t length);
 

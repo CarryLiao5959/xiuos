@@ -18,6 +18,15 @@
  *
  ****************************************************************************/
 
+/**
+* @file imxrt_enet.c
+* @brief nuttx source code
+*                https://github.com/apache/incubator-nuttx.git
+* @version 10.3.0 
+* @author AIIT XUOS Lab
+* @date 2022-03-23
+*/
+
 /****************************************************************************
  * Included Files
  ****************************************************************************/
@@ -51,7 +60,7 @@
 #  include <nuttx/net/pkt.h>
 #endif
 
-#include "arm_arch.h"
+#include "arm_internal.h"
 #include "chip.h"
 #include "imxrt_config.h"
 #include "hardware/imxrt_enet.h"

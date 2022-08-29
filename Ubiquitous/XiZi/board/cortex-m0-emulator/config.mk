@@ -7,7 +7,6 @@ export CXXFLAGS := -mcpu=cortex-m0 -mthumb -ffunction-sections -fdata-sections -
 
 export APPLFLAGS := -mcpu=cortex-m0 -mthumb -ffunction-sections -fdata-sections -Wl,--gc-sections,-Map=XiZi-app.map,-cref,-u, -T $(BSP_ROOT)/link_userspace.lds
 
-
 export DEFINES := -DHAVE_CCONFIG_H -g
 
 export ARCH = arm

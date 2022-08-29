@@ -1,0 +1,28 @@
+config ADAPTER_LORA_E22
+        string "E22-400T33D adapter name"
+        default "e22"
+
+if ADD_XIZI_FETURES
+
+endif
+
+if ADD_NUTTX_FETURES
+
+    config ADAPTER_E22_M0_PATH
+        string "E22 M0 pin device"
+        default "/dev/gpio0"
+
+    config ADAPTER_E22_M1_PATH
+        string "E22 M1 pin device"
+        default "/dev/gpio1"
+    
+
+    config ADAPTER_E22_DRIVER
+        string "E22 device uart driver path"
+        default "/dev/ttyS3"
+
+endif
+
+if ADD_RTTHREAD_FETURES
+
+endif

@@ -37,6 +37,7 @@ static struct SensorProductInfo info =
  * @param sdev - sensor device pointer
  * @return success: 1 , failure: other
  */
+#ifdef ADD_NUTTX_FETURES
 static int SensorDeviceOpen(struct SensorDevice *sdev)
 {
     int result = 0;
@@ -46,7 +47,20 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
         printf("open %s error\n", SENSOR_DEVICE_G8S_DEV);
         return -1;
     }
-    
+}
+
+#else
+static int SensorDeviceOpen(struct SensorDevice *sdev)
+{
+    int result = 0;
+
+    sdev->fd = PrivOpen(SENSOR_DEVICE_G8S_DEV, O_RDWR);
+    if (sdev->fd < 0) {
+        printf("open %s error\n", SENSOR_DEVICE_G8S_DEV);
+        return -1;
+    }    
+
+
     struct SerialDataCfg cfg;
     cfg.serial_baud_rate    = BAUD_RATE_9600;
     cfg.serial_data_bits    = DATA_BITS_8;
@@ -56,6 +70,7 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     cfg.serial_bit_order    = 0;
     cfg.serial_invert_mode  = 0;
 #ifdef SENSOR_G8S_DRIVER_EXTUART
+    cfg.is_ext_uart         = 1;
     cfg.ext_uart_no         = SENSOR_DEVICE_G8S_DEV_EXT_PORT;
     cfg.port_configure      = PORT_CFG_INIT;
 #endif
@@ -67,7 +82,7 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
 
     return result;
 }
-
+#endif
 /**
  * @description: Read sensor device
  * @param sdev - sensor device pointer
@@ -76,10 +91,9 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
  */
 static int SensorDeviceRead(struct SensorDevice *sdev, size_t len)
 {
-    uint8_t tmp = 0;
 
     PrivWrite(sdev->fd, g8s_read_instruction, sizeof(g8s_read_instruction));
-
+    PrivTaskDelay(500);
     if (PrivRead(sdev->fd, sdev->buffer, len) < 0)
         return -1;
 
@@ -140,16 +154,26 @@ static int32_t QuantityRead(struct SensorQuantity *quant)
                 result_ascii[i] = quant->sdev->buffer[i];
             }
 
-            if (8 == ascii_length) {
-                for (i = 0; i < ascii_length; i ++) {
-                    result_hex[i] = result_ascii[i] - 0x30;
-                    result += result_hex[i] * pow(10, ascii_length - 1 - i);
-                }
-                return result;
-            } else {
+            if (ascii_length == 0){
+
                 printf("This reading is wrong\n");
+
                 result = SENSOR_QUANTITY_VALUE_ERROR;
+
                 return result;
+
+            }else{
+
+                for (i = 0; i < ascii_length; i ++) {
+
+                    result_hex[i] = result_ascii[i] - 0x30;
+
+                    result += result_hex[i] * pow(10, ascii_length - 1 - i);
+
+                }
+
+                return result;                
+
             }
         }
         if (quant->sdev->status == SENSOR_DEVICE_ACTIVE) {

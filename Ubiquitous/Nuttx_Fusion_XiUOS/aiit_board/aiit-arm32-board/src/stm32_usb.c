@@ -22,7 +22,7 @@
 * @file stm32_usb.c
 * @brief nuttx source code
 *                https://github.com/apache/incubator-nuttx.git
-* @version 10.2.0 
+* @version 10.3.0 
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -46,7 +46,7 @@
 #include <nuttx/usb/usbhost.h>
 #include <nuttx/usb/usbdev_trace.h>
 
-#include "arm_arch.h"
+#include "arm_internal.h"
 #include "stm32.h"
 #include "stm32_otgfs.h"
 #include "aiit-arm32-board.h"

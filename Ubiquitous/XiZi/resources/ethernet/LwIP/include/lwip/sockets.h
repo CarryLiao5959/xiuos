@@ -45,7 +45,7 @@
 
 #include "lwip/ip_addr.h"
 #include "lwip/netif.h"
-#include "lwip/err.h"
+// #include "lwip/err.h"
 #include "lwip/inet.h"
 #include "lwip/errno.h"
 
@@ -520,11 +520,11 @@ struct pollfd
 #define LWIP_TIMEVAL_PRIVATE 1
 #endif
 
-#if LWIP_TIMEVAL_PRIVATE
-// struct timeval {
-//   long    tv_sec;         /* seconds */
-//   long    tv_usec;        /* and microseconds */
-// };
+#if defined(LWIP_TIMEVAL_PRIVATE) && defined(LIB_MUSLLIB)
+struct timeval {
+  long    tv_sec;         /* seconds */
+  long    tv_usec;        /* and microseconds */
+};
 #endif /* LWIP_TIMEVAL_PRIVATE */
 
 #define lwip_socket_init() /* Compatibility define, no init needed. */

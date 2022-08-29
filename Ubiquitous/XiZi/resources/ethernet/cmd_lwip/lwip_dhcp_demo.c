@@ -31,6 +31,7 @@
 #include "netif/ethernet.h"
 #include "enet_ethernetif.h"
 
+#include <shell.h>
 #include "board.h"
 
 #include "pin_mux.h"

@@ -17,8 +17,10 @@
  * @author AIIT XUOS Lab
  * @date 2021.12.23
  */
-
-#include <user_api.h>
+//
+#ifdef ADD_XIZI_FETURES
+# include <user_api.h>
+#endif
 #include <sensor.h>
 
 /**

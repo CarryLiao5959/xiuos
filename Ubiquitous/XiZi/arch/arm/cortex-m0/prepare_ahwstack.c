@@ -155,7 +155,7 @@ uint8 KTaskStackSetup(struct TaskDescriptor *task)
         StackContex->ExErrorStackContex.lr  = (unsigned long)KTaskQuit; 
     }
 #else
-    StackContex->ExErrorStackContex.lr  = (unsigned long)KTaskQuit; 
+    StackContex->ExErrorStackContex.lr = (unsigned long)KTaskQuit;
 #endif
 
 #if USE_FPU

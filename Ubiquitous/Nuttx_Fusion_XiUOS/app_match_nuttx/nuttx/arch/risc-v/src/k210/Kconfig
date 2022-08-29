@@ -5,15 +5,6 @@
 
 comment "K210 Configuration Options"
 
-config K210_ENABLE_DPFPU
-	bool "K210 DP_FPU Support"
-	default y
-	select ARCH_HAVE_FPU
-	select ARCH_HAVE_DPFPU
-	select LIBC_FLOATINGPOINT
-	---help---
-		Enable the RISC-V Double-Precision Floating Point Unit (DP-FPU).
-
 menu "K210 Peripheral Support"
 
 # These "hidden" settings determine whether a peripheral option is available
@@ -33,6 +24,19 @@ config K210_UART0
 	select ARCH_HAVE_UART0
 	select ARCH_HAVE_SERIAL_TERMIOS
 	select K210_UART
+
+config K210_HAVE_LCD
+	bool
+	default n
+
+config K210_LCD
+	bool "LCD"
+	default n
+	select K210_HAVE_LCD
+
+config K210_LCD_BACKLIGHT
+    bool "LCD BACKLIGHT"
+    default n
 
 endmenu
 

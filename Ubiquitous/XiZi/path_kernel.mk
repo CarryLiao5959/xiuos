@@ -1,8 +1,26 @@
 
-export KERNELPATHS:=
+export KERNELPATHS:= -I$(BSP_ROOT)
+
+ifeq ($(CONFIG_LIB_MUSLLIB), y)
+KERNELPATHS += -I$(KERNEL_ROOT)/lib/musllib/src/include \
+	-I$(KERNEL_ROOT)/lib/musllib/include \
+	-I$(KERNEL_ROOT)/lib/musllib/src/internal #
+# chose arch for musl
+ifeq ($(ARCH), arm)
+KERNELPATHS += -I$(KERNEL_ROOT)/lib/musllib/arch/arm
+endif
+ifeq ($(ARCH), risc-v)
+KERNELPATHS += -I$(KERNEL_ROOT)/lib/musllib/arch/riscv64
+endif
+
+endif # end of musl include path
+
+ifeq ($(CONFIG_LIB_NEWLIB),y)
+KERNELPATHS += -I$(KERNEL_ROOT)/lib/newlib/include #
+endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/xidatong-arm32)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m7 \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/include \
@@ -18,23 +36,39 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 	-I$(BSP_ROOT)/third_party_driver/MIMXRT1052 \
 	-I$(BSP_ROOT)/third_party_driver/MIMXRT1052/drivers \
 	-I$(BSP_ROOT)/third_party_driver/CMSIS/Include \
+	-I$(BSP_ROOT)/include \
+	-I$(BSP_ROOT)/xip \
 	-I$(KERNEL_ROOT)/include \
-	-I$(KERNEL_ROOT)/resources/ethernet/LwIP \
+	-I$(KERNEL_ROOT)/resources/include 
+
+ifeq ($(CONFIG_RESOURCES_LWIP),y)
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/compat \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/netif \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/apps \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/priv \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/prot \
-	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch \
-	-I$(KERNEL_ROOT)/resources/include \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch 
+endif 
+endif
+
+
+ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/xidatong-riscv64)
+KERNELPATHS += \
 	-I$(BSP_ROOT)/include \
-	-I$(BSP_ROOT)/xip #
+    -I$(BSP_ROOT)/third_party_driver/include \
+	-I$(BSP_ROOT)/third_party_driver \
+	-I$(BSP_ROOT)/third_party_driver/camera \
+	-I$(BSP_ROOT)/third_party_driver/drivers \
+	-I$(BSP_ROOT)/third_party_driver/lcd \
+	-I$(KERNEL_ROOT)/include #
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/kd233)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(BSP_ROOT)/include \
     -I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver \
@@ -45,7 +79,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/maix-go)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(BSP_ROOT)/include \
     -I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver \
@@ -56,7 +90,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/stm32f407-st-discovery)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m4 \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/sdio \
@@ -64,6 +98,9 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 	-I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver/usb/STM32_USB_OTG_Driver/inc \
 	-I$(KERNEL_ROOT)/include \
+
+ifeq ($(CONFIG_RESOURCES_LWIP),y)
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/compat \
@@ -72,12 +109,12 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/apps \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/priv \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/prot \
-	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch \
-	-I$(BSP_ROOT)/include #
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch 
+endif
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/aiit-arm32-board)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m4 \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver \
@@ -91,7 +128,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/stm32f407zgt6)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m4 \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/sdio\
@@ -103,14 +140,14 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/gapuino)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/include \
 	-I$(KERNEL_ROOT)/include #
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/gd32vf103-rvstar)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/risc-v/gd32vf103-rvstar \
 	-I$(BSP_ROOT)/include \
 	-I$(BSP_ROOT)/third_party_driver \
@@ -119,7 +156,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/rv32m1-vega)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/risc-v/rv32m1-vega \
 	-I$(BSP_ROOT)/include \
 	-I$(BSP_ROOT)/third_party_driver \
@@ -128,7 +165,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/hifive1-rev-B)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver/include/sifive \
@@ -139,7 +176,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/hifive1-emulator)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver/include/sifive \
@@ -150,7 +187,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/k210-emulator)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/include \
 	-I$(BSP_ROOT)/third_party_driver/include \
@@ -163,7 +200,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/aiit-riscv64-board)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/include \
 	-I$(BSP_ROOT)/third_party_driver/include \
@@ -176,7 +213,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/cortex-m0-emulator)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m0 \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/Libraries/driverlib \
@@ -187,7 +224,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/cortex-m3-emulator)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m3 \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/Libraries/driverlib \
@@ -198,7 +235,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/cortex-m4-emulator)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m4 \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/sdio\
@@ -210,7 +247,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/ok1052-c)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m7 \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/include \
@@ -226,6 +263,32 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 	-I$(BSP_ROOT)/third_party_driver/MIMXRT1052 \
 	-I$(BSP_ROOT)/third_party_driver/MIMXRT1052/drivers \
 	-I$(BSP_ROOT)/third_party_driver/CMSIS/Include \
+	-I$(BSP_ROOT)/include \
+	-I$(BSP_ROOT)/xip \
+	-I$(KERNEL_ROOT)/include \
+	-I$(KERNEL_ROOT)/resources/include 
+
+ifeq ($(CONFIG_RESOURCES_LWIP),y)
+KERNELPATHS += \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/compat \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/netif \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/apps \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/priv \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/prot \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch 
+endif
+endif
+
+ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/imxrt1176-sbc)
+KERNELPATHS :=-I$(BSP_ROOT) \
+	-I$(KERNEL_ROOT)/arch/arm/cortex-m7 \
+	-I$(BSP_ROOT)/include \
+	-I$(BSP_ROOT)/third_party_driver \
+	-I$(BSP_ROOT)/third_party_driver/include \
+	-I$(BSP_ROOT)/third_party_driver/CMSIS/Include \
 	-I$(KERNEL_ROOT)/include \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include \
@@ -237,12 +300,11 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/prot \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch \
 	-I$(KERNEL_ROOT)/resources/include \
-	-I$(BSP_ROOT)/include \
 	-I$(BSP_ROOT)/xip #
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/stm32f103-nano)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m3 \
 	-I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver/libraries/STM32F1xx_HAL/inc \
@@ -252,7 +314,7 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/nuvoton-m2354)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m23 \
 	-I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver/include/Drivers \
@@ -268,7 +330,7 @@ KERNELPATHS += -I$(KERNEL_ROOT)/arch \
             -I$(KERNEL_ROOT)/arch/risc-v/shared/kernel_service #
 
 ifeq ($(CONFIG_FS_VFS), y)
-KERNELPATHS +=-I$(KERNEL_ROOT)/fs/devfs \
+KERNELPATHS += -I$(KERNEL_ROOT)/fs/devfs \
 	-I$(KERNEL_ROOT)/fs/fatfs \
 	-I$(KERNEL_ROOT)/fs/shared/include #
 endif
@@ -279,7 +341,9 @@ endif
 
 ifeq ($(CONFIG_TRANSFORM_LAYER_ATTRIUBUTE), y)
 ifeq ($(CONFIG_ADD_XIZI_FETURES), y)
+ifeq ($(CONFIG_LIB_MUSLLIB), )
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/transform_layer/xizi/user_api/posix_support/include #
+endif
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/transform_layer/xizi #
 endif
 
@@ -349,11 +413,6 @@ KERNELPATHS +=-I$(KERNEL_ROOT)/tool/shell/letter-shell \
 	-I$(KERNEL_ROOT)/tool/shell/letter-shell/file_ext #
 endif
 
-
-ifeq ($(CONFIG_LIB_NEWLIB),y)
-KERNELPATHS += -I$(KERNEL_ROOT)/lib/newlib/include #
-endif
-
 ifeq ($(CONFIG_FS_LWEXT4),y)
 KERNELPATHS += -I$(KERNEL_ROOT)/fs/lwext4/lwext4_submodule/blockdev/xiuos #
 KERNELPATHS += -I$(KERNEL_ROOT)/fs/lwext4/lwext4_submodule/include #
@@ -387,12 +446,12 @@ endif
 KERNELPATHS += -I$(KERNEL_ROOT)/kernel/include #
 
 
-COMPILE_KERNEL:
-	@$(eval CPPPATHS=$(KERNELPATHS))
-	@for dir in $(SRC_KERNEL_DIR);do    \
-               $(MAKE) -C $$dir;          \
-       done
-	@cp link.mk build/Makefile
-	@$(MAKE) -C build COMPILE_TYPE="_kernel" TARGET=XiZi-$(BOARD)_kernel.elf LINK_FLAGS=LFLAGS
-	@rm build/Makefile build/make.obj
+# COMPILE_KERNEL:
+# 	@$(eval CPPPATHS=$(KERNELPATHS))
+# 	@for dir in $(SRC_KERNEL_DIR);do    \
+#                $(MAKE) -C $$dir;          \
+#        done
+# 	@cp link.mk build/Makefile
+# 	@$(MAKE) -C build COMPILE_TYPE="_kernel" TARGET=XiZi-$(BOARD)_kernel.elf LINK_FLAGS=LFLAGS
+# 	@rm build/Makefile build/make.obj
 

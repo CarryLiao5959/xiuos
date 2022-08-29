@@ -13,7 +13,6 @@
 #ifndef _INC_IOT_VFS_H_
 #define _INC_IOT_VFS_H_
 
-#include <xizi.h>
 #include <bus.h>
 
 #define MAX_FILE_NAME 255

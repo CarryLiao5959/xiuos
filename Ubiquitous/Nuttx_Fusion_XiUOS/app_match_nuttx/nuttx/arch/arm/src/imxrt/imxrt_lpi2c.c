@@ -18,6 +18,15 @@
  *
  ****************************************************************************/
 
+/**
+* @file imxrt_lpi2c.c
+* @brief nuttx source code
+*                https://github.com/apache/incubator-nuttx.git
+* @version 10.3.0 
+* @author AIIT XUOS Lab
+* @date 2022-03-23
+*/
+
 /****************************************************************************
  * Included Files
  ****************************************************************************/
@@ -42,8 +51,7 @@
 
 #include <arch/board/board.h>
 
-#include "arm_arch.h"
-
+#include "arm_internal.h"
 #include "imxrt_lpi2c.h"
 #include "imxrt_gpio.h"
 
@@ -1054,8 +1062,8 @@ static void imxrt_lpi2c_setclock(FAR struct imxrt_lpi2c_priv_s *priv,
             }
           else
             {
-              if ((getreg32(IMXRT_CCM_ANALOG_PLL_USB2) &
-                   CCM_ANALOG_PLL_USB2_DIV_SELECT_MASK) != 0)
+              if ((getreg32(IMXRT_CCM_ANALOG_PLL_USB1) &
+                   CCM_ANALOG_PLL_USB1_DIV_SELECT_MASK) != 0)
                 {
                   pll3_div = 22;
                 }
@@ -1686,7 +1694,7 @@ static int imxrt_lpi2c_transfer(FAR struct i2c_master_s *dev,
   priv->msgc  = count;
   priv->flags = msgs->flags;
 
-  i2cinfo("Flags %x, len %d \n", msgs->flags, msgs->length);
+  i2cinfo("Flags %x, len %d\n", msgs->flags, msgs->length);
 
   /* Reset I2C trace logic */
 

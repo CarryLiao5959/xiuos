@@ -32,6 +32,7 @@ extern int Ps5308Pm1_0Init(void);
 extern int Ps5308Pm2_5Init(void);
 extern int Ps5308Pm10Init(void);
 extern int Zg09Co2Init(void);
+extern int G8sCo2Init(void);
 extern int As830Ch4Init(void);
 extern int Tb600bIaq10IaqInit(void);
 extern int Tb600bTvoc10TvocInit(void);
@@ -104,6 +105,10 @@ static struct InitDesc sensor_desc[] =
 
 #ifdef SENSOR_ZG09
 	{ "zg09_co2", Zg09Co2Init },
+#endif
+
+#ifdef SENSOR_G8S
+	{ "g8s_co2", G8sCo2Init },
 #endif
 
 #ifdef SENSOR_QS_FX

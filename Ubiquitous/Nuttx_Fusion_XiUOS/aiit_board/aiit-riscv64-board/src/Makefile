@@ -34,8 +34,4 @@ ifeq ($(CONFIG_DEV_GPIO),y)
 CSRCS += k210_gpio.c
 endif
 
-ifeq ($(CONFIG_ARCH_FPU),y)
-CSRCS += k210_ostest.c
-endif
-
 include $(TOPDIR)/boards/Board.mk

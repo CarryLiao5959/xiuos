@@ -5,8 +5,10 @@ MAKEFLAGS += --no-print-directory
 .PHONY:COMPILE_APP COMPILE_KERNEL
 
 
-support :=kd233 stm32f407-st-discovery maix-go stm32f407zgt6 aiit-riscv64-board aiit-arm32-board hifive1-rev-B hifive1-emulator k210-emulator cortex-m3-emulator cortex-m4-emulator ok1052-c gapuino stm32f103-nano gd32vf103-rvstar cortex-m0-emulator rv32m1-vega nuvoton-m2354
-support += xidatong-arm32
+riscv_support := kd233 maix-go hifive1-rev-B gapuino gd32vf103-rvstar rv32m1-vega aiit-riscv64-board xidatong-riscv64
+arm_support += stm32f407-st-discovery stm32f407zgt6 stm32f103-nano nuvoton-m2354 ok1052-c imxrt1176-sbc aiit-arm32-board xidatong-arm32 
+emulator_support += hifive1-emulator k210-emulator cortex-m0-emulator cortex-m3-emulator cortex-m4-emulator
+support := $(riscv_support) $(arm_support) $(emulator_support) 
 SRC_DIR :=
 
 export BOARD ?=kd233
@@ -16,7 +18,10 @@ export KCONFIG_CONFIG ?= .config
 ifeq ($(filter $(BOARD),$(support)),)
 $(warning "You should choose board like this:make BOARD=kd233")
 $(warning "This is what we support:")
-$(warning "$(support)")
+$(warning "RISCV EVB:    $(riscv_support)")
+$(warning "ARM EVB:      $(arm_support)")
+$(warning "EMULATORS:    $(emulator_support)")
+# $(warning "$(support)")
 $(error "break" )
 endif
 
@@ -41,30 +46,35 @@ export CPPPATHS
 export SRC_APP_DIR := ../../APP_Framework
 export SRC_KERNEL_DIR := arch board lib fs kernel resources tool
 export SRC_DIR:= $(SRC_APP_DIR) $(SRC_KERNEL_DIR)
+export LIBCC 
+export MUSL_DIR := $(KERNEL_ROOT)/lib/musllib
+export LWIP_DIR := $(KERNEL_ROOT)/resources/ethernet
 
 PART:=
 
 all:
-
 ifeq ($(CONFIG_COMPILER_APP)_$(CONFIG_COMPILER_KERNEL),y_)
-include path_app.mk
 PART += COMPILE_APP
 
 else ifeq ($(CONFIG_COMPILER_APP)_$(CONFIG_COMPILER_KERNEL),_y)
-include path_kernel.mk
 PART += COMPILE_KERNEL
 
 else ifeq ($(CONFIG_COMPILER_APP)_$(CONFIG_COMPILER_KERNEL),y_y)
-include path_app.mk
-include path_kernel.mk
 PART := COMPILE_APP COMPILE_KERNEL
 
 else
-include path_kernel.mk
-CPPPATHS := $(KERNELPATHS)
-PART := COMPILE_ALL
+PART := 
+
+ifeq ($(CONFIG_LIB_MUSLLIB), y)
+PART += COMPILE_MUSL
 endif
 
+ifeq ($(CONFIG_RESOURCES_LWIP), y)
+PART += COMPILE_LWIP
+endif
+
+PART += COMPILE_ALL
+endif
 
 
 all: $(PART)
@@ -78,7 +88,40 @@ COMPILE_ALL:
 	@$(MAKE) -C build TARGET=XiZi-$(BOARD).elf LINK_FLAGS=LFLAGS
 	@rm build/Makefile build/make.obj
 
+COMPILE_MUSL:
+	@for dir in $(MUSL_DIR);do    \
+               $(MAKE) -C $$dir COMPILE_TYPE=$@ CONFIG_RESOURCES_LWIP=n;          \
+       done
+	@cp link_libc.mk build/Makefile
+	@$(MAKE) -C build TARGET=libmusl.a LINK_FLAGS=LFLAGS
+	@cp build/libmusl.a $(KERNEL_ROOT)/lib/musllib/libmusl.a
+	@rm build/Makefile build/make.obj
 
+COMPILE_LWIP: 
+	@for dir in $(LWIP_DIR);do    \
+               $(MAKE) -C $$dir COMPILE_TYPE=$@;          \
+       done
+	@cp link_lwip.mk build/Makefile
+	@$(MAKE) -C build TARGET=liblwip.a LINK_FLAGS=LFLAGS
+	@cp build/liblwip.a $(KERNEL_ROOT)/resources/ethernet/LwIP/liblwip.a
+	@rm build/Makefile build/make.obj
+
+COMPILE_KERNEL:
+	@for dir in $(SRC_KERNEL_DIR);do    \
+               $(MAKE) -C $$dir;          \
+       done
+	@cp link.mk build/Makefile
+	@$(MAKE) -C build COMPILE_TYPE="_kernel" TARGET=XiZi-$(BOARD)_kernel.elf LINK_FLAGS=LFLAGS
+	@rm build/Makefile build/make.obj
+
+COMPILE_APP:
+	@echo $(SRC_APP_DIR)
+	@for dir in $(SRC_APP_DIR);do    \
+               $(MAKE) -C $$dir USE_APP_INCLUDEPATH=y;          \
+       done
+	@cp link.mk build/Makefile
+	@$(MAKE) -C build COMPILE_TYPE="_app" TARGET=XiZi-$(BOARD)_app.elf LINK_FLAGS=APPLFLAGS
+	@rm build/Makefile build/make.obj
 
 show_info:
 	@echo "CONFIG_COMPILER_APP is :" $(CONFIG_COMPILER_APP)
@@ -137,4 +180,6 @@ distclean:
 	@echo Clean all configuration
 	@make clean
 	@rm -f .config*
+	@rm -f $(KERNEL_ROOT)/lib/musllib/libmusl.a
+	@rm -f $(KERNEL_ROOT)/resources/ethernet/LwIP/liblwip.a
 	@rm -f $(KERNEL_ROOT)/board/*/.config

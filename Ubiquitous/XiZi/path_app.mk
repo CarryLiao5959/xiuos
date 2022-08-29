@@ -32,13 +32,13 @@ ifeq ($(CONFIG_CRYPTO), y)
 APPPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/security/crypto/include #
 endif
 
-COMPILE_APP:
-	@$(eval CPPPATHS=$(APPPATHS))
-	@echo $(SRC_APP_DIR)
-	@for dir in $(SRC_APP_DIR);do    \
-               $(MAKE) -C $$dir;          \
-       done
-	@cp link.mk build/Makefile
-	@$(MAKE) -C build COMPILE_TYPE="_app" TARGET=XiZi-$(BOARD)_app.elf LINK_FLAGS=APPLFLAGS
-	@rm build/Makefile build/make.obj
+# COMPILE_APP:
+# 	@$(eval CPPPATHS=$(APPPATHS))
+# 	@echo $(SRC_APP_DIR)
+# 	@for dir in $(SRC_APP_DIR);do    \
+#                $(MAKE) -C $$dir;          \
+#        done
+# 	@cp link.mk build/Makefile
+# 	@$(MAKE) -C build COMPILE_TYPE="_app" TARGET=XiZi-$(BOARD)_app.elf LINK_FLAGS=APPLFLAGS USE_APP_INCLUDEPATH=y
+# 	@rm build/Makefile build/make.obj
 

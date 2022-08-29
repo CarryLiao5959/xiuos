@@ -38,14 +38,9 @@
 
 #define TRY_TIMES 10
 
-#ifdef ADD_NUTTX_FETURES
-static void Ec200tPowerSet(void){ return; }
-#else  
-    #ifdef ADD_RTTHREAD_FETURES
-    static void Ec200tPowerSet(void){ return; }
-    #else
-    static void Ec200tPowerSet(void)
-    {
+static void Ec200tPowerSet(void)
+{
+#ifdef ADAPTER_EC200T_USING_PWRKEY
     int pin_fd;
     pin_fd = PrivOpen(ADAPTER_EC200T_PIN_DRIVER, O_RDWR);
     if (pin_fd < 0) {
@@ -76,9 +71,8 @@ static void Ec200tPowerSet(void){ return; }
     PrivClose(pin_fd);
 
     PrivTaskDelay(10000);
-    }
-    #endif
 #endif
+}
 
 static int Ec200tOpen(struct Adapter *adapter)
 {
@@ -148,7 +142,6 @@ out:
     return ret;
 }
 
-
 #ifdef ADD_NUTTX_FETURES
 static int Ec200tIoctl(struct Adapter *adapter, int cmd, void *args){ return 0;}
 #else
@@ -174,6 +167,7 @@ static int Ec200tIoctl(struct Adapter *adapter, int cmd, void *args)
     serial_cfg.serial_bit_order = STOP_BITS_1;
     serial_cfg.serial_invert_mode = NRZ_NORMAL;
 #ifdef ADAPTER_EC200T_DRIVER_EXT_PORT
+    serial_cfg.is_ext_uart = 1;
     serial_cfg.ext_uart_no = ADAPTER_EC200T_DRIVER_EXT_PORT;
     serial_cfg.port_configure = PORT_CFG_INIT;
 #endif
@@ -183,7 +177,6 @@ static int Ec200tIoctl(struct Adapter *adapter, int cmd, void *args)
     ioctl_cfg.args = &serial_cfg;
     PrivIoctl(adapter->fd, OPE_INT, &ioctl_cfg);
     
-
     Ec200tPowerSet();
     
     return 0;

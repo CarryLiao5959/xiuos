@@ -21,6 +21,8 @@
 #include "sys_arch.h"
 #include "lwip/udp.h"
 #include "lwip/sockets.h"
+#include <shell.h>
+#include <sys.h>
 
 
 #define PBUF_SIZE 27

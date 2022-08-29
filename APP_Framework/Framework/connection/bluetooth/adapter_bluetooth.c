@@ -82,7 +82,7 @@ int AdapterBlueToothInit(void)
 int AdapterBlueToothTest(void)
 {
     const char *bluetooth_msg = "BT Adapter Test";
-    char bluetooth_recv_msg[128];
+    char bluetooth_recv_msg[128]={0};
     int len;
     int baud_rate = BAUD_RATE_9600;
 
@@ -92,7 +92,7 @@ int AdapterBlueToothTest(void)
     AdapterDeviceOpen(adapter);
 
     //if bluetooth master and slave have already match, no need to AdapterDeviceControl and AdapterDeviceConnect
-    AdapterDeviceControl(adapter, OPE_INT, &baud_rate);
+	  AdapterDeviceControl(adapter, OPE_INT, &baud_rate);
     //AdapterDeviceConnect(adapter, adapter->net_role, NULL, NULL, 0);
 
     len = strlen(bluetooth_msg);
@@ -100,6 +100,7 @@ int AdapterBlueToothTest(void)
     while (1) {
         AdapterDeviceRecv(adapter, bluetooth_recv_msg, 8);
         printf("bluetooth_recv_msg %s\n", bluetooth_recv_msg);
+
         AdapterDeviceSend(adapter, bluetooth_msg, len);
         printf("send %s after recv\n", bluetooth_msg);
         PrivTaskDelay(1000);

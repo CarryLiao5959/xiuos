@@ -20,5 +20,6 @@ SRC_FILES += altcp_alloc.c \
 			 udp.c
 
 SRC_DIR += ipv4
+LWIP_DIR += ipv4
 
 include $(KERNEL_ROOT)/compiler.mk

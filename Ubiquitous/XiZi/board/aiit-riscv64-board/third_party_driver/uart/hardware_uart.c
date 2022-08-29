@@ -22,7 +22,7 @@
 * @date 2021-04-25
 */
 
-#include <atomic.h>
+#include <bsp_atomic.h>
 #include <hardware_uart.h>
 #include <plic.h>
 #include <stdint.h>

@@ -38,6 +38,7 @@
 #define LWIP_HDR_ERRNO_H
 
 #include "lwip/opt.h"
+#include <errno.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -178,12 +179,12 @@ extern "C" {
 #define  EMEDIUMTYPE    124  /* Wrong medium type */
 
 #ifndef errno
-extern int errno;
+        extern int errno;
 #endif
 
 #else /* LWIP_PROVIDE_ERRNO */
 
-/* Define LWIP_ERRNO_STDINCLUDE if you want to include <errno.h> here */
+        /* Define LWIP_ERRNO_STDINCLUDE if you want to include <errno.h> here */
 #ifdef LWIP_ERRNO_STDINCLUDE
 #include <errno.h>
 #else /* LWIP_ERRNO_STDINCLUDE */
@@ -194,7 +195,7 @@ extern int errno;
 #endif /* LWIP_ERRNO_STDINCLUDE */
 
 #endif /* LWIP_PROVIDE_ERRNO */
-
+    
 #ifdef __cplusplus
 }
 #endif

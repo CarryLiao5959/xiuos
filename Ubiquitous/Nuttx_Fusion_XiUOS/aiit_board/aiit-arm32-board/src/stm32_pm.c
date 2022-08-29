@@ -22,7 +22,7 @@
 * @file stm32_pm.c
 * @brief nuttx source code
 *                https://github.com/apache/incubator-nuttx.git
-* @version 10.2.0 
+* @version 10.3.0 
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -32,10 +32,6 @@
  ****************************************************************************/
 
 #include <nuttx/config.h>
-
-#include <nuttx/board.h>
-#include <nuttx/power/pm.h>
-
 #include "arm_internal.h"
 #include "stm32_pm.h"
 #include "aiit-arm32-board.h"
@@ -66,10 +62,6 @@
 
 void arm_pminitialize(void)
 {
-  /* Then initialize the NuttX power management subsystem proper */
-
-  pm_initialize();
-
 #if defined(CONFIG_ARCH_IDLE_CUSTOM) && defined(CONFIG_PM_BUTTONS)
   /* Initialize the buttons to wake up the system from low power modes */
 

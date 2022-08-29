@@ -43,7 +43,7 @@
 #include "lwip/opt.h"
 #include "lwip/def.h"
 #include "lwip/ip_addr.h"
-#include "lwip/ip6_addr.h"
+// #include "lwip/ip6_addr.h"
 
 #ifdef __cplusplus
 extern "C" {

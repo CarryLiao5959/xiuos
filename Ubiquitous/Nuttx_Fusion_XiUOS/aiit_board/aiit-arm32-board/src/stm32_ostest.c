@@ -22,7 +22,7 @@
 * @file stm32_ostest.c
 * @brief nuttx source code
 *                https://github.com/apache/incubator-nuttx.git
-* @version 10.2.0 
+* @version 10.3.0 
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -41,7 +41,6 @@
 #include <nuttx/irq.h>
 #include <arch/board/board.h>
 
-#include "arm_arch.h"
 #include "arm_internal.h"
 #include "aiit-arm32-board.h"
 

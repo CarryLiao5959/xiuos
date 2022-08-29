@@ -18,29 +18,14 @@
  *
  ****************************************************************************/
 
-/****************************************************************************
- * The external functions, imxrt_lpspi1/2/3/4select and
- * imxrt_lpspi1/2/3/4status must be provided by board-specific logic.
- * They are implementations of the select and status methods of the SPI
- * interface defined by struct imxrt_lpspi_ops_s (see
- * include/nuttx/spi/spi.h). All other methods (including
- * imxrt_lpspibus_initialize()) are provided by common IMXRT logic.
- * To use this common SPI logic on your board:
- *
- *   1. Provide logic in imxrt_boardinitialize() to configure SPI chip
- *      select pins.
- *   2. Provide imxrt_lpspi1/2/3/4select() and imxrt_lpspi1/2/3/4status()
- *      functions in your board-specific logic.  These functions will
- *      perform chip selection and status operations using GPIOs in the way
- *      your board is configured.
- *   3. Add a calls to imxrt_lpspibus_initialize() in your low level
- *      application initialization logic
- *   4. The handle returned by imxrt_lpspibus_initialize() may then be
- *      used to bind the SPI driver to higher level logic (e.g., calling
- *      mmcsd_lpspislotinitialize(), for example, will bind the SPI
- *      driver to the SPI MMC/SD driver).
- *
- ****************************************************************************/
+/**
+* @file imxrt_lpspi.c
+* @brief nuttx source code
+*                https://github.com/apache/incubator-nuttx.git
+* @version 10.3.0 
+* @author AIIT XUOS Lab
+* @date 2022-03-23
+*/
 
 /****************************************************************************
  * Included Files
@@ -61,13 +46,10 @@
 #include <nuttx/arch.h>
 #include <nuttx/semaphore.h>
 #include <nuttx/spi/spi.h>
-#include <nuttx/power/pm.h>
 
 #include <arch/board/board.h>
 
 #include "arm_internal.h"
-#include "arm_arch.h"
-
 #include "chip.h"
 
 #include "imxrt_lpspi.h"
@@ -1695,7 +1677,6 @@ FAR struct spi_dev_s *imxrt_lpspibus_initialize(int bus)
 #endif
     {
       spierr("ERROR: Unsupported SPI bus: %d\n", bus);
-      return NULL;
     }
 
   leave_critical_section(flags);

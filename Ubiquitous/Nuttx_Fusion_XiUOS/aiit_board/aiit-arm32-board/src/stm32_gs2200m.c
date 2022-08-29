@@ -22,7 +22,7 @@
 * @file stm32_gs2200m.c
 * @brief nuttx source code
 *                https://github.com/apache/incubator-nuttx.git
-* @version 10.2.0 
+* @version 10.3.0 
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -42,7 +42,7 @@
 #include <nuttx/spinlock.h>
 #include <nuttx/wireless/gs2200m.h>
 
-#include "arm_arch.h"
+#include "arm_internal.h"
 #include "chip.h"
 #include "stm32.h"
 
@@ -116,7 +116,7 @@ static void gs2200m_irq_enable(void)
   irqstate_t flags = spin_lock_irqsave(NULL);
   uint32_t dready = 0;
 
-  wlinfo("== ec:%" PRId32 " called=%" PRId32 " \n",
+  wlinfo("== ec:%" PRId32 " called=%" PRId32 "\n",
          _enable_count, _n_called++);
 
   if (0 == _enable_count)
@@ -139,7 +139,7 @@ static void gs2200m_irq_enable(void)
     {
       /* Call g_irq_handler directly */
 
-      wlinfo("== ** call irq handler ** \n");
+      wlinfo("== ** call irq handler **\n");
       g_irq_handler(0, NULL, g_irq_arg);
     }
 }
@@ -152,7 +152,7 @@ static void gs2200m_irq_disable(void)
 {
   irqstate_t flags = spin_lock_irqsave(NULL);
 
-  wlinfo("== ec:%" PRId32 " called=%" PRId32 " \n",
+  wlinfo("== ec:%" PRId32 " called=%" PRId32 "\n",
          _enable_count, _n_called++);
 
   _enable_count--;

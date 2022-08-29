@@ -35,6 +35,12 @@
 #include <xs_isr.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <stdarg.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
 #include <xs_memory.h>
 #include <xs_id.h>
 #include <xs_ktick.h>

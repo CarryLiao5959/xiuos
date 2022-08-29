@@ -37,11 +37,11 @@
 #ifndef LWIP_HDR_NETIF_H
 #define LWIP_HDR_NETIF_H
 
-#include "lwip/opt.h"
+// #include "lwip/opt.h"
 
 #define ENABLE_LOOPBACK (LWIP_NETIF_LOOPBACK || LWIP_HAVE_LOOPIF)
 
-#include "lwip/err.h"
+// #include "lwip/err.h"
 
 #include "lwip/ip_addr.h"
 

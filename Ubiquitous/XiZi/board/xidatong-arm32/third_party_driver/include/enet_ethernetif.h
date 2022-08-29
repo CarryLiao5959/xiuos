@@ -181,7 +181,7 @@ err_t ethernetif1_init(struct netif *netif);
  */
 void ethernetif_input( struct netif *netif);
 
-void ETH_BSP_Config(void);
+int ETH_BSP_Config(void);
 
 int32 lwip_obtain_semaphore(struct netif *netif);
 

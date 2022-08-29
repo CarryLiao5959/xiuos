@@ -19,10 +19,10 @@
  ****************************************************************************/
 
 /**
-* @file nsh.h
+* @file nsh_h.c
 * @brief nuttx source code
 *                 https://github.com/apache/incubator-nuttx-apps
-* @version 10.2.0
+* @version 10.23.0
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -574,9 +574,15 @@
 #  define CONFIG_NSH_DISABLE_FREE 1
 #endif
 
+#if !defined(CONFIG_FS_PROCFS) || defined(CONFIG_FS_PROCFS_EXCLUDE_MEMDUMP)
+#  undef  CONFIG_NSH_DISABLE_MEMDUMP
+#  define CONFIG_NSH_DISABLE_MEMDUMP 1
+#endif
+
 /* Suppress unused file utilities */
 
 #define NSH_HAVE_CATFILE          1
+#define NSH_HAVE_WRITEFILE        1
 #define NSH_HAVE_READFILE         1
 #define NSH_HAVE_FOREACH_DIRENTRY 1
 #define NSH_HAVE_TRIMDIR          1
@@ -949,6 +955,9 @@ void nsh_usbtrace(void);
 #ifndef CONFIG_NSH_DISABLE_FREE
   int cmd_free(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
+#ifndef CONFIG_NSH_DISABLE_MEMDUMP
+  int cmd_memdump(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
+#endif
 #ifndef CONFIG_NSH_DISABLE_TIME
   int cmd_time(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
@@ -1282,7 +1291,7 @@ int nsh_catfile(FAR struct nsh_vtbl_s *vtbl, FAR const char *cmd,
  *
  * Description:
  *   Read a small file into a user-provided buffer.  The data is assumed to
- *   be a string and is guaranteed to be NUL-termined.  An error occurs if
+ *   be a string and is guaranteed to be NULL-terminated.  An error occurs if
  *   the file content (+terminator)  will not fit into the provided 'buffer'.
  *
  * Input Parameters:
@@ -1301,6 +1310,30 @@ int nsh_catfile(FAR struct nsh_vtbl_s *vtbl, FAR const char *cmd,
 #ifdef NSH_HAVE_READFILE
 int nsh_readfile(FAR struct nsh_vtbl_s *vtbl, FAR const char *cmd,
                  FAR const char *filepath, FAR char *buffer, size_t buflen);
+#endif
+
+/****************************************************************************
+ * Name: nsh_writefile
+ *
+ * Description:
+ *   Dump the contents of a file to the current NSH terminal.
+ *
+ * Input Paratemets:
+ *   vtbl     - session vtbl
+ *   cmd      - NSH command name to use in error reporting
+ *   buffer   - The pointer of writting buffer
+ *   len      - The length of writting buffer
+ *   filepath - The full path to the file to be dumped
+ *
+ * Returned Value:
+ *   Zero (OK) on success; -1 (ERROR) on failure.
+ *
+ ****************************************************************************/
+
+#ifdef NSH_HAVE_WRITEFILE
+int nsh_writefile(FAR struct nsh_vtbl_s *vtbl, FAR const char *cmd,
+                  FAR const char *buffer, size_t len,
+                  FAR const char *filepath);
 #endif
 
 /****************************************************************************
@@ -1421,6 +1454,10 @@ int nsh_foreach_var(FAR struct nsh_vtbl_s *vtbl, nsh_foreach_var_t cb,
   int cmd_Ch438(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
 
+#if defined(CONFIG_K210_LCD) && !defined(CONFIG_NSH_DISABLE_LCD)
+  int cmd_Lcd(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
+#endif
+
 #if defined(CONFIG_APPLICATION_SENSOR_HCHO_TB600B_WQ_HCHO1OS) && !defined(CONFIG_NSH_DISABLE_HCHO_TB600B_WQ_HCHO1OS)
   int cmd_Hcho1os(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
@@ -1439,6 +1476,10 @@ int nsh_foreach_var(FAR struct nsh_vtbl_s *vtbl, nsh_foreach_var_t cb,
 
 #if defined(CONFIG_APPLICATION_SENSOR_CO2_ZG09) && !defined(CONFIG_NSH_DISABLE_CO2ZG09)
   int cmd_Co2Zg09(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
+#endif
+
+#if defined(CONFIG_APPLICATION_SENSOR_CO2_G8S) && !defined(CONFIG_NSH_DISABLE_CO2G8S)
+  int cmd_Co2G8S(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
 
 #if defined(CONFIG_APPLICATION_SENSOR_PM1_0_PS5308) && !defined(CONFIG_NSH_DISABLE_PM1_0PS5308)
@@ -1486,7 +1527,8 @@ int nsh_foreach_var(FAR struct nsh_vtbl_s *vtbl, nsh_foreach_var_t cb,
   int cmd_recvzigbee(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
 
-#if (defined(CONFIG_ADAPTER_LORA_SX1278) || defined(CONFIG_ADAPTER_LORA_E220)) && !defined(CONFIG_NSH_DISABLE_ADAPTER_LORATEST)
+#if (defined(CONFIG_ADAPTER_LORA_SX1278) || defined(CONFIG_ADAPTER_LORA_E220) || defined(CONFIG_ADAPTER_LORA_E22)) && \
+    !defined(CONFIG_NSH_DISABLE_ADAPTER_LORATEST)
   int cmd_AdapterLoraTest(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
 
@@ -1500,6 +1542,14 @@ int nsh_foreach_var(FAR struct nsh_vtbl_s *vtbl, nsh_foreach_var_t cb,
 
 #if defined(CONFIG_ADAPTER_LORA_E220) && !defined(CONFIG_NSH_DISABLE_E220_LORA_SEND)
   int cmd_E220LoraSend(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
+#endif
+
+#if defined(CONFIG_ADAPTER_LORA_E22) && !defined(CONFIG_NSH_DISABLE_E22_LORA_RECEIVE)
+  int cmd_E22LoraReceive(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
+#endif
+
+#if defined(CONFIG_ADAPTER_LORA_E22) && !defined(CONFIG_NSH_DISABLE_E22_LORA_SEND)
+  int cmd_E22LoraSend(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
 
 #if defined(CONFIG_ADAPTER_BLUETOOTH_HC08) && !defined(CONFIG_NSH_DISABLE_ADAPTER_BLUETOOTH_TEST)

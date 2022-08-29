@@ -23,7 +23,7 @@
 #define XS_KLIST_H
 
 #include <xs_base.h>
-#include "libc.h"
+// #include <libc.h>
 
 #ifdef __cplusplus
 extern "C" {

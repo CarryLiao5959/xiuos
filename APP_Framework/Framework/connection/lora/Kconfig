@@ -6,6 +6,10 @@ config ADAPTER_E220
         bool "Using lora adapter device E220-400T22S"
         default n
 
+config ADAPTER_E22
+        bool "Using lora adapter device E22-400T33D"
+        default n
+
 choice 
         prompt "Lora device adapter select net role type "
         default AS_LORA_CLIENT_ROLE
@@ -39,4 +43,8 @@ endif
 
 if ADAPTER_E220
     source "$APP_DIR/Framework/connection/lora/e220/Kconfig"
+endif
+
+if ADAPTER_E22
+    source "$APP_DIR/Framework/connection/lora/e22/Kconfig"
 endif 

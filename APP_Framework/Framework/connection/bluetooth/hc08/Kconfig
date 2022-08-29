@@ -55,9 +55,30 @@ if ADD_NUTTX_FETURES
 endif
 
 if ADD_RTTHREAD_FETURES
-        config ADAPTER_HC08_DRIVER
-                string "HC08 device uart driver path"
-                default "/dev/uart4"
+         config ADAPTER_HC08_RECV_BUFFER_SIZE
+                int "HC08 recv data buffer size"
+                default "128"
+
         config ADAPTER_HC08_WORK_ROLE
                 string "HC08 work role M(MASTER) or S(SLAVER)"
+                default "M"
+        
+        config ADAPTER_HC08_DRIVER_EXTUART
+                bool "Using extra uart to support bluetooth"
+                default n
+
+        config ADAPTER_HC08_DRIVER
+                string "HC08 device uart driver path"
+                default "/dev/dev2"
+                depends on !ADAPTER_HC08_DRIVER_EXTUART
+
+        if ADAPTER_HC08_DRIVER_EXTUART                    
+                config ADAPTER_HC08_DRIVER
+                        string "HC08 device extra uart driver path"
+                        default "/dev/dev2"
+
+                config ADAPTER_HC08_DRIVER_EXT_PORT
+                        int "if HC08 device using extuart, choose port"
+                        default "2"
+        endif
 endif

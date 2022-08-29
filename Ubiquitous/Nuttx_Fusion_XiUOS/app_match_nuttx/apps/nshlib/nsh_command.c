@@ -22,7 +22,7 @@
 * @file nsh_command.c
 * @brief nuttx source code
 *                 https://github.com/apache/incubator-nuttx-apps
-* @version 10.2.0
+* @version 10.3.0
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -223,6 +223,12 @@ static const struct cmdmap_s g_cmdmap[] =
 
 #ifndef CONFIG_NSH_DISABLE_FREE
   { "free",     cmd_free,     1, 1, NULL },
+#endif
+
+#ifdef CONFIG_DEBUG_MM
+# ifndef CONFIG_NSH_DISABLE_MEMDUMP
+  { "memdump",  cmd_memdump,  1, 3, "[pid/used/free]" },
+# endif
 #endif
 
 #ifdef CONFIG_NET_UDP
@@ -594,6 +600,10 @@ static const struct cmdmap_s g_cmdmap[] =
   { "ch438",    cmd_Ch438,     1, 1, "[ch438 demo cmd.]" },
 #endif
 
+#if defined(CONFIG_K210_LCD) && !defined(CONFIG_NSH_DISABLE_LCD)
+  { "lcd",      cmd_Lcd,     1, 1, "[LCD demo cmd.]" },
+#endif
+
 #if defined(CONFIG_APPLICATION_SENSOR_HCHO_TB600B_WQ_HCHO1OS) && !defined(CONFIG_NSH_DISABLE_HCHO_TB600B_WQ_HCHO1OS)
   { "hcho1os",       cmd_Hcho1os,       1, 1, "[get the concentration of formaldehyde with sensor tb600b_wq_hcho1os.]" },
 #endif
@@ -612,6 +622,10 @@ static const struct cmdmap_s g_cmdmap[] =
 
 #if defined(CONFIG_APPLICATION_SENSOR_CO2_ZG09) && !defined(CONFIG_NSH_DISABLE_CO2ZG09)
   { "zg09",       cmd_Co2Zg09,       1, 1, "[get the concentration of co2  with sensor ZG09.]" },
+#endif
+
+#if defined(CONFIG_APPLICATION_SENSOR_CO2_G8S) && !defined(CONFIG_NSH_DISABLE_CO2G8S)
+  { "g8s",       cmd_Co2G8S,       1, 1, "[get the concentration of co2  with sensor G8S.]" },
 #endif
 
 #if defined(CONFIG_APPLICATION_SENSOR_PM1_0_PS5308) && !defined(CONFIG_NSH_DISABLE_PM1_0PS5308)
@@ -658,8 +672,9 @@ static const struct cmdmap_s g_cmdmap[] =
   { "recvzigbee",       cmd_recvzigbee,       1, 1, "[receive message.]" },
 #endif
 
-#if (defined(CONFIG_ADAPTER_LORA_SX1278) || defined(CONFIG_ADAPTER_LORA_E220)) && !defined(CONFIG_NSH_DISABLE_ADAPTER_LORATEST)
-  { "AdapterLoraTest",       cmd_AdapterLoraTest,       1, 1, "[Lora sx128 test.]" },
+#if (defined(CONFIG_ADAPTER_LORA_SX1278) || defined(CONFIG_ADAPTER_LORA_E220) || defined(CONFIG_ADAPTER_LORA_E22)) && \
+    !defined(CONFIG_NSH_DISABLE_ADAPTER_LORATEST)
+  { "AdapterLoraTest",       cmd_AdapterLoraTest,       1, 1, "[Lora test.]" },
 #endif
 
 #if defined(CONFIG_ADAPTER_4G_EC200T) && !defined(CONFIG_NSH_DISABLE_ADAPTER_4GTEST)
@@ -672,6 +687,14 @@ static const struct cmdmap_s g_cmdmap[] =
 
 #if defined(CONFIG_ADAPTER_LORA_E220) && !defined(CONFIG_NSH_DISABLE_E220_LORA_SEND)
   { "E220Send",       cmd_E220LoraSend,       1, 2, "[e220loraSend <message>]" },
+#endif
+
+#if defined(CONFIG_ADAPTER_LORA_E22) && !defined(CONFIG_NSH_DISABLE_E22_LORA_RECEIVE)
+  { "E22Receive",       cmd_E22LoraReceive,       1, 1, "[e22 lora receive.]" },
+#endif
+
+#if defined(CONFIG_ADAPTER_LORA_E22) && !defined(CONFIG_NSH_DISABLE_E22_LORA_SEND)
+  { "E22Send",       cmd_E22LoraSend,       1, 2, "[e22loraSend <message>]" },
 #endif
 
 #if defined(CONFIG_ADAPTER_BLUETOOTH_HC08) && !defined(CONFIG_NSH_DISABLE_ADAPTER_BLUETOOTH_TEST)

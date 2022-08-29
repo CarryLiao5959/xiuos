@@ -64,6 +64,7 @@ config SENSOR_ZG09
                 endif                
         endif
 
+
 config SENSOR_G8S
         bool "Using g8-s"
         default n
@@ -99,7 +100,11 @@ config SENSOR_G8S
                 endif
 
                 if ADD_NUTTX_FETURES
-
+                       config SENSOR_DEVICE_G8S_DEV
+                               string "CO2 device name"
+                               default "/dev/ttyS3"
+                               ---help---
+                                   If USART1 is selected, then fill in /dev/ttyS1 here.
                 endif
 
                 if ADD_RTTHREAD_FETURES

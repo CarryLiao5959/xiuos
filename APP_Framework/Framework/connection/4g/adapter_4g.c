@@ -110,7 +110,9 @@ int Adapter4GTest(void)
 
     return 0;    
 }
-// SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, Adapter4GTest, Adapter4GTest, show adapter 4G information);
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(Adapter4GTestRTThread,a 4G adpter sample);
+
+#ifdef ADD_RTTHREAD_FETURES     
+MSH_CMD_EXPORT(Adapter4GTest,a EC200T adpter sample);
+#else
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, Adapter4GTest, Adapter4GTest, show adapter 4G information);
 #endif

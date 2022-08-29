@@ -65,6 +65,7 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     cfg.serial_bit_order    = 0;
     cfg.serial_invert_mode  = 0;
 #ifdef SENSOR_AS830_DRIVER_EXTUART
+    cfg.is_ext_uart         = 1;
     cfg.ext_uart_no         = SENSOR_DEVICE_AS830_DEV_EXT_PORT;
     cfg.port_configure      = PORT_CFG_INIT;
 #endif

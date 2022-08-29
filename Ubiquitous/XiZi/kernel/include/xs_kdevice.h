@@ -80,11 +80,11 @@ enum SIGN_OPER
 
 struct DeviceBlockArrange
 {
-    uint32 bank_num;
-    uint32 size_perbank;
-    uint32 block_size;
-    uint16 bank_start;
-    uint16 bank_end;                      
+    uint32_t bank_num;
+    uint32_t size_perbank;
+    uint32_t block_size;
+    uint16_t bank_start;
+    uint16_t bank_end;                      
 };
 
 struct DeviceBlockAddr

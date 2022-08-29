@@ -36,6 +36,8 @@
 #include "nsh.h"
 #include "nsh_console.h"
 
+extern int FrameworkInit(void);
+
 /****************************************************************************
  * Name: cmd_Ch438
  ****************************************************************************/
@@ -45,6 +47,19 @@ int cmd_Ch438(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
     nsh_output(vtbl, "Hello, world!\n");
     CH438Demo();
+    return OK;
+}
+#endif
+
+/****************************************************************************
+ * Name: cmd_lcd
+ ****************************************************************************/
+#if defined(CONFIG_K210_LCD) && !defined(CONFIG_NSH_DISABLE_LCD)
+extern void LcdDemo(void);
+int cmd_Lcd(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, LCD!\n");
+    LcdDemo();
     return OK;
 }
 #endif
@@ -121,6 +136,21 @@ int cmd_Co2Zg09(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
     nsh_output(vtbl, "Hello, world!\n");
     FrameworkInit();
     Co2Zg09();
+    return OK;
+}
+#endif
+
+/****************************************************************************
+ * Name: cmd_Co2g8s
+ ****************************************************************************/
+
+#if defined(CONFIG_APPLICATION_SENSOR_CO2_G8S) && !defined(CONFIG_NSH_DISABLE_CO2G8S)
+extern void Co2G8s(void);
+int cmd_Co2G8S(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, world!\n");
+    FrameworkInit();
+    Co2G8s();
     return OK;
 }
 #endif
@@ -294,7 +324,8 @@ int cmd_AdapterWifiTest(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 }
 #endif
 
-#if (defined(CONFIG_ADAPTER_LORA_SX1278) || defined(CONFIG_ADAPTER_LORA_E220)) && !defined(CONFIG_NSH_DISABLE_ADAPTER_LORATEST)
+#if (defined(CONFIG_ADAPTER_LORA_SX1278) || defined(CONFIG_ADAPTER_LORA_E220) || defined(CONFIG_ADAPTER_LORA_E22)) && \
+    !defined(CONFIG_NSH_DISABLE_ADAPTER_LORATEST)
 extern int AdapterLoraTest(void);
 int cmd_AdapterLoraTest(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
@@ -334,6 +365,28 @@ int cmd_E220LoraSend(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
     nsh_output(vtbl, "Hello, world!\n");
     FrameworkInit();
     E220LoraSend(argc,argv);
+    return OK;
+}
+#endif
+
+#if defined(CONFIG_ADAPTER_LORA_E22) && !defined(CONFIG_NSH_DISABLE_E22_LORA_RECEIVE)
+void E22LoraReceive(void);
+int cmd_E22LoraReceive(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, world!\n");
+    FrameworkInit();
+    E22LoraReceive();
+    return OK;
+}
+#endif
+
+#if defined(CONFIG_ADAPTER_LORA_E22) && !defined(CONFIG_NSH_DISABLE_E22_LORA_SEND)
+extern void E22LoraSend(int argc, char *argv[]);
+int cmd_E22LoraSend(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, world!\n");
+    FrameworkInit();
+    E22LoraSend(argc,argv);
     return OK;
 }
 #endif

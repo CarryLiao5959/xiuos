@@ -29,10 +29,10 @@ extern "C" {
 #include <time.h>
 #include <sys/time.h>
 
-#if defined(ARCH_ARM)
+#if defined(ARCH_ARM) && !defined(LIB_MUSLLIB)
 #include "pthread arm.h"
 #endif
-
+    
 // enum {
 //     PTHREAD_BARRIER_SERIAL_THREAD,
 //     PTHREAD_CANCEL_ASYNCHRONOUS,
@@ -94,7 +94,7 @@ int       pthread_setname_np(pthread_t thread, const char *name);
 int       pthread_timedjoin_np(pthread_t thread, void **retval, const struct timespec *abstime);
 
 /* function in pthread_mutex.c */
-int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
+int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t* attr);
 int pthread_mutex_destroy(pthread_mutex_t *mutex);
 int pthread_mutex_lock(pthread_mutex_t *mutex);
 int pthread_mutex_unlock(pthread_mutex_t *mutex);
@@ -105,7 +105,7 @@ int pthread_mutexattr_destroy(pthread_mutexattr_t *attr);
 int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type);
 int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int type);
 int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int pshared);
-int pthread_mutexattr_getpshared(pthread_mutexattr_t *attr, int *pshared);
+int pthread_mutexattr_getpshared(const pthread_mutexattr_t *attr, int *pshared);
 
 #ifdef __cplusplus
 }

@@ -21,7 +21,11 @@
 #include <adapter.h>
 
 #define E220_GATEWAY_ADDRESS 0xFFFF
+#ifdef ADD_RTTHREAD_FETURES
+#define E220_CHANNEL 0x02
+#else
 #define E220_CHANNEL 0x05
+#endif
 
 #ifdef AS_LORA_GATEWAY_ROLE
 #define E220_ADDRESS E220_GATEWAY_ADDRESS
@@ -31,7 +35,11 @@
 #define E220_ADDRESS ADAPTER_LORA_NET_ROLE_ID
 #endif
 
+#ifdef ADD_RTTHREAD_FETURES
+#define E220_UART_BAUD_RATE 9600
+#else
 #define E220_UART_BAUD_RATE 115200
+#endif
 
 enum E220LoraMode
 {
@@ -265,13 +273,16 @@ static int E220SetRegisterParam(struct Adapter *adapter, uint16 address, uint8 c
     buffer[10] = 0;                      //low-cipher
 
     ret = PrivWrite(adapter->fd, (void *)buffer, 11);
+		
     if(ret < 0){
         printf("E220SetRegisterParam send failed %d!\n", ret);
     }
 
-    PrivRead(adapter->fd, buffer, 11);
 
-    E220LoraModeConfig(DATA_TRANSFER_MODE);
+    PrivRead(adapter->fd, buffer, 11);
+	E220LoraModeConfig(DATA_TRANSFER_MODE);
+
+    
     PrivTaskDelay(1000);
 
     return 0;
@@ -337,9 +348,10 @@ static int E220Open(struct Adapter *adapter)
     return 0;
 }
 #else
+#ifdef ADD_RTTHREAD_FETURES
 static int E220Open(struct Adapter *adapter)
 {
-    /*step1: open e220 uart port*/
+     /*step1: open e220 uart port*/
     adapter->fd = PrivOpen(ADAPTER_E220_DRIVER, O_RDWR);
     if (adapter->fd < 0) {
         printf("E220Open get uart %s fd error\n", ADAPTER_E220_DRIVER);
@@ -378,6 +390,59 @@ static int E220Open(struct Adapter *adapter)
     ioctl_cfg.args = &cfg;
 
     PrivIoctl(adapter->fd, OPE_INT, &ioctl_cfg);
+    
+	cfg.serial_baud_rate = E220_UART_BAUD_RATE;
+    ioctl_cfg.args = &cfg;
+
+    PrivIoctl(adapter->fd, OPE_INT, &ioctl_cfg);
+
+    ADAPTER_DEBUG("E220Open done\n");
+
+    return 0;
+}
+#else
+static int E220Open(struct Adapter *adapter)
+{
+    /*step1: open e220 uart port*/
+    adapter->fd = PrivOpen(ADAPTER_E220_DRIVER, O_RDWR);
+    if (adapter->fd < 0) {
+        printf("E220Open get uart %s fd error\n", ADAPTER_E220_DRIVER);
+        return -1;
+    }
+
+    struct SerialDataCfg cfg;
+    memset(&cfg, 0 ,sizeof(struct SerialDataCfg));
+
+    cfg.serial_baud_rate = BAUD_RATE_9600;
+    cfg.serial_data_bits = DATA_BITS_8;
+    cfg.serial_stop_bits = STOP_BITS_1;
+    cfg.serial_parity_mode = PARITY_NONE;
+    cfg.serial_bit_order = BIT_ORDER_LSB;
+    cfg.serial_invert_mode = NRZ_NORMAL;
+    cfg.serial_buffer_size = SERIAL_RB_BUFSZ;
+
+    /*aiit board use ch438, so it needs more serial configuration*/
+#ifdef ADAPTER_E220_DRIVER_EXTUART
+    cfg.is_ext_uart = 1;
+    cfg.ext_uart_no         = ADAPTER_E220_DRIVER_EXT_PORT;
+    cfg.port_configure      = PORT_CFG_INIT;
+#endif
+
+#ifdef AS_LORA_GATEWAY_ROLE
+    //serial receive timeout 10s
+    cfg.serial_timeout = 10000;
+#endif
+
+#ifdef AS_LORA_CLIENT_ROLE
+    //serial receive wait forever
+    cfg.serial_timeout = -1;
+#endif
+
+    struct PrivIoctlCfg ioctl_cfg;
+    ioctl_cfg.ioctl_driver_type = SERIAL_TYPE;
+    ioctl_cfg.args = &cfg;
+
+    PrivIoctl(adapter->fd, OPE_INT, &ioctl_cfg);
 
     E220SetRegisterParam(adapter, E220_ADDRESS, E220_CHANNEL, E220_UART_BAUD_RATE);
 
@@ -390,6 +455,7 @@ static int E220Open(struct Adapter *adapter)
 
     return 0;
 }
+#endif
 #endif
 
 /**
@@ -472,7 +538,7 @@ static int E220Send(struct Adapter *adapter, const void *buf, size_t len)
  */
 static int E220Recv(struct Adapter *adapter, void *buf, size_t len)
 {
-    int recv_len, recv_len_continue;
+    int recv_len=0, recv_len_continue=0;
 
     uint8 *recv_buf = PrivMalloc(len);
 
@@ -558,7 +624,46 @@ static void LoraOpen(void)
 
     E220Open(adapter);
 }
+MSH_CMD_EXPORT(LoraOpen,Lora open test sample);
 
+#ifdef ADD_RTTHREAD_FETURES
+static void LoraRead(void *parameter)
+{
+	int RevLen;
+	int i, cnt = 0;
+
+    uint8 buffer[256];
+
+    memset(buffer, 0, 256);
+
+    struct Adapter *adapter = AdapterDeviceFindByName(ADAPTER_LORA_NAME);
+    if (NULL == adapter) {
+        printf("LoraRead find lora adapter error\n");
+        return;
+    }
+	
+    while (1)
+    {
+        printf("ready to read lora data\n");
+
+        RevLen = E220Recv(adapter, buffer, 6);
+		if (RevLen) {
+            printf("lora get data %u\n", RevLen);
+            for (i = 0; i < RevLen; i ++) {
+                printf("i %u data 0x%x\n", i, buffer[i]);
+            }
+
+            memset(buffer, 0, 256);
+
+            PrivTaskDelay(1000);
+
+			cnt ++;
+            E220Send(adapter, &cnt, 1);
+		}
+	}
+}
+MSH_CMD_EXPORT(LoraRead,Lora read test sample);
+#else
 static void LoraRead(void *parameter)
 {
 	int RevLen;
@@ -594,6 +699,8 @@ static void LoraRead(void *parameter)
 		}
 	}
 }
+#endif
+
 
 #ifdef ADD_XIZI_FETURES
 static void LoraTest(void)
@@ -666,4 +773,42 @@ void E220LoraSend(int argc, char *argv[])
         E220Close(adapter);
     }
 }
+#endif
+
+#ifdef ADD_RTTHREAD_FETURES
+
+static void LoraReadStart(void)
+{
+    int ret;
+
+    LoraOpen();
+
+	rt_thread_t tid= rt_thread_create("LoraReadStart", LoraRead, RT_NULL,2048,10,5); 
+	if(tid!=RT_NULL){
+		rt_thread_startup(tid);
+	}else{
+		rt_kprintf("LoraReadStart task_lora_read failed \r\n");
+		return;
+	}
+
+}
+MSH_CMD_EXPORT(LoraReadStart,Lora read task start sample);
+#define E22400T_M1_PIN (11U)
+#define E22400T_M0_PIN (9U)
+static void LoraSend(int argc, char *argv[])
+{
+	  int8_t cmd[10]={0xFF,0xFF,0x02,0xAA,0XBB,0xCC};   //sned AA BB CC to address 01 channel05
+		LoraOpen();
+    struct Adapter *adapter = AdapterDeviceFindByName(ADAPTER_LORA_NAME);
+    if (NULL == adapter) {
+        printf("LoraRead find lora adapter error\n");
+        return;
+    }
+		rt_pin_mode (E22400T_M1_PIN, PIN_MODE_OUTPUT);
+	  rt_pin_mode (E22400T_M0_PIN, PIN_MODE_OUTPUT);
+    rt_pin_write(E22400T_M1_PIN, PIN_LOW);
+	  rt_pin_write(E22400T_M0_PIN, PIN_HIGH);
+    E220Send(adapter, cmd, 6);
+}
+MSH_CMD_EXPORT(LoraSend,Lora send sample);
 #endif

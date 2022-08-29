@@ -73,6 +73,7 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     cfg.serial_bit_order    = 0;
     cfg.serial_invert_mode  = 0;
 #ifdef SENSOR_TB600B_IAQ10_DRIVER_EXTUART
+    cfg.is_ext_uart         = 1;
     cfg.ext_uart_no         = SENSOR_DEVICE_TB600B_IAQ10_DEV_EXT_PORT;
     cfg.port_configure      = PORT_CFG_INIT;
 #endif

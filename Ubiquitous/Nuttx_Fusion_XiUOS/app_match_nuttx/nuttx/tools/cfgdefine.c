@@ -22,9 +22,9 @@
 * @file cfgdefine.c
 * @brief nuttx source code
 *                 https://github.com/apache/incubator-nuttx-apps
-* @version 10.2.0 
+* @version 10.3.0 
 * @author AIIT XUOS Lab
-* @date 2022-03-17
+* @date 2022-06-17
 */
 
 /****************************************************************************
@@ -63,12 +63,14 @@ static const char *dequote_list[] =
   "CONFIG_INIT_ARGS",                     /* Argument list of entry point */
   "CONFIG_INIT_SYMTAB",                   /* Global symbol table */
   "CONFIG_INIT_NEXPORTS",                 /* Global symbol table size */
+  "CONFIG_INIT_ENTRYPOINT",               /* Name of entry point function */
   "CONFIG_MODLIB_SYMTAB_ARRAY",           /* Symbol table array used by modlib functions */
   "CONFIG_MODLIB_NSYMBOLS_VAR",           /* Variable holding number of symbols in the table */
   "CONFIG_PASS1_BUILDIR",                 /* Pass1 build directory */
   "CONFIG_PASS1_TARGET",                  /* Pass1 build target */
   "CONFIG_PASS1_OBJECT",                  /* Pass1 build object */
-  "CONFIG_USER_ENTRYPOINT",               /* Name of entry point function */
+  "CONFIG_TTY_LAUNCH_ENTRYPOINT",         /* Name of entry point from tty launch */
+  "CONFIG_TTY_LAUNCH_ARGS",               /* Argument list of entry point from tty launch */
 
   /* NxWidgets/NxWM */
 
@@ -95,7 +97,7 @@ static const char *dequote_list[] =
 
 static char *skip_space(char *ptr)
 {
-  while (*ptr && isspace((int)*ptr)) ptr++;
+  while (*ptr && isspace(*ptr)) ptr++;
   return ptr;
 }
 
@@ -103,7 +105,7 @@ static char *skip_space(char *ptr)
 
 static char *find_name_end(char *ptr)
 {
-  while (*ptr && (isalnum((int)*ptr) || *ptr == '_')) ptr++;
+  while (*ptr && (isalnum(*ptr) || *ptr == '_')) ptr++;
   return ptr;
 }
 
@@ -111,16 +113,16 @@ static char *find_name_end(char *ptr)
 
 static char *find_value_end(char *ptr)
 {
-  while (*ptr && !isspace((int)*ptr))
+  while (*ptr && !isspace(*ptr))
     {
       if (*ptr == '"')
         {
-          do ptr++; while (*ptr && *ptr != '"');
+          do ptr++; while (*ptr && (*ptr != '"' || *(ptr - 1) == '\\'));
           if (*ptr) ptr++;
         }
       else
         {
-          do ptr++; while (*ptr && !isspace((int)*ptr) && *ptr != '"');
+          do ptr++; while (*ptr && !isspace(*ptr) && *ptr != '"');
         }
     }
 
@@ -157,13 +159,7 @@ static char *read_line(FILE *stream)
 
 static void parse_line(char *ptr, char **varname, char **varval)
 {
-  /* Skip over any leading spaces */
-
-  ptr = skip_space(ptr);
-
-  /* The first no-space is the beginning of the variable name */
-
-  *varname = skip_space(ptr);
+  *varname = ptr;
   *varval = NULL;
 
   /* Parse to the end of the variable name */
@@ -359,7 +355,7 @@ void generate_definitions(FILE *stream)
               else
                 {
                   printf("#define %s %s\n", varname, varval);
-                  printf("#define %s %s\n", &varname[7], varval);                  
+                  printf("#define %s %s\n", &varname[7], varval);
                 }
             }
         }

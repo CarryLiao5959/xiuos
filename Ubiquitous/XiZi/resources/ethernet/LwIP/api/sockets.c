@@ -54,6 +54,7 @@
 #include "lwip/netif.h"
 #include "lwip/priv/tcpip_priv.h"
 #include "lwip/mld6.h"
+#include "lwip/errno.h"
 #if LWIP_CHECKSUM_ON_COPY
 #include "lwip/inet_chksum.h"
 #endif

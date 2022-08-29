@@ -13,22 +13,21 @@
 #include <rtthread.h>
 #include "drv_gpio.h"
 #include <board.h>
-
+#include "fsl_gpio.h"
+#include "board/hardware/ch438/ch438.h"
 /* defined the LED pin: GPIO1_IO9 */
 #define LED0_PIN               GET_PIN(1,9)
-
+extern int FrameworkInit(void);
 int main(void)
-{
+{   
     /* set LED0 pin mode to output */
     rt_pin_mode(LED0_PIN, PIN_MODE_OUTPUT);
     rt_kprintf("XIUOS xidatong build %s %s\n",__DATE__,__TIME__);
-    while (1)
-    {
-        rt_pin_write(LED0_PIN, PIN_HIGH);
-        rt_thread_mdelay(500);
-        rt_pin_write(LED0_PIN, PIN_LOW);
-        rt_thread_mdelay(500);
-    }
+    FrameworkInit();
+	  while (1)
+    {    
+        rt_thread_mdelay(5000);
+     }
 }
 
 #ifdef BSP_USING_SDRAM

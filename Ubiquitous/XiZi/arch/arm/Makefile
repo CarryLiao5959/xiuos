@@ -30,6 +30,11 @@ SRC_DIR := shared
 SRC_DIR += cortex-m7
 endif
 
+ifeq ($(CONFIG_BOARD_IMXRT1176_SBC_EVB),y)
+SRC_DIR := shared
+SRC_DIR += cortex-m7
+endif
+
 # cortex-m0 is ARMv6-m
 
 ifeq ($(CONFIG_BOARD_CORTEX_M0_EVB),y)

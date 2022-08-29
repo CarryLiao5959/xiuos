@@ -33,7 +33,7 @@ Modification:
 #include "fsl_clock.h"
 #include "fsl_enet.h"
 #include "clock_config.h"
-#include <xizi.h>
+// #include <xizi.h>
 #include <arch_interrupt.h>
 
 extern int heap_start;

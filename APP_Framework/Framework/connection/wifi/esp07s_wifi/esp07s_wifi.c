@@ -82,6 +82,7 @@ static int Esp07sUartOpen(struct Adapter *adapter)
     cfg.serial_buffer_size = SERIAL_RB_BUFSZ;
 
 #ifdef ADAPTER_ESP07S_DRIVER_EXT_PORT
+    cfg.is_ext_uart = 1;
     cfg.ext_uart_no         = ADAPTER_ESP07S_DRIVER_EXT_PORT;
     cfg.port_configure      = PORT_CFG_INIT;
 #endif
@@ -512,6 +513,7 @@ static int Esp07sWifiIoctl(struct Adapter *adapter, int cmd, void *args)
             cfg.serial_buffer_size = SERIAL_RB_BUFSZ;
 
 #ifdef ADAPTER_ESP07S_DRIVER_EXT_PORT
+            cfg.is_ext_uart = 1;
             cfg.ext_uart_no         = ADAPTER_ESP07S_DRIVER_EXT_PORT;
             cfg.port_configure      = PORT_CFG_INIT;
 #endif

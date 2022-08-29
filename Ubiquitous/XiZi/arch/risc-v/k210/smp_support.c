@@ -20,7 +20,7 @@ Author: AIIT XUOS Lab
 *************************************************/
 
 #include "board.h"
-#include <atomic.h>
+#include <bsp_atomic.h>
 #include <clint.h>
 #include <encoding.h>
 #include <xs_spinlock.h>

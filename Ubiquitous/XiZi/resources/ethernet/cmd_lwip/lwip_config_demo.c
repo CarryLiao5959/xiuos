@@ -20,6 +20,8 @@
 
 #include "board.h"
 #include "sys_arch.h"
+#include <shell.h>
+#include <sys.h>
 
 /******************************************************************************/
 

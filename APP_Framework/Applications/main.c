@@ -24,7 +24,7 @@ int main(void)
 #ifdef APPLICATION_OTA
 	ApplicationOtaTaskInit();
 #endif
-    return 0;
+	return 0;
 }
 // int cppmain(void);
 

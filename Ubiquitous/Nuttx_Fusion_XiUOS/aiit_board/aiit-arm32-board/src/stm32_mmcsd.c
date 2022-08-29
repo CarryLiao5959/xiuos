@@ -22,7 +22,7 @@
 * @file stm32_mmcsd.c
 * @brief nuttx source code
 *                https://github.com/apache/incubator-nuttx.git
-* @version 10.2.0 
+* @version 10.3.0 
 * @author AIIT XUOS Lab
 * @date 2022-03-17
 */
@@ -40,7 +40,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "arm_arch.h"
+#include "arm_internal.h"
 #include "chip.h"
 #include "stm32.h"
 
@@ -91,7 +91,7 @@ int stm32_mmcsd_initialize(int port, int minor)
   stm32_configgpio(GPIO_MMCSD_NSS);   /* Assign CS */
   stm32_gpiowrite(GPIO_MMCSD_NSS, 1); /* Ensure the CS is inactive */
 
-  mcinfo("INFO: Initializing mmcsd port %d minor %d \n",
+  mcinfo("INFO: Initializing mmcsd port %d minor %d\n",
          port, minor);
 
   spi = stm32_spibus_initialize(port);

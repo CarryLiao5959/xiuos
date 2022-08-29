@@ -357,7 +357,7 @@ static int FatfsStat(struct MountPoint *mp, const char *path,
     FRESULT res;
     FILINFO fno;
     char *ff_path;
-    struct tm tm;
+    // struct tm tm;
     int year, mon, day, hour, min, sec;
     WORD tmp;
 
@@ -465,7 +465,7 @@ DWORD GetFatTime(void)
 {
     DWORD fat_time = 0;
 
-#ifdef LIB
+#if defined LIB && !defined(LIB_MUSLLIB)
     time_t now;
     struct tm *p_tm;
     struct tm tm_now;

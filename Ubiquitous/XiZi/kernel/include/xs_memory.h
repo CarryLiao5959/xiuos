@@ -23,6 +23,7 @@
 #define XS_MEMORY_H
 
 #include <xsconfig.h>
+#include <xs_base.h>
 
 #ifdef __cplusplus
 extern "C" {

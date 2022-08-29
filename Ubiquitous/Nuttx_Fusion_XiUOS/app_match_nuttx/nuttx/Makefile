@@ -40,9 +40,9 @@ DUMMY  := ${shell $(MAKE) -C tools -f Makefile.host incdir \
 # Include the correct Makefile for the selected architecture.
 
 ifeq ($(CONFIG_WINDOWS_NATIVE),y)
-include tools/Makefile.win
+include tools/Win.mk
 else
 export KERNEL_ROOT = $(CURDIR)
-include tools/Makefile.unix
+include tools/Unix.mk
 endif
 endif

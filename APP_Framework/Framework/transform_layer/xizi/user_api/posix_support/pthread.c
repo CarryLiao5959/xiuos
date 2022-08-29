@@ -49,8 +49,8 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
       return -1 ;
     
     ret = UserTaskStartup(pid);
-    *thread = pid;
-    
+    *thread = (pthread_t)(long)pid;
+
     return ret;
 
 }
@@ -63,7 +63,7 @@ void pthread_exit(void *value_ptr){
 pthread_t pthread_self(void){
     
     pthread_t pthread ;
-    pthread = UserGetTaskID();
+    pthread = (pthread_t)(long)UserGetTaskID();
     return pthread;
 }
 
@@ -112,7 +112,8 @@ int pthread_join(pthread_t thread, void **retval)
 int pthread_kill(pthread_t thread, int sig)
 {
     /* This api should not be used, and will not be supported */
-    UserTaskDelete(thread);
+    int32_t *thread_id_tmp = (void *)&thread;
+    UserTaskDelete(*thread_id_tmp);
     return -1;
 }
 

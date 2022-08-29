@@ -27,7 +27,7 @@
 #include "lwip/timeouts.h"
 #include "lwip/init.h"
 #include "netif/ethernet.h"
-
+#include <shell.h>
 #include "board.h"
 #include "pin_mux.h"
 #include "clock_config.h"
@@ -35,9 +35,9 @@
 #include <sys_arch.h>
 #include "connect_ethernet.h"
 
-char test_ip_addr[] = {192, 168, 250, 253};
+char test_ip_addr[] = {192, 168, 145, 220};
 char test_net_mask[] = {255, 255, 255, 0};
-char test_gw_addr[] = {192, 168, 250, 252};
+char test_gw_addr[] = {192, 168, 145, 1};
 ip4_addr_t ping_addr;
 
 /******************************************************************************/

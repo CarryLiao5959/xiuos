@@ -1,31 +1,22 @@
-/****************************************************************************
- * boards/risc-v/k210/aiit-riscv64-board/kernel/k210_userspace.c
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.  The
- * ASF licenses this file to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the
- * License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations
- * under the License.
- *
- ****************************************************************************/
+/*
+* Copyright (c) 2020 AIIT XUOS Lab
+* XiUOS is licensed under Mulan PSL v2.
+* You can use this software according to the terms and conditions of the Mulan PSL v2.
+* You may obtain a copy of Mulan PSL v2 at:
+*        http://license.coscl.org.cn/MulanPSL2
+* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+* See the Mulan PSL v2 for more details.
+*/
 
 /**
-* @file k210_userspace.c
-* @brief nuttx source code
-*                https://github.com/apache/incubator-nuttx.git
-* @version 10.2.0 
-* @author AIIT XUOS Lab
-* @date 2022-03-17
-*/
+ * @file k210_userspace.c
+ * @brief aiit-riscv64-board k210_userspace.c
+ * @version 1.0
+ * @author AIIT XUOS Lab
+ * @date 2022.03.17
+ */
 
 /****************************************************************************
  * Included Files
@@ -82,13 +73,13 @@ extern uint32_t _ebss;            /* End+1 of .bss */
 
 /* This is the user space entry point */
 
-int CONFIG_USER_ENTRYPOINT(int argc, char *argv[]);
+int CONFIG_INIT_ENTRYPOINT(int argc, char *argv[]);
 
 const struct userspace_s userspace locate_data(".userspace") =
 {
   /* General memory map */
 
-  .us_entrypoint    = (main_t)CONFIG_USER_ENTRYPOINT,
+  .us_entrypoint    = (main_t)CONFIG_INIT_ENTRYPOINT,
   .us_textstart     = (uintptr_t)&_stext,
   .us_textend       = (uintptr_t)&_etext,
   .us_datasource    = (uintptr_t)&_eronly,

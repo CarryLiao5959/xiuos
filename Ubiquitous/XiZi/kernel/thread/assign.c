@@ -372,7 +372,6 @@ void StartupOsAssign(void)
     FirstRunningTask = ChooseTaskWithHighestPrio(&Assign.os_assign_read_vector);
 
     SetSystemRunningTask(FirstRunningTask);
-
     SwitchToFirstRunningTask(FirstRunningTask);
 }
 

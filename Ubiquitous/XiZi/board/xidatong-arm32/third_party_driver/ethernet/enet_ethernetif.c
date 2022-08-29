@@ -116,7 +116,7 @@ void ethernetif_gpio_init(void)
     GPIO_WritePinOutput(GPIO1, 3, 1);
 }
 
-void ETH_BSP_Config(void)
+int ETH_BSP_Config(void)
 {
     static int flag = 0;
     if(flag == 0)
@@ -125,6 +125,7 @@ void ETH_BSP_Config(void)
         ethernetif_gpio_init();
         flag = 1;
     }
+    return 0;
 }
 
 void ethernetif_phy_init(struct ethernetif *ethernetif,
