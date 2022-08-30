@@ -876,7 +876,7 @@ static int wiz_interrupt_init(rt_base_t isr_pin)
     }
 
     /* create WIZnet SPI RX thread  */
-    tid = rt_thread_create("wiz", wiz_data_thread_entry, RT_NULL, 1024, RT_THREAD_PRIORITY_MAX / 6, 20);
+    tid = rt_thread_create("wiz", wiz_data_thread_entry, RT_NULL, 2048, RT_THREAD_PRIORITY_MAX / 6, 20);
     if (tid != RT_NULL)
     {
         rt_thread_startup(tid);
