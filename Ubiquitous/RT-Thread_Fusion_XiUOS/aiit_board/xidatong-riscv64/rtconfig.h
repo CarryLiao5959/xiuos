@@ -12,7 +12,7 @@
 
 /* RT-Thread Kernel */
 
-#define RT_NAME_MAX 8
+#define RT_NAME_MAX 12
 #define RT_USING_SMP
 #define RT_CPUS_NR 2
 #define RT_ALIGN_SIZE 8
@@ -190,6 +190,19 @@
 
 /* Onboard Peripheral Drivers */
 
+#define BSP_USING_CH438
+#define BSP_CH438_ALE_PIN 24
+#define BSP_CH438_NWR_PIN 25
+#define BSP_CH438_NRD_PIN 26
+#define BSP_CH438_D0_PIN 27
+#define BSP_CH438_D1_PIN 28
+#define BSP_CH438_D2_PIN 29
+#define BSP_CH438_D3_PIN 30
+#define BSP_CH438_D4_PIN 31
+#define BSP_CH438_D5_PIN 32
+#define BSP_CH438_D6_PIN 33
+#define BSP_CH438_D7_PIN 34
+#define BSP_CH438_INT_PIN 35
 
 /* Kendryte SDK Config */
 

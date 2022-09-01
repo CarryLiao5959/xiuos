@@ -1,6 +1,6 @@
 #include <rtthread.h>
 #include <rtdevice.h>
-#include <drv_io_config.h>
+#include "drv_io_config.h"
 #include <gpiohs.h>
 #include "board.h"
 #include "ch438.h"
@@ -349,7 +349,7 @@ int rt_hw_ch438_init(void)
         extserial  = &extserial1;
         extserial->ops              = &extuart_ops;
         extserial->config           = config;
-        extserial->config.baud_rate = 9600;
+        extserial->config.baud_rate = 115200;
 		extserial->config.reserved = 1; ///< extern uart port
 
         extuart_serial_parm[1] = &extserial1;
@@ -368,7 +368,7 @@ int rt_hw_ch438_init(void)
         extserial  = &extserial2;
         extserial->ops              = &extuart_ops;
         extserial->config           = config;
-        extserial->config.baud_rate = 9600;
+        extserial->config.baud_rate = 115200;
 		extserial->config.reserved = 2; ///< extern uart port
 
         extuart_serial_parm[2] = &extserial2;
