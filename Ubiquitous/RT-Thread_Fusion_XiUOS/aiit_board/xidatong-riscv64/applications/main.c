@@ -22,7 +22,7 @@
 #include <rtdevice.h>
 #include <stdio.h>
 //#define LED_G   12
-
+extern int FrameworkInit(void);
 int main(void)
 {
     //rt_pin_mode(LED_G, PIN_MODE_OUTPUT);
@@ -32,6 +32,7 @@ int main(void)
     sprintf(info1,"xuos-intelligence k210  ");
     sprintf(info2,"build %s %s",__DATE__,__TIME__);
     printf("%s %s \n",info1,info2); 
+    FrameworkInit();
     #ifdef BSP_USING_LCD
     #include<drv_lcd.h>
     lcd_show_string(0,60,24,info1);

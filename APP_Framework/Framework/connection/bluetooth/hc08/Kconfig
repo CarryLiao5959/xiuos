@@ -65,7 +65,7 @@ if ADD_RTTHREAD_FETURES
         
         config ADAPTER_HC08_DRIVER_EXTUART
                 bool "Using extra uart to support bluetooth"
-                default n
+                default y
 
         config ADAPTER_HC08_DRIVER
                 string "HC08 device uart driver path"
@@ -75,10 +75,10 @@ if ADD_RTTHREAD_FETURES
         if ADAPTER_HC08_DRIVER_EXTUART                    
                 config ADAPTER_HC08_DRIVER
                         string "HC08 device extra uart driver path"
-                        default "/dev/dev2"
+                        default "/dev/extuart_dev1"
 
                 config ADAPTER_HC08_DRIVER_EXT_PORT
                         int "if HC08 device using extuart, choose port"
-                        default "2"
+                        default "1"
         endif
 endif
