@@ -11,15 +11,15 @@
 */
  
 /**
-* @file connect_i2c.h
-* @brief define aiit-arm32-board i2c function and struct
+* @file drv_soft_i2c.h
+* @brief define xidatong-riscv64-board i2c function and struct
 * @version 1.0 
 * @author AIIT XUOS Lab
-* @date 2021-04-25
+* @date 2022-09-30
 */
 
-#ifndef __DRV_I2C_H__
-#define __DRV_I2C_H__
+#ifndef __DRV_SOFT_I2C_H__
+#define __DRV_SOFT_I2C_H__
 
 
 #include <i2c.h>
@@ -65,4 +65,4 @@ struct rt_i2c
 }
 #endif
 
-#endif /* __DRV_I2C_H__ */
+#endif /* __DRV_SOFT_I2C_H__ */
