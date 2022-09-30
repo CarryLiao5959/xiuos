@@ -127,6 +127,8 @@
 #define RT_USING_SERIAL_V1
 #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_I2C
+#define RT_USING_I2C_BITOPS
 #define RT_USING_PIN
 #define RT_USING_SPI
 
@@ -181,6 +183,9 @@
 
 #define __STACKSIZE__ 4096
 #define BSP_USING_UART_HS
+#define BSP_USING_I2C1
+#define BSP_I2C1_SDA_PIN 15
+#define BSP_I2C1_SCL_PIN 17
 #define BSP_USING_SPI1
 #define BSP_SPI1_CLK_PIN 9
 #define BSP_SPI1_D0_PIN 11

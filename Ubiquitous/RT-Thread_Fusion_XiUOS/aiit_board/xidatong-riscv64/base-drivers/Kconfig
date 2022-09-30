@@ -60,15 +60,15 @@ menu "On-chip Peripheral Drivers"
         endif
 
     menuconfig BSP_USING_I2C1
-        bool "Enable  I2C1"
+        bool "Enable I2C1"
         select RT_USING_I2C
         default n
-        if BSP_USING_I2C11
-            config BSP_I2C1_SDA_PIN
+        if BSP_USING_I2C1
+            config BSP_I2C1_SDA_PIN 
                 int "I2C1 sda pin number"
                 default 15
-            config BSP_I2C1_CLK_PIN
-                int "I2C1 clk pin number"
+            config BSP_I2C1_SCL_PIN
+                int "I2C1 scl pin number"
                 default 17
         endif
 
