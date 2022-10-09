@@ -4,9 +4,44 @@
 
 该教育开发板板载摄像头dvp接口，可外接（ov2640、ov5640等），同时还外接屏幕lcd（320*320），以及W5500网卡。
 
+|       功能        | **引脚序号**<br />（并非原理图连接线序号） |    引脚定义    |
+| :---------------: | :----------------------------------------: | :------------: |
+| 高速串口作为shell |                     5                      |     ISP_RX     |
+|                   |                     6                      |     ISP_TX     |
+|       W5500       |                     9                      | SPI1_ENET_SCLK |
+|                   |                     10                     | SPI1_ENET_MISO |
+|                   |                     11                     | SPI1_ENET_MOSI |
+|                   |                     12                     | SPI1_ENET_nCS  |
+|                   |                     13                     | SPI1_ENET_nRST |
+|                   |                     14                     |   ENET_nINT    |
+|    ov2640接口     |                     47                     |    SCCB_SDA    |
+|                   |                     46                     |   SCCB_SCLK    |
+|                   |                     40                     |    CMOS_RST    |
+|                   |                     45                     |   CMOS_VSYNC   |
+|                   |                     41                     |   CMOS_PWDN    |
+|                   |                     42                     |   CMOS_XCLK    |
+|                   |                     43                     |   CMOS_PCLK    |
+|                   |                     44                     |   CMOS_HREF    |
+|      LCD接口      |                     37                     |     LCD_CS     |
+|                   |                     38                     |     LCD_WR     |
+|                   |                     39                     |     LCD_DC     |
+|                   |                     36                     |    LCD_RST     |
+|       SD卡        |                     26                     |    SPI_CLK     |
+|                   |                     27                     |    SPI_MOSI    |
+|                   |                     25                     |    SPI_MISO    |
+|                   |                     28                     |  SOFT_SPI_CS0  |
+|                   |                                            |                |
+|                   |                                            |                |
+|                   |                                            |                |
+
+
+
+
+
 
 
 ## 编译说明
+
 先下载源码，进入xiuos根目录：
     
     git submodule init
