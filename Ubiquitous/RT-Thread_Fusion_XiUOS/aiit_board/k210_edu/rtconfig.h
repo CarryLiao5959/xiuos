@@ -182,6 +182,12 @@
 
 #define __STACKSIZE__ 4096
 #define BSP_USING_UART_HS
+#define BSP_USING_SPI1
+#define BSP_SPI1_CLK_PIN 9
+#define BSP_SPI1_D0_PIN 11
+#define BSP_SPI1_D1_PIN 10
+#define BSP_SPI1_USING_SS0
+#define BSP_SPI1_SS0_PIN 12
 #define BSP_USING_SOFT_SPI
 #define BSP_SOFT_SPI_CLK_PIN 26
 #define BSP_SOFT_SPI_MOSI_PIN 27
@@ -237,6 +243,17 @@
 
 /* the value must be greater than OV2640_Y_RESOLUTION_IMAGE_OUTSIZE */
 
+#define PKG_USING_WIZNET
+#define WIZ_USING_W5500
+
+/* WIZnet device configure */
+
+#define WIZ_SPI_DEVICE "spi10"
+#define WIZ_RST_PIN 13
+#define WIZ_IRQ_PIN 14
+#define WIZ_USING_DHCP
+#define WIZ_USING_PING
+#define PKG_USING_WIZNET_LATEST_VERSION
 
 /* APP_Framework */
 

@@ -876,7 +876,7 @@ static int wiz_interrupt_init(rt_base_t isr_pin)
     }
 
     /* create WIZnet SPI RX thread  */
-    tid = rt_thread_create("wiz", wiz_data_thread_entry, RT_NULL, 1024, RT_THREAD_PRIORITY_MAX / 6, 20);
+    tid = rt_thread_create("wiz", wiz_data_thread_entry, RT_NULL, 4096, RT_THREAD_PRIORITY_MAX / 6, 20);
     if (tid != RT_NULL)
     {
         rt_thread_startup(tid);
@@ -963,7 +963,7 @@ int wiz_init(void)
     rt_timer_start(dns_tick_timer);
 
     /* create WIZnet link status Polling thread  */
-    tid = rt_thread_create("wiz_stat", wiz_link_status_thread_entry, RT_NULL, 2048, RT_THREAD_PRIORITY_MAX - 4, 20);
+    tid = rt_thread_create("wiz_stat", wiz_link_status_thread_entry, RT_NULL, 4096, RT_THREAD_PRIORITY_MAX - 4, 20);
     if (tid != RT_NULL)
     {
         rt_thread_startup(tid);
