@@ -39,11 +39,11 @@ if PKG_USING_WIZNET
 
             config WIZ_RST_PIN
                 int "Reset PIN number"
-                default 10
+                default 13
 
             config WIZ_IRQ_PIN
                 int "IRQ PIN number"
-                default 11
+                default 14
         endmenu
     endif
 
