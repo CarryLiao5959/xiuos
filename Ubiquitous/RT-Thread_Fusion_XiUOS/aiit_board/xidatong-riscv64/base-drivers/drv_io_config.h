@@ -73,6 +73,23 @@ enum HS_GPIO_CONFIG
 #define BSP_CH438_D7_PIN   34
 #define BSP_CH438_INT_PIN  35
 
+// LCD PIN.define
+#define BSP_LCD_NRST        37
+#define BSP_LCD_SCLK        38
+#define BSP_LCD_MOSI        39
+#define BSP_LCD_MISO        40
+#define BSP_LCD_NCS         41
+#define BSP_LCD_BL_PIN      47
+
+// LCD FPIOA.define
+#define FPIOA_LCD_DC        3
+#define FPIOA_LCD_NRST      0
+#define FPIOA_LCD_BL        9
+#define FPIOA_LCD_SCLK      28
+#define FPIOA_LCD_MOSI      29
+#define FPIOA_LCD_MISO      23  // can't use GPIOHS30
+#define FPIOA_LCD_NCS       31
+
 extern int io_config_init(void);
 
 #endif

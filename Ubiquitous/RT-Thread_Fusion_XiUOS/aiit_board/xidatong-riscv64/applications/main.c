@@ -34,9 +34,35 @@ int main(void)
     printf("%s %s \n",info1,info2); 
     FrameworkInit();
     #ifdef BSP_USING_LCD
-    #include<drv_lcd.h>
-    lcd_show_string(0,60,24,info1);
-    lcd_show_string(0,90,24,info2);
+    #include <drv_lcd.h>
+    #include "drv_lt768_lcd.h"
+    #include "LT768_Lib.h"
+    static rt_device_t lcd_dev;
+    // Accessing the lcd Device （the first step）
+    lcd_dev = rt_device_find("lcd");
+    if (!lcd_dev)
+    {
+        rt_kprintf("find %s failed!\n", "lcd");
+        return RT_ERROR;
+    }
+
+    if (rt_device_open(lcd_dev,0) != RT_EOK)
+    {
+        lcd_dev = 0;
+        rt_kprintf("open %s failed!\n", "lcd");
+        return -RT_ERROR;
+    }
+    // lcd init
+    LCD_init();
+
+    LT768_DrawSquare_Fill(0,0,LCD_XSIZE_TFT,LCD_YSIZE_TFT,White);
+    rt_thread_mdelay(20);
+    LT768_Select_Internal_Font_Init(32,1,1,1,1);
+    LT768_Print_Internal_Font_String(0,30,RED,WHITE,"\\ | /");
+    LT768_Print_Internal_Font_String(0,60,RED,WHITE,"- RT -");
+    LT768_Print_Internal_Font_String(0,90,RED,WHITE,"/ | \\");
+    LT768_Print_Internal_Font_String(0,120,RED,WHITE,info1);
+    LT768_Print_Internal_Font_String(0,150,RED,WHITE,info2);
     #endif
     while(1)
     {

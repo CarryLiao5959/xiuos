@@ -508,12 +508,12 @@ int rt_hw_lcd_init(void)
     lcd_8080_device_t lcd_dev = &_lcddev;
 
     lcd_dev->cs                         = SPI_CHIP_SELECT_0;
-    lcd_dev->dc_pin                     = LCD_DC_PIN;
+    lcd_dev->dc_pin                     = FPIOA_LCD_DC;
 #if BSP_LCD_RST_PIN >= 0
-    lcd_dev->rst_pin                    = LCD_RST_PIN;
+    lcd_dev->rst_pin                    = FPIOA_LCD_NRST;
 #endif
 #if BSP_LCD_BACKLIGHT_PIN >= 0
-    lcd_dev->backlight_pin              = LCD_BACKLIGHT_PIN;
+    lcd_dev->backlight_pin              = FPIOA_LCD_BL;
 #endif
     dmalock_sync_take(&lcd_dev->dma_channel, RT_WAITING_FOREVER);
     lcd_dev->spi_channel                = SPI_DEVICE_0;
