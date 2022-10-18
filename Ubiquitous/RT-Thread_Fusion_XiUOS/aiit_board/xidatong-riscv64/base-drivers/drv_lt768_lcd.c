@@ -35,7 +35,6 @@ void LCD_init(void)
     gpiohs_set_drive_mode(FPIOA_LCD_NCS, GPIO_DM_OUTPUT);
 
     // LT768 init
-    LT768_HW_Reset();
     LT768_Init();
     
     Select_SFI_Dual_Mode0();
@@ -52,7 +51,7 @@ void LCD_init(void)
     Active_Window_WH(LCD_XSIZE_TFT,LCD_YSIZE_TFT);
     rt_thread_mdelay(10);
     Canvas_Image_Start_address(layer1_start_addr);
-//    LT768_DMA_24bit_Block(1,0,0,0,LCD_XSIZE_TFT,LCD_YSIZE_TFT,LCD_XSIZE_TFT,0x0014C000);
+//  LT768_DMA_24bit_Block(1,0,0,0,LCD_XSIZE_TFT,LCD_YSIZE_TFT,LCD_XSIZE_TFT,0x0014C000);
 }
 
 rt_uint8_t LCD_Read_Byte(void)
@@ -64,7 +63,7 @@ rt_uint8_t LCD_Read_Byte(void)
     {
         gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_LOW);   usleep(10);//usleep(1);
         rByte<<=1;
-        rByte|=gpiohs_get_pin(FPIOA_LCD_MISO);      usleep(10);//usleep(1);
+        rByte|=gpiohs_get_pin(FPIOA_LCD_MISO);          usleep(10);//usleep(1);
         gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    usleep(10);//usleep(1);
     }
 
