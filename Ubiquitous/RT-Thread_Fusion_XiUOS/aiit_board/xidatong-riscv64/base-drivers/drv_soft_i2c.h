@@ -61,6 +61,8 @@ struct rt_i2c
     }
 #endif
 
+int rt_hw_i2c_init(void);
+
 #ifdef __cplusplus
 }
 #endif

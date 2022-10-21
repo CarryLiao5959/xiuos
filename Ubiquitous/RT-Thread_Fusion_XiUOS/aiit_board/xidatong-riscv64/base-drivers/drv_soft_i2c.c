@@ -23,9 +23,6 @@
 #include <rtdevice.h>
 #include <rtdbg.h>
 #include "board.h"
-#include <gpio_common.h>
-#include <gpio.h>
-#include <gpiohs.h>
 #include <fpioa.h>
 #include "drv_soft_i2c.h"
 #include <sleep.h>
@@ -124,6 +121,27 @@ static rt_int32_t get_scl(void *data)
     return rt_pin_read(cfg->scl);
 }
 
+/**
+ * The time delay function.
+ *
+ * @param microseconds.
+ */
+void soft_i2c_delay(rt_uint64_t usec)
+{
+    if(usec <= 0)
+    {
+        return;
+    }
+    rt_uint64_t cycle = read_cycle();
+    rt_uint64_t nop_all = usec * sysctl_clock_get_freq(SYSCTL_CLOCK_CPU) / 1000000UL;
+    while (1)
+    {
+        if(read_cycle() - cycle >= nop_all)
+            break;
+    }
+    return;
+}
+
 static const struct rt_i2c_bit_ops bit_ops =
     {
         .data = RT_NULL,
@@ -131,7 +149,7 @@ static const struct rt_i2c_bit_ops bit_ops =
         .set_scl = set_scl,
         .get_sda = get_sda,
         .get_scl = get_scl,
-        .udelay = usleep,
+        .udelay = soft_i2c_delay,
         .delay_us = 1,
         .timeout = 100};
 
@@ -145,16 +163,19 @@ static const struct rt_i2c_bit_ops bit_ops =
 static rt_err_t I2cBusReset(const struct rt_i2c_config *cfg)
 {
     rt_int32_t i = 0; 
+    rt_pin_mode(cfg->sda, PIN_MODE_INPUT_PULLUP);
     if (PIN_LOW == rt_pin_read(cfg->sda))
     {
         while (i++ < 9)
         {
+            rt_pin_mode(cfg->scl, PIN_MODE_OUTPUT);
             rt_pin_write(cfg->scl, PIN_HIGH);
-            usleep(100);
+            soft_i2c_delay(100);
             rt_pin_write(cfg->scl, PIN_LOW);
-            usleep(100);
+            soft_i2c_delay(100);
         }
     }
+    rt_pin_mode(cfg->sda, PIN_MODE_INPUT_PULLUP);
     if (PIN_LOW == rt_pin_read(cfg->sda))
     {
         return -RT_ERROR;
@@ -178,7 +199,7 @@ int rt_hw_i2c_init(void)
         RT_ASSERT(result == RT_EOK);
         I2cBusReset(&i2c_config[i]);
 
-        LOG_D("software simulation %s init done, pin scl: %d, pin sda %d",
+        rt_kprintf("software simulation %s init done, pin scl: %d, pin sda %d \n",
               i2c_config[i].name,
               i2c_config[i].scl,
               i2c_config[i].sda);
