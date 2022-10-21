@@ -14,6 +14,9 @@ if GetDepend('PKG_USING_WIZNET'):
     src += ['tcp_client.c']
     src += ['tcp_server.c']
 
+if GetDepend('RT_USING_TOUCH'): 
+    src += ['touch_gt911_test.c'] 
+    
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')
