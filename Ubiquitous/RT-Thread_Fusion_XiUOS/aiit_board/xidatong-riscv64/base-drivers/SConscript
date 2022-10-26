@@ -40,6 +40,10 @@ if GetDepend('BSP_USING_LCD'):
     src += ['LT768_Lib.c']
     src += ['LT768.c']
 
+if GetDepend('BSP_USING_CH376'):
+    src += ['ch376.c']
+    src += ['ch376_fs.c']
+
 # if GetDepend('BSP_USING_CH438'):
 #     src += ['ch438.c']
 group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH)

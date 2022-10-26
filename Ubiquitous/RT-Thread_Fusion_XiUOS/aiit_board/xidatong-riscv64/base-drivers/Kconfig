@@ -217,8 +217,24 @@ menu "Onboard Peripheral Drivers"
             int "int pin number for ch438"
             default 35
         endif
-    
-
+    menuconfig BSP_USING_CH376
+    bool "Enable CH376"
+    default n
+    select BSP_USING_UART3
+    if BSP_USING_CH376
+        choice
+            prompt "select ch376 function."
+            default CH376_USB_FUNCTION
+        config CH376_USB_FUNCTION
+            bool "select ch376 usb function"
+        config CH376_SD_FUNCTION
+            bool "select ch376 sd function"
+        endchoice
+        config CH376_WORK_MODE
+            hex "ch376 work mode set:0x03 sd,0x06 u-disk"
+            default 0x03 if CH376_SD_FUNCTION
+            default 0x06 if CH376_USB_FUNCTION
+    endif
 endmenu
 
 endmenu

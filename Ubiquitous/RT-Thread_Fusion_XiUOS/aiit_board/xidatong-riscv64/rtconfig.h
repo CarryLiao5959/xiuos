@@ -184,6 +184,11 @@
 
 #define __STACKSIZE__ 4096
 #define BSP_USING_UART_HS
+#define BSP_USING_UART3
+#define BSP_UART3_TXD_PIN 22
+#define BSP_UART3_RXD_PIN 23
+#define BSP_UART3_RTS_PIN -1
+#define BSP_UART3_CTS_PIN -1
 #define BSP_USING_I2C1
 #define BSP_I2C1_SDA_PIN 15
 #define BSP_I2C1_SCL_PIN 17
@@ -209,6 +214,9 @@
 #define BSP_CH438_D6_PIN 33
 #define BSP_CH438_D7_PIN 34
 #define BSP_CH438_INT_PIN 35
+#define BSP_USING_CH376
+#define CH376_USB_FUNCTION
+#define CH376_WORK_MODE 0x06
 
 /* Kendryte SDK Config */
 
