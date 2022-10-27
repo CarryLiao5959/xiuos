@@ -36,12 +36,6 @@ static struct SensorProductInfo info =
  */
 static int SensorDeviceOpen(struct SensorDevice *sdev)
 {
-#ifdef ADD_NUTTX_FETURES
-    sdev->fd = PrivOpen(SENSOR_DEVICE_HS300X_DEV, O_RDWR);
-
-    return sdev->fd;
-
-#else
     int result;
     uint16_t i2c_dev_addr = SENSOR_DEVICE_HS300X_I2C_ADDR;
     
@@ -57,7 +51,6 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     result = PrivIoctl(sdev->fd, OPE_INT, &ioctl_cfg);
 
     return result;
-#endif
 }
 
 /**

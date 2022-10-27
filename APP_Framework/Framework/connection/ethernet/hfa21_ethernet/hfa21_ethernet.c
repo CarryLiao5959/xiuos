@@ -401,6 +401,7 @@ static int Hfa21EthernetIoctl(struct Adapter *adapter, int cmd, void *args)
     serial_cfg.serial_parity_mode = PARITY_NONE;
     serial_cfg.serial_bit_order = BIT_ORDER_LSB;
     serial_cfg.serial_invert_mode = NRZ_NORMAL;
+    serial_cfg.is_ext_uart = 0;
 #ifdef ADAPTER_HFA21_DRIVER_EXT_PORT
     serial_cfg.is_ext_uart = 1;
     serial_cfg.ext_uart_no = ADAPTER_HFA21_DRIVER_EXT_PORT;

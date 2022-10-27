@@ -26,6 +26,3 @@ void mnist_app(void);
 int tfmnist(void) {
     mnist_app();
 }
-// #ifndef SEPARATE_COMPILE
-// SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, tfmnist, tfmnist, run mnist demo of tflite);
-// #endif

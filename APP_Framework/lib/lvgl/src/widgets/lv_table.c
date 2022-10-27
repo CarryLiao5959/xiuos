@@ -116,7 +116,7 @@ void lv_table_set_cell_value_fmt(lv_obj_t * obj, uint16_t row, uint16_t col, con
     LV_ASSERT_OBJ(obj, MY_CLASS);
     LV_ASSERT_NULL(fmt);
 
-    lv_table_t * table = (lv_table_t *)obj;
+    lv_table_t* table = (lv_table_t*)obj;
     if(col >= table->col_cnt) {
         LV_LOG_WARN("lv_table_set_cell_value: invalid column");
         return;
@@ -183,9 +183,11 @@ void lv_table_set_cell_value_fmt(lv_obj_t * obj, uint16_t row, uint16_t col, con
     /*Refresh the row height*/
     lv_coord_t cell_left = lv_obj_get_style_pad_left(obj, LV_PART_ITEMS);
     lv_coord_t cell_right = lv_obj_get_style_pad_right(obj, LV_PART_ITEMS);
-    lv_coord_t cell_top = lv_obj_get_style_pad_top(obj, LV_PART_ITEMS);
-    lv_coord_t cell_bottom = lv_obj_get_style_pad_bottom(obj, LV_PART_ITEMS);
-
+    // lv_coord_t cell_top = lv_obj_get_style_pad_top(obj, LV_PART_ITEMS);
+    lv_coord_t cell_top = 3;
+    // lv_coord_t cell_bottom = lv_obj_get_style_pad_bottom(obj, LV_PART_ITEMS);
+    lv_coord_t cell_bottom = 3;
+    
     lv_coord_t letter_space = lv_obj_get_style_text_letter_space(obj, LV_PART_ITEMS);
     lv_coord_t line_space = lv_obj_get_style_text_line_space(obj, LV_PART_ITEMS);
     const lv_font_t * font = lv_obj_get_style_text_font(obj, LV_PART_ITEMS);

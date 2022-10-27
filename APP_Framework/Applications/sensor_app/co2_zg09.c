@@ -18,9 +18,6 @@
  * @date 2021.04.23
  */
 
-#ifdef ADD_XIZI_FETURES
-# include <user_api.h>
-#endif
 #include <sensor.h>
 
 /**
@@ -31,6 +28,6 @@ void Co2Zg09(void)
 {
     struct SensorQuantity *co2 = SensorQuantityFind(SENSOR_QUANTITY_ZG09_CO2, SENSOR_QUANTITY_CO2);
     SensorQuantityOpen(co2);
-    printf("CO2 : %d ppm\n", SensorQuantityRead(co2));
+    printf("CO2 : %d ppm\n", SensorQuantityReadValue(co2));
     SensorQuantityClose(co2);
 }

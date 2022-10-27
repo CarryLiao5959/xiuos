@@ -1,0 +1,162 @@
+/*
+* Copyright (c) 2020 AIIT XUOS Lab
+* XiUOS is licensed under Mulan PSL v2.
+* You can use this software according to the terms and conditions of the Mulan PSL v2.
+* You may obtain a copy of Mulan PSL v2 at:
+*        http://license.coscl.org.cn/MulanPSL2
+* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+* See the Mulan PSL v2 for more details.
+*/
+
+/**
+* @file board.c
+* @brief support hc32f4a0-board init configure and start-up
+* @version 2.0 
+* @author AIIT XUOS Lab
+* @date 2022-09-08
+*/
+
+/*************************************************
+File name: board.c
+Description: support hc32f4a0-board init configure and driver/task/... init
+Others: 
+History: 
+1. Date: 2022-09-08
+Author: AIIT XUOS Lab
+Modification: 
+1. support hc32f4a0-board InitBoardHardware
+*************************************************/
+
+#include <xizi.h>
+#include <board.h>
+#include <hc32_ll.h>
+#include <connect_usart.h>
+
+extern void entry(void);
+extern int HwUsartInit();
+
+/* Peripheral register WE/WP selection */
+#define LL_PERIPH_SEL                   (LL_PERIPH_GPIO | LL_PERIPH_FCG | LL_PERIPH_PWC_CLK_RMU | \
+                                         LL_PERIPH_EFM | LL_PERIPH_SRAM)
+
+void SystemClockConfig(void)
+{
+    stc_clock_xtal_init_t stcXtalInit;
+    stc_clock_pll_init_t stcPLLHInit;
+
+    /* PCLK0, HCLK  Max 240MHz */
+    /* PCLK1, PCLK4 Max 120MHz */
+    /* PCLK2, PCLK3 Max 60MHz  */
+    /* EX BUS Max 120MHz */
+    CLK_SetClockDiv(CLK_BUS_CLK_ALL, \
+                    (CLK_PCLK0_DIV1 | CLK_PCLK1_DIV2 | CLK_PCLK2_DIV4 | \
+                     CLK_PCLK3_DIV4 | CLK_PCLK4_DIV2 | CLK_EXCLK_DIV2 | \
+                     CLK_HCLK_DIV1));
+
+    (void)CLK_XtalStructInit(&stcXtalInit);
+    /* Config Xtal and enable Xtal */
+    stcXtalInit.u8Mode   = CLK_XTAL_MD_OSC;
+    stcXtalInit.u8Drv    = CLK_XTAL_DRV_ULOW;
+    stcXtalInit.u8State  = CLK_XTAL_ON;
+    stcXtalInit.u8StableTime = CLK_XTAL_STB_2MS;
+    (void)CLK_XtalInit(&stcXtalInit);
+
+    (void)CLK_PLLStructInit(&stcPLLHInit);
+    /* VCO = (8/1)*120 = 960MHz*/
+    stcPLLHInit.u8PLLState = CLK_PLL_ON;
+    stcPLLHInit.PLLCFGR = 0UL;
+    stcPLLHInit.PLLCFGR_f.PLLM = 1UL - 1UL;
+    stcPLLHInit.PLLCFGR_f.PLLN = 120UL - 1UL;
+    stcPLLHInit.PLLCFGR_f.PLLP = 4UL - 1UL;
+    stcPLLHInit.PLLCFGR_f.PLLQ = 4UL - 1UL;
+    stcPLLHInit.PLLCFGR_f.PLLR = 4UL - 1UL;
+    stcPLLHInit.PLLCFGR_f.PLLSRC = CLK_PLL_SRC_XTAL;
+    (void)CLK_PLLInit(&stcPLLHInit);
+
+    /* Highspeed SRAM set to 0 Read/Write wait cycle */
+    SRAM_SetWaitCycle(SRAM_SRAMH, SRAM_WAIT_CYCLE0, SRAM_WAIT_CYCLE0);
+
+    /* SRAM1_2_3_4_backup set to 1 Read/Write wait cycle */
+    SRAM_SetWaitCycle((SRAM_SRAM123 | SRAM_SRAM4 | SRAM_SRAMB), SRAM_WAIT_CYCLE1, SRAM_WAIT_CYCLE1);
+
+    /* 0-wait @ 40MHz */
+    (void)EFM_SetWaitCycle(EFM_WAIT_CYCLE5);
+
+    /* 4 cycles for 200 ~ 250MHz */
+    GPIO_SetReadWaitCycle(GPIO_RD_WAIT4);
+    CLK_SetSysClockSrc(CLK_SYSCLK_SRC_PLL);
+}
+
+void PeripheralClockConfig(void)
+{
+#if defined(BSP_USING_CAN1)
+    CLK_SetCANClockSrc(CLK_CAN1, CLK_CANCLK_SYSCLK_DIV6);
+#endif
+#if   defined(BSP_USING_CAN2)
+    CLK_SetCANClockSrc(CLK_CAN2, CLK_CANCLK_SYSCLK_DIV6);
+#endif
+
+#if defined(RT_USING_ADC)
+    CLK_SetPeriClockSrc(CLK_PERIPHCLK_PCLK);
+#endif
+}
+
+void SysTickConfiguration(void)
+{
+    stc_clock_freq_t stcClkFreq;
+    uint32_t cnts;
+
+    CLK_GetClockFreq(&stcClkFreq);
+
+    cnts = (uint32_t)stcClkFreq.u32HclkFreq / TICK_PER_SECOND;
+
+    SysTick_Config(cnts);
+}
+
+void SysTick_Handler(void)
+{
+    TickAndTaskTimesliceUpdate();
+}
+
+struct InitSequenceDesc _board_init[] = 
+{
+	{ " NONE ",NONE },
+};
+
+void InitBoardHardware()
+{
+	int i = 0;
+	int ret = 0;
+
+    /* MCU Peripheral registers write unprotected */
+    LL_PERIPH_WE(LL_PERIPH_SEL);
+
+    SystemClockConfig();
+
+    PeripheralClockConfig();
+
+    SysTickConfiguration();
+
+#ifdef BSP_USING_UART
+	HwUsartInit();
+#endif
+
+    InitBoardMemory((void *)MEMORY_START_ADDRESS, (void *)MEMORY_END_ADDRESS);
+
+#ifdef KERNEL_CONSOLE
+    InstallConsole(KERNEL_CONSOLE_BUS_NAME, KERNEL_CONSOLE_DRV_NAME, KERNEL_CONSOLE_DEVICE_NAME);
+
+    KPrintf("\nconsole init completed.\n");
+    KPrintf("board initialization......\n");
+#endif
+
+	for(i = 0; _board_init[i].fn != NONE; i++) {
+		ret = _board_init[i].fn();
+		KPrintf("initialize %s %s\n", _board_init[i].fn_name, ret == 0 ? "success" : "failed");
+	}
+  
+    KPrintf("board init done.\n");
+	KPrintf("start kernel...\n");
+}

@@ -69,18 +69,6 @@ static int E18HardwareModeGet()
 #endif 
 }
 
-#ifdef ADD_NUTTX_FETURES
-static int E18UartOpen(struct Adapter *adapter)
-{
-    adapter->fd = PrivOpen(ADAPTER_E18_DRIVER, O_RDWR);
-    if (adapter->fd < 0) {
-        printf("E18UartSetUp get serial %s fd error\n", ADAPTER_E18_DRIVER);
-        return -1;
-    }
-
-    return adapter->fd;
-}
-#else
 static int E18UartOpen(struct Adapter *adapter)
 {
     if (NULL == adapter) {
@@ -105,12 +93,13 @@ static int E18UartOpen(struct Adapter *adapter)
     cfg.serial_bit_order = BIT_ORDER_LSB;
     cfg.serial_invert_mode = NRZ_NORMAL;
     cfg.serial_buffer_size = SERIAL_RB_BUFSZ;
+    cfg.is_ext_uart = 0;
 
     /*aiit board use ch438, so it needs more serial configuration*/
 #ifdef ADAPTER_E18_DRIVER_EXTUART
-    cfg.is_ext_uart         = 1;
-    cfg.ext_uart_no         = ADAPTER_E18_DRIVER_EXT_PORT;
-    cfg.port_configure      = PORT_CFG_INIT;
+    cfg.is_ext_uart = 1;
+    cfg.ext_uart_no = ADAPTER_E18_DRIVER_EXT_PORT;
+    cfg.port_configure = PORT_CFG_INIT;
 #endif
 
     struct PrivIoctlCfg ioctl_cfg;
@@ -123,7 +112,6 @@ static int E18UartOpen(struct Adapter *adapter)
     printf("Zigbee uart config ready\n");
     return 0;
 }
-#endif
 
 static int E18NetworkModeConfig(struct Adapter *adapter)
 {
@@ -472,7 +460,7 @@ static int E18Recv(struct Adapter *adapter, void *buf, size_t len)
     return 0;
 }
 
-static int E18Quit(struct Adapter *adapter)
+static int E18Quit(struct Adapter *adapter, unsigned char *priv_net_group)
 {
 
     return 0;

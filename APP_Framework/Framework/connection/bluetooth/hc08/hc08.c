@@ -262,6 +262,7 @@ static int Hc08Open(struct Adapter *adapter)
     serial_cfg.serial_parity_mode = PARITY_NONE;
     serial_cfg.serial_bit_order = STOP_BITS_1;
     serial_cfg.serial_invert_mode = NRZ_NORMAL;
+    serial_cfg.is_ext_uart = 0;
 #ifdef ADAPTER_HC08_DRIVER_EXT_PORT
     serial_cfg.is_ext_uart = 1;
     serial_cfg.ext_uart_no = ADAPTER_HC08_DRIVER_EXT_PORT;
@@ -300,42 +301,6 @@ static int Hc08Close(struct Adapter *adapter)
     return 0;
 }
 
-#ifdef ADD_NUTTX_FETURES
-static int Hc08Ioctl(struct Adapter *adapter, int cmd, void *args)
-{
-    if (OPE_INT != cmd) {
-        printf("Hc08Ioctl only support OPE_INT, do not support %d\n", cmd);
-        return -1;
-    }
-
-    uint32_t baud_rate = *((uint32_t *)args);
-
-    PrivIoctl(adapter->fd, OPE_INT, baud_rate);
-
-    //Step1 : detect hc08 serial function
-    if (Hc08AtConfigure(adapter->agent, HC08_AT_CMD_DETECT, NULL, NULL) < 0) {
-        return -1;
-    }
-
-    //Step2 : set hc08 device serial baud, hc08_set_baud send "AT+BAUD=%s"
-    if (Hc08AtConfigure(adapter->agent, HC08_AT_CMD_SET_BAUDRATE, args, NULL) < 0) {
-        return -1;
-    }
-
-    PrivTaskDelay(200);
-
-    //Step3 : show hc08 device info, hc08_get send "AT+RX" response device info
-    char device_info[HC08_RESP_DEFAULT_SIZE * 2] = {0};
-    if (Hc08AtConfigure(adapter->agent, HC08_AT_CMD_GET_DEVICE_INFO, NULL, device_info) < 0) {
-        return -1;
-    }
-
-    ADAPTER_DEBUG("Hc08 ioctl done\n");
-    
-    return 0;
-}
-
-#else  
 static int Hc08Ioctl(struct Adapter *adapter, int cmd, void *args)
 {
     if (OPE_INT != cmd) {
@@ -355,6 +320,7 @@ static int Hc08Ioctl(struct Adapter *adapter, int cmd, void *args)
     serial_cfg.serial_parity_mode = PARITY_NONE;
     serial_cfg.serial_bit_order = STOP_BITS_1;
     serial_cfg.serial_invert_mode = NRZ_NORMAL;
+    serial_cfg.is_ext_uart = 0;
 #ifdef ADAPTER_HC08_DRIVER_EXT_PORT
     serial_cfg.is_ext_uart = 1;
     serial_cfg.ext_uart_no = ADAPTER_HC08_DRIVER_EXT_PORT;
@@ -425,8 +391,6 @@ static int Hc08Ioctl(struct Adapter *adapter, int cmd, void *args)
     
     return 0;
 }
-
-#endif
 
 static int Hc08SetAddr(struct Adapter *adapter, const char *ip, const char *gateway, const char *netmask)
 {

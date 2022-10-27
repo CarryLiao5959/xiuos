@@ -1,3 +1,3 @@
-SRC_FILES := plc_show_demo.c plc_control_demo.c
+SRC_DIR := advantech beckhoff br delta mitsubishi omron schneider siemens
 
 include $(KERNEL_ROOT)/compiler.mk

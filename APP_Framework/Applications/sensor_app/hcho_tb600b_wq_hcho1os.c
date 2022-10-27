@@ -18,11 +18,7 @@
  * @date 2021.12.15
  */
 
-#ifdef ADD_XIZI_FETURES
-# include <user_api.h>
-#endif
 #include <sensor.h>
-
 
 /**
  * @description: Read a hcho
@@ -34,7 +30,7 @@ void HchoTb600bHcho1os(void)
     SensorQuantityOpen(hcho);
     int32_t result = 0;
 
-    result = SensorQuantityRead(hcho);
+    result = SensorQuantityReadValue(hcho);
 
     printf("tvoc concentration is : %dppb\n", result);
     SensorQuantityClose(hcho);

@@ -22,7 +22,7 @@
 #include <string.h>
 #include <transform.h>
 
-void test_adc()
+void TestAdc(void)
 {
     int adc_fd;
     uint8 adc_channel = 0x0;
@@ -56,6 +56,4 @@ void test_adc()
 
     return;
 }
-
- SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN),
-                                                 adc, test_adc, read 3.3 voltage data from adc);
+PRIV_SHELL_CMD_FUNCTION(TestAdc, a adc test sample, PRIV_SHELL_CMD_MAIN_ATTR);

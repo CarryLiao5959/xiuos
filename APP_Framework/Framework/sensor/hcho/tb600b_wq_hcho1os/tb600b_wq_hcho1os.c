@@ -35,18 +35,6 @@ static struct SensorProductInfo info =
  * @param sdev - sensor device pointer
  * @return success: 1 , failure: other
  */
-#ifdef ADD_NUTTX_FETURES
-static int SensorDeviceOpen(struct SensorDevice *sdev)
-{
-    sdev->fd = PrivOpen(SENSOR_DEVICE_TB600B_WQ_HCHO1OS_DEV, O_RDWR);
-    if (sdev->fd < 0) {
-        printf("open %s error\n", SENSOR_DEVICE_TB600B_WQ_HCHO1OS_DEV);
-        return -1;
-    }
-
-    return sdev->fd;
-}
-#else
 static int SensorDeviceOpen(struct SensorDevice *sdev)
 {
     int result = 0;
@@ -58,17 +46,18 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     }
     
     struct SerialDataCfg cfg;
-    cfg.serial_baud_rate    = BAUD_RATE_9600;
-    cfg.serial_data_bits    = DATA_BITS_8;
-    cfg.serial_stop_bits    = STOP_BITS_1;
-    cfg.serial_buffer_size  = 128;
-    cfg.serial_parity_mode  = PARITY_NONE;
-    cfg.serial_bit_order    = 0;
-    cfg.serial_invert_mode  = 0;
+    cfg.serial_baud_rate = BAUD_RATE_9600;
+    cfg.serial_data_bits = DATA_BITS_8;
+    cfg.serial_stop_bits = STOP_BITS_1;
+    cfg.serial_buffer_size = 128;
+    cfg.serial_parity_mode = PARITY_NONE;
+    cfg.serial_bit_order = 0;
+    cfg.serial_invert_mode = 0;
+    cfg.is_ext_uart = 0;
 #ifdef SENSOR_TB600B_WQ_HCHO1OS_DRIVER_EXTUART
-    cfg.is_ext_uart         = 1;
-    cfg.ext_uart_no         = SENSOR_DEVICE_TB600B_WQ_HCHO1OS_DEV_EXT_PORT;
-    cfg.port_configure      = PORT_CFG_INIT;
+    cfg.is_ext_uart = 1;
+    cfg.ext_uart_no = SENSOR_DEVICE_TB600B_WQ_HCHO1OS_DEV_EXT_PORT;
+    cfg.port_configure = PORT_CFG_INIT;
 #endif
 
     struct PrivIoctlCfg ioctl_cfg;
@@ -78,7 +67,6 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
 
     return result;
 }
-#endif
 
 /**
  * @description: Read sensor device

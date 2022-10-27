@@ -604,6 +604,10 @@ static const struct cmdmap_s g_cmdmap[] =
   { "lcd",      cmd_Lcd,     1, 1, "[LCD demo cmd.]" },
 #endif
 
+#if defined(CONFIG_USER_TEST_SEMC) && !defined(CONFIG_NSH_DISABLE_USER_TEST_SEMC)
+  { "sram",      cmd_Extsram,     1, 1, "[Extra sdram demo cmd.]" },
+#endif
+
 #if defined(CONFIG_APPLICATION_SENSOR_HCHO_TB600B_WQ_HCHO1OS) && !defined(CONFIG_NSH_DISABLE_HCHO_TB600B_WQ_HCHO1OS)
   { "hcho1os",       cmd_Hcho1os,       1, 1, "[get the concentration of formaldehyde with sensor tb600b_wq_hcho1os.]" },
 #endif

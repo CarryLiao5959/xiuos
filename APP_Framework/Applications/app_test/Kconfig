@@ -4,10 +4,6 @@ menu "test app"
         default n
 
         if USER_TEST
-            config USER_TEST_SPI_FLASH
-                bool "Config test spi flash"
-                default n
-
             menuconfig USER_TEST_ADC
                 bool "Config test adc"
                 default n
@@ -29,5 +25,9 @@ menu "test app"
                             default "/dev/dac_dev"
                     endif
                 endif
+
+            config USER_TEST_SEMC
+                bool "Config test semc sdram"
+                default n
         endif
 endmenu

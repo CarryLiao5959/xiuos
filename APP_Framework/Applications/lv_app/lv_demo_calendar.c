@@ -1,3 +1,24 @@
+/*
+* Copyright (c) 2020 AIIT XUOS Lab
+* XiUOS is licensed under Mulan PSL v2.
+* You can use this software according to the terms and conditions of the Mulan PSL v2.
+* You may obtain a copy of Mulan PSL v2 at:
+*        http://license.coscl.org.cn/MulanPSL2
+* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+* See the Mulan PSL v2 for more details.
+*/
+
+/**
+* @file:    lv_demo_calendar.c
+* @brief:   a calendar application using littleVgl
+* @version: 2.0
+* @author:  AIIT XUOS Lab
+* @date:    2022/9/26
+*
+*/
+
 #include <lvgl.h>
 #include "lv_demo_calendar.h"
 // #include <drv_lcd.h>
@@ -18,7 +39,7 @@ static void event_handler(lv_event_t * e)
 void lv_demo_calendar(void)
 {
     lv_obj_t  * calendar = lv_calendar_create(lv_scr_act());
-    lv_obj_set_size(calendar, 480, 272);
+    lv_obj_set_size(calendar, 800, 480);//lv_obj_set_size(calendar, 800, 480);
     lv_obj_align(calendar, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_event_cb(calendar, event_handler, LV_EVENT_ALL, NULL);
 

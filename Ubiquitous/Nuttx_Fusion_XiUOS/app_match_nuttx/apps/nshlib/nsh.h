@@ -1458,6 +1458,10 @@ int nsh_foreach_var(FAR struct nsh_vtbl_s *vtbl, nsh_foreach_var_t cb,
   int cmd_Lcd(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif
 
+#if defined(CONFIG_USER_TEST_SEMC) && !defined(CONFIG_NSH_DISABLE_USER_TEST_SEMC)
+  int cmd_Extsram(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
+#endif
+
 #if defined(CONFIG_APPLICATION_SENSOR_HCHO_TB600B_WQ_HCHO1OS) && !defined(CONFIG_NSH_DISABLE_HCHO_TB600B_WQ_HCHO1OS)
   int cmd_Hcho1os(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv);
 #endif

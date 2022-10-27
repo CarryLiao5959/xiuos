@@ -51,32 +51,6 @@ static void *ReadTask(void *parameter)
  * @param sdev - sensor device pointer
  * @return success: 1 , failure: other
  */
-#ifdef ADD_NUTTX_FETURES
-static int SensorDeviceOpen(struct SensorDevice *sdev)
-{
-    int result = 0;
-
-    result = PrivMutexCreate(&buff_lock, 0);
-    if (result != 0){
-      printf("SensorDeviceOpen:mutex create failed, status=%d\n", result);
-    }
-
-    sdev->fd = open(SENSOR_DEVICE_PS5308_DEV, O_RDWR);
-    if (sdev->fd < 0) {
-        printf("SensorDeviceOpen:open %s error\n", SENSOR_DEVICE_PS5308_DEV);
-        return -1;
-    }
-
-    result = PrivTaskCreate(&active_task_id, NULL, &ReadTask, sdev);
-    if (result != 0){
-      printf("SensorDeviceOpen:task create failed, status=%d\n", result);
-    }
-
-    PrivTaskStartup(&active_task_id);
-
-    return result;
-}
-#else
 static int SensorDeviceOpen(struct SensorDevice *sdev)
 {
     int result = 0;
@@ -90,17 +64,18 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     }
     
     struct SerialDataCfg cfg;
-    cfg.serial_baud_rate    = BAUD_RATE_9600;
-    cfg.serial_data_bits    = DATA_BITS_8;
-    cfg.serial_stop_bits    = STOP_BITS_1;
-    cfg.serial_buffer_size  = 128;
-    cfg.serial_parity_mode  = PARITY_NONE;
-    cfg.serial_bit_order    = 0;
-    cfg.serial_invert_mode  = 0;
+    cfg.serial_baud_rate = BAUD_RATE_9600;
+    cfg.serial_data_bits = DATA_BITS_8;
+    cfg.serial_stop_bits = STOP_BITS_1;
+    cfg.serial_buffer_size = 128;
+    cfg.serial_parity_mode = PARITY_NONE;
+    cfg.serial_bit_order = 0;
+    cfg.serial_invert_mode = 0;
+    cfg.is_ext_uart = 0;
 #ifdef SENSOR_PS5308_DRIVER_EXTUART
-    cfg.is_ext_uart         = 1;
-    cfg.ext_uart_no         = SENSOR_DEVICE_PS5308_DEV_EXT_PORT;
-    cfg.port_configure      = PORT_CFG_INIT;
+    cfg.is_ext_uart = 1;
+    cfg.ext_uart_no = SENSOR_DEVICE_PS5308_DEV_EXT_PORT;
+    cfg.port_configure = PORT_CFG_INIT;
 #endif
 
     result = PrivIoctl(sdev->fd, OPE_INT, &cfg);
@@ -110,7 +85,6 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
 
     return result;
 }
-#endif
 
 /**
  * @description: Close PS5308 sensor device

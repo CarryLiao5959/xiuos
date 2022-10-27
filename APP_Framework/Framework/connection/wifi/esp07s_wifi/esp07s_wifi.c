@@ -25,11 +25,6 @@
 
 #define LEN_PARA_BUF 128
 
-#ifdef ADD_NUTTX_FETURES
-#define EOK 0
-#define x_err_t int
-#endif
-
 static int Esp07sWifiSetDown(struct Adapter *adapter_at);
 
 /**
@@ -80,11 +75,11 @@ static int Esp07sUartOpen(struct Adapter *adapter)
     cfg.serial_bit_order = BIT_ORDER_LSB;
     cfg.serial_invert_mode = NRZ_NORMAL;
     cfg.serial_buffer_size = SERIAL_RB_BUFSZ;
-
+    cfg.is_ext_uart = 0;
 #ifdef ADAPTER_ESP07S_DRIVER_EXT_PORT
     cfg.is_ext_uart = 1;
-    cfg.ext_uart_no         = ADAPTER_ESP07S_DRIVER_EXT_PORT;
-    cfg.port_configure      = PORT_CFG_INIT;
+    cfg.ext_uart_no = ADAPTER_ESP07S_DRIVER_EXT_PORT;
+    cfg.port_configure = PORT_CFG_INIT;
 #endif
 
     struct PrivIoctlCfg ioctl_cfg;
@@ -511,7 +506,7 @@ static int Esp07sWifiIoctl(struct Adapter *adapter, int cmd, void *args)
             cfg.serial_bit_order = BIT_ORDER_LSB;
             cfg.serial_invert_mode = NRZ_NORMAL;
             cfg.serial_buffer_size = SERIAL_RB_BUFSZ;
-
+            cfg.is_ext_uart = 0;
 #ifdef ADAPTER_ESP07S_DRIVER_EXT_PORT
             cfg.is_ext_uart = 1;
             cfg.ext_uart_no         = ADAPTER_ESP07S_DRIVER_EXT_PORT;

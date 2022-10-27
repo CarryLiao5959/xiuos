@@ -12,7 +12,7 @@
 #include "lv_port_indev_template.h"
 #include "../../lvgl.h"
 
-static int touch_fd = 0;
+static int touch_fd = -1;
 static TouchDataParam touch_data;
 /*********************
  *      DEFINES
@@ -230,8 +230,8 @@ static void touchpad_init(void)
         printf("touch fd = %d\n",touch_fd);
     } else {
         printf("open %s touch fd = %d failed.\n",PRIV_TOUCH_DEV,touch_fd);
+        touch_fd = -1;
     }
-        
     /*Your code comes here*/
 }
 
@@ -260,6 +260,11 @@ static bool touchpad_is_pressed(void)
     int ret;
     /*Your code comes here*/
     memset(&touch_data, 0 ,sizeof(TouchDataParam));
+
+    if (touch_fd < 0) {
+        return false;
+    }
+    
     ret = PrivRead(touch_fd, &touch_data, 1);
     if(ret && touch_data.x >= 0 && touch_data.x < MY_INDEV_X && touch_data.y >= 0 && touch_data.y < MY_INDEV_Y)
     {

@@ -31,63 +31,63 @@ void sm4_test_case(){
     sms4_key_t key;
 
     //test case 1
-    KPrintf("\n#################### sm4 test ##########################\n");
-    KPrintf("\n####sm4 test case1:\n");
-    KPrintf("plaintext:  ");
+    printf("\n#################### sm4 test ##########################\n");
+    printf("\n####sm4 test case1:\n");
+    printf("plaintext:  ");
     for (int i = 0; i< 16; i++){
-        KPrintf("%02x ",input[i]);
+        printf("%02x ",input[i]);
     }
-    KPrintf("\n");
-    KPrintf("key:        ");
+    printf("\n");
+    printf("key:        ");
     for (int i = 0; i< 16; i++){
-        KPrintf("%02x",ukey[i]);
+        printf("%02x",ukey[i]);
     }
-    KPrintf("\n");
+    printf("\n");
 
-    KPrintf("encryption:\n");
+    printf("encryption:\n");
     sms4_set_encrypt_key(&key, ukey);
     Sms4EcbEncryptNoPadding(input,16,res,&olen,&key);
-    KPrintf("ciphertext: ");
+    printf("ciphertext: ");
     for (int i = 0; i< 16; i++){
-        KPrintf("%02x",res[i]);
+        printf("%02x",res[i]);
     }
-    KPrintf("\n");
-    KPrintf("decryption:\n");
+    printf("\n");
+    printf("decryption:\n");
     sms4_set_decrypt_key(&key, ukey);
-	KPrintf("round key in sms4_set_decrypt_key:\n");
+	printf("round key in sms4_set_decrypt_key:\n");
 	for (int i = 0; i < 32; i++){
-		KPrintf("rk%d:%08x\n", i, key.rk[i]);
+		printf("rk%d:%08x\n", i, key.rk[i]);
 	}
     Sms4EcbDecryptNoPadding(res,16,res,&olen,&key);
     printf("plaintext:  ");
     for (int i = 0; i< 16; i++){
-        KPrintf("%02x",res[i]);
+        printf("%02x",res[i]);
     }
     printf("\n");
 
     ////test case 2
-    KPrintf("\n####sm4 test case2:\n");
-    KPrintf("plaintext:  ");
+    printf("\n####sm4 test case2:\n");
+    printf("plaintext:  ");
     for (int i = 0; i< 16; i++){
-        KPrintf("%02x",input[i]);
+        printf("%02x",input[i]);
     }
-    KPrintf("\n");
-    KPrintf("key:        ");
+    printf("\n");
+    printf("key:        ");
     for (int i = 0; i< 16; i++){
-        KPrintf("%02x",ukey[i]);
+        printf("%02x",ukey[i]);
     }
-    KPrintf("\n");
-    KPrintf("encrypt 1000000 times:\n");
+    printf("\n");
+    printf("encrypt 1000000 times:\n");
     sms4_set_encrypt_key(&key, ukey);
 	memcpy(plaintext, input, 16);
     for (int i = 0;i< 1000000; i++){
         Sms4EcbEncryptNoPadding(plaintext,16,ciphertext,&olen,&key);
 		memcpy(plaintext, ciphertext, 16);
     }
-    KPrintf("ciphertext: ");
+    printf("ciphertext: ");
     for (int i = 0; i< 16; i++){
-        KPrintf("%02x",ciphertext[i]);
+        printf("%02x",ciphertext[i]);
     }
-    KPrintf("\n");
-    KPrintf("\n########################################################\n");
+    printf("\n");
+    printf("\n########################################################\n");
 }

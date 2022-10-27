@@ -1,4 +1,0 @@
-menuconfig USING_CONTROL_PLC_COMMON
-        bool "PLC common"
-        default y
-

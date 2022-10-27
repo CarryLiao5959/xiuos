@@ -18,18 +18,8 @@
  * @date 2021.12.14
  */
 
-#ifdef ADD_XIZI_FETURES
-# include <user_api.h>
-#endif
 #include <sensor.h>
 
-// struct iaq_data {
-//     uint16_t gas;
-//     uint8_t TH;
-//     uint8_t TL;
-//     uint8_t RhH;
-//     uint8_t RhL;
-// };
 /**
  * @description: Read a iaq
  * @return 0
@@ -40,7 +30,7 @@ void IaqTb600bIaq10(void)
     SensorQuantityOpen(iaq);
     int32_t result = 0;
 
-    result = SensorQuantityRead(iaq);
+    result = SensorQuantityReadValue(iaq);
 
     printf("Gas concentration is : %dppb\n", result);
     SensorQuantityClose(iaq);

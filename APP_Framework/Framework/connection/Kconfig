@@ -8,11 +8,11 @@ if SUPPORT_CONNECTION_FRAMEWORK
         bool "Using connection framework debug log function"
         default y
 
-        menuconfig CONNECTION_INDUSTRIAL_ETHERNET
-                bool "Using industrial ethernet"
+        menuconfig CONNECTION_INDUSTRIAL_NETWORK
+                bool "Using industrial network"
                 default n
-        if CONNECTION_INDUSTRIAL_ETHERNET
-        source "$APP_DIR/Framework/connection/industrial_ethernet/Kconfig"
+        if CONNECTION_INDUSTRIAL_NETWORK
+        source "$APP_DIR/Framework/connection/industrial_network/Kconfig"
         endif
 
         menuconfig CONNECTION_INDUSTRIAL_FIELDBUS

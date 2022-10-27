@@ -11,7 +11,7 @@
 */
 
 /**
- * @file adapter_wifiiiii.c
+ * @file adapter_wifi.c
  * @brief Implement the connection wifi adapter function
  * @version 1.1
  * @author AIIT XUOS Lab
@@ -20,9 +20,6 @@
 
 #include <adapter.h>
 #include "adapter_wifi.h"
-#ifdef ADD_XIZI_FETURES
-#include <bus_pin.h>
-#endif
 
 #ifdef ADAPTER_HFA21_WIFI
 extern AdapterProductInfoType Hfa21WifiAttach(struct Adapter *adapter);
@@ -100,7 +97,6 @@ int AdapterWifiInit(void)
 }
 
 /******************wifi TEST*********************/
-#ifdef ADD_XIZI_FETURES
 int AdapterWifiTest(void)
 {
     char cmd[64];
@@ -108,6 +104,7 @@ int AdapterWifiTest(void)
 
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
 
+#if 0
 #ifdef ADAPTER_HFA21_DRIVER_EXT_PORT
     static BusType ch438_pin;
     ch438_pin = PinBusInitGet();
@@ -154,7 +151,7 @@ int AdapterWifiTest(void)
 
     PrivClose(pin_fd);
 #endif
-
+#endif
     AdapterDeviceOpen(adapter);
     // AdapterDeviceControl(adapter, OPE_INT, &baud_rate);
 
@@ -182,38 +179,23 @@ int AdapterWifiTest(void)
         PrivTaskDelay(1000);
     }
 }
-#endif
+PRIV_SHELL_CMD_FUNCTION(AdapterWifiTest, a WiFi test sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(AdapterWifiTest,a wifi adpter sample);
-#endif
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, AdapterWifiTest, AdapterWifiTest, show adapter wifi information);
-#endif
-
-int wifiopen(void)
+int WifiOpen(void)
 {
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
     return AdapterDeviceOpen(adapter);
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, wifiopen, wifiopen, open adapter wifi );
-#endif
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(wifiopen,a wifi adpter sample);
-#endif
-int wificlose(void)
+PRIV_SHELL_CMD_FUNCTION(WifiOpen, a WiFi open sample, PRIV_SHELL_CMD_MAIN_ATTR);
+
+int WifiClose(void)
 {
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
     return AdapterDeviceClose(adapter);
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, wificlose, wificlose, close adapter wifi );
-#endif
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(wificlose,a wifi adpter sample);
-#endif
-int wifisetup(int argc, char *argv[])
+PRIV_SHELL_CMD_FUNCTION(WifiClose, a WiFi close sample, PRIV_SHELL_CMD_MAIN_ATTR);
+
+int WifiSetup(int argc, char *argv[])
 {
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
     struct WifiParam param;
@@ -225,13 +207,9 @@ int wifisetup(int argc, char *argv[])
 
     return AdapterDeviceSetUp(adapter);
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(3)|SHELL_CMD_DISABLE_RETURN, wifisetup, wifisetup, setup adapter wifi );
-#endif
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(wifisetup,a wifi adpter sample:wifisetup <server|client>);
-#endif
-int wifiaddrset(int argc, char *argv[])
+PRIV_SHELL_CMD_FUNCTION(WifiSetup, a WiFi setup sample, PRIV_SHELL_CMD_MAIN_ATTR);
+
+int WifiAddrSet(int argc, char *argv[])
 {
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
     char *ip = argv[1];
@@ -242,25 +220,17 @@ int wifiaddrset(int argc, char *argv[])
     AdapterDevicePing(adapter, "36.152.44.95");///< ping www.baidu.com
     return AdapterDeviceNetstat(adapter);
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(4)|SHELL_CMD_DISABLE_RETURN, wifiaddrset, wifiaddrset, addrset adapter wifi);
-#endif
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(wifiaddrset,a wifi adpter sample:wifiaddrset <server|client>);
-#endif
-int wifiping(int argc, char *argv[])
+PRIV_SHELL_CMD_FUNCTION(WifiAddrSet, a WiFi addr set sample, PRIV_SHELL_CMD_MAIN_ATTR);
+
+int WifiPing(int argc, char *argv[])
 {
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
     printf("ping %s\n",argv[1]);
     return AdapterDevicePing(adapter, argv[1]);
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(3), wifiping, wifiping, wifiping adapter );
-#endif
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(wifiping,a wifi adpter sample:wifiping <server|client>);
-#endif
-int wificonnect(int argc, char *argv[])
+PRIV_SHELL_CMD_FUNCTION(WifiPing, a WiFi ping sample, PRIV_SHELL_CMD_MAIN_ATTR);
+
+int WifiConnect(int argc, char *argv[])
 {
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
     char *ip = argv[1];
@@ -278,13 +248,9 @@ int wificonnect(int argc, char *argv[])
 
     return AdapterDeviceConnect(adapter, net_role, ip, port, ip_type);
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(4)|SHELL_CMD_DISABLE_RETURN, wificonnect, wificonnect, wificonnect adapter);
-#endif
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(wificonnect,a wifi adpter sample:wificonnect <server|client>);
-#endif
-int wifisend(int argc, char *argv[])
+PRIV_SHELL_CMD_FUNCTION(WifiConnect, a WiFi connect sample, PRIV_SHELL_CMD_MAIN_ATTR);
+
+int WifiSend(int argc, char *argv[])
 {
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
 
@@ -296,13 +262,9 @@ int wifisend(int argc, char *argv[])
     }
     return 0;
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(3)|SHELL_CMD_DISABLE_RETURN, wifisend, wifisend, wifisend adapter wifi information);
-#endif
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(wifisend,a wifi adpter sample:wifisend <server|client>);
-#endif
-int wifirecv(int argc, char *argv[])
+PRIV_SHELL_CMD_FUNCTION(WifiSend, a WiFi send sample, PRIV_SHELL_CMD_MAIN_ATTR);
+
+int WifiRecv(int argc, char *argv[])
 {
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
 
@@ -313,12 +275,7 @@ int wifirecv(int argc, char *argv[])
         printf("wifi recv [%s]\n",wifi_recv_msg);
     }
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(3)|SHELL_CMD_DISABLE_RETURN, wifirecv, wifirecv, wifirecv adapter wifi information);
-#endif
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(wifirecv,a wifi adpter sample:wifirecv <server|client>);
-#endif
+PRIV_SHELL_CMD_FUNCTION(WifiRecv, a WiFi receive sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
 #ifdef ADD_NUTTX_FETURES
 

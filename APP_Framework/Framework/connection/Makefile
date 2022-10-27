@@ -9,8 +9,8 @@ endif
 ifeq ($(CONFIG_ADD_XIZI_FETURES),y)
     SRC_FILES := adapter.c adapter_agent.c
 
-    ifeq ($(CONFIG_CONNECTION_INDUSTRIAL_ETHERNET),y)
-        SRC_DIR += industrial_ethernet
+    ifeq ($(CONFIG_CONNECTION_INDUSTRIAL_NETWORK),y)
+        SRC_DIR += industrial_network
     endif
 
     ifeq ($(CONFIG_CONNECTION_INDUSTRIAL_FIELDBUS),y)

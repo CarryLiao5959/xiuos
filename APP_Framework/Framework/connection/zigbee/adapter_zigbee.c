@@ -90,7 +90,7 @@ int AdapterZigbeeInit(void)
 }
 
 /******************TEST*********************/
-int openzigbee(void)
+int OpenZigbee(void)
 {
     int ret = 0;
 
@@ -98,19 +98,19 @@ int openzigbee(void)
 
 #ifdef ADAPTER_E18
     ret = AdapterDeviceOpen(adapter);
-    if(ret < 0){
+    if(ret < 0) {
         printf("open adapter failed\n");
         return -1;
     }
 
     adapter->info->work_mode = 1;
     ret = AdapterDeviceControl(adapter, CONFIG_ZIGBEE_NET_MODE,NULL);
-    if(ret < 0){
+    if(ret < 0) {
         printf("control adapter failed\n");
         return -1;
     }
     ret = AdapterDeviceJoin(adapter, NULL);
-    if(ret < 0){
+    if(ret < 0) {
         printf("join adapter failed\n");
         return -1;
     }
@@ -118,12 +118,9 @@ int openzigbee(void)
 
     return 0;    
 }
+PRIV_SHELL_CMD_FUNCTION(OpenZigbee, a ZigBee open sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, openzigbee, openzigbee, show adapter zigbee information);
-#endif
-
-int sendzigbee(int argc, char *argv[])
+int SendZigbee(int argc, char *argv[])
 {
     const char *send_msg = argv[1];
     int ret = 0;
@@ -132,20 +129,17 @@ int sendzigbee(int argc, char *argv[])
 
     printf("send argv1 %s\n",argv[1]);
     ret = AdapterDeviceSend(adapter, send_msg, strlen(send_msg));
-    if(ret < 0){
+    if(ret < 0) {
         printf(" adapter send failed\n");
         return -1;
     }
     printf("zigbee send msg %s\n", send_msg);
     
-
     return 0;    
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(2)|SHELL_CMD_DISABLE_RETURN, sendzigbee, sendzigbee, show adapter zigbee information);
-#endif
+PRIV_SHELL_CMD_FUNCTION(SendZigbee, a ZigBee send sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
-int recvzigbee(void)
+int RecvZigbee(void)
 {
     char recv_msg[128];
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_ZIGBEE_NAME);
@@ -156,7 +150,4 @@ int recvzigbee(void)
     
     return 0;    
 }
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, recvzigbee, recvzigbee, show adapter zigbee information);
-#endif
-
+PRIV_SHELL_CMD_FUNCTION(RecvZigbee, a ZigBee receive sample, PRIV_SHELL_CMD_MAIN_ATTR);

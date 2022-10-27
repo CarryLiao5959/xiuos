@@ -4,5 +4,6 @@ menuconfig SUPPORT_CONTROL_FRAMEWORK
     select TRANSFORM_LAYER_ATTRIUBUTE
 
 if SUPPORT_CONTROL_FRAMEWORK
-    source "$APP_DIR/Framework/control/plc/interoperability/Kconfig"
+    source "$APP_DIR/Framework/control/ipc_protocol/Kconfig"
+    source "$APP_DIR/Framework/control/plc_protocol/Kconfig"
 endif

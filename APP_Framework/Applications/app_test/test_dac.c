@@ -22,7 +22,7 @@
 #include <string.h>
 #include <transform.h>
 
-void test_dac()
+void TestDac(void)
 {
     int dac_fd;
     uint16 dac_set_value = 800;
@@ -56,5 +56,4 @@ void test_dac()
 
     return;
 }
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN),
-                                                test_dac, test_dac, set digital data to dac);
+PRIV_SHELL_CMD_FUNCTION(TestDac, a dac test sample, PRIV_SHELL_CMD_MAIN_ATTR);

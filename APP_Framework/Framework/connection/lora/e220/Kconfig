@@ -56,9 +56,12 @@ if ADD_NUTTX_FETURES
 
         if ADAPTER_E220_DRIVER_EXTUART                    
                 config ADAPTER_E220_DRIVER
-                string "E220 device extra uart driver path"
-                default "/dev/extuart_dev3"
+                        string "E220 device extra uart driver path"
+                        default "/dev/extuart_dev3"
 
+                config ADAPTER_E220_DRIVER_EXT_PORT
+                        int "if E220 device using extuart, choose port"
+                        default "3"
         endif
 
 endif

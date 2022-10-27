@@ -314,7 +314,7 @@ int SensorQuantityClose(struct SensorQuantity *quant)
  * @param quant - sensor quantity pointer
  * @return quantity value
  */
-int SensorQuantityRead(struct SensorQuantity *quant)
+int SensorQuantityReadValue(struct SensorQuantity *quant)
 {
     if (!quant)
         return -1;
@@ -330,6 +330,29 @@ int SensorQuantityRead(struct SensorQuantity *quant)
     }
 
     return result;
+}
+
+/**
+ * @description: Read quantity decimal point
+ * @param quant - sensor quantity pointer
+ * @return decimal point num, 0: 0 1: 0.1 2: 0.01 3: 0.001
+ */
+int SensorQuantityReadDecimalPoint(struct SensorQuantity *quant)
+{
+    if (!quant)
+        return -1;
+
+    int decimal_point = 0;
+    struct SensorDevice *sdev = quant->sdev;
+
+    if (!sdev)
+        return -1;
+
+    if (quant->ReadValue != NULL) {
+        decimal_point = quant->ReadDecimalPoint(quant);
+    }
+
+    return decimal_point;
 }
 
 /**

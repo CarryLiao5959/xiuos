@@ -111,9 +111,4 @@ int AdapterBlueToothTest(void)
 
     return 0;    
 }
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(AdapterBlueToothTest,a bt adpter sample);
-#endif
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, AdapterBlueToothTest, AdapterBlueToothTest, show adapter bluetooth information);
-#endif
+PRIV_SHELL_CMD_FUNCTION(AdapterBlueToothTest, a bluetooth test sample, PRIV_SHELL_CMD_MAIN_ATTR);

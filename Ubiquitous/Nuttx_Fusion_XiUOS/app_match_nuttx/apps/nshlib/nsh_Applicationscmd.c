@@ -65,6 +65,19 @@ int cmd_Lcd(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 #endif
 
 /****************************************************************************
+ * Name: cmd_Extsram
+ ****************************************************************************/
+#if defined(CONFIG_USER_TEST_SEMC) && !defined(CONFIG_NSH_DISABLE_USER_TEST_SEMC)
+extern int extsram_test(void);
+int cmd_Extsram(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, extra sdram!\n");
+    extsram_test();
+    return OK;
+}
+#endif
+
+/****************************************************************************
  * Name: cmd_Hcho1os
  ****************************************************************************/
 

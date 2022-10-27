@@ -66,6 +66,10 @@ if ADD_NUTTX_FETURES
                 config ADAPTER_E18_DRIVER
                 string "E18 device extra uart driver path"
                 default "/dev/extuart_dev1"
+
+                config ADAPTER_E18_DRIVER_EXT_PORT
+                        int "if E18 device using extuart, choose port"
+                        default "1"
     endif
 
 endif

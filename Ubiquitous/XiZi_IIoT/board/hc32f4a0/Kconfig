@@ -1,0 +1,37 @@
+mainmenu "XiZi_IIoT Project Configuration"
+
+config BSP_DIR
+    string
+    option env="BSP_ROOT"
+    default "."
+
+config KERNEL_DIR
+    string
+    option env="KERNEL_ROOT"
+    default "../.."
+
+config BOARD_HC32F4A0_EVB
+    bool
+    select ARCH_ARM
+    default y
+
+source "$KERNEL_DIR/arch/Kconfig"
+
+menu "hc32f4a0 feature"
+    source "$BSP_DIR/third_party_driver/Kconfig"
+    
+    menu "config default board resources"
+        menu "config board app name"
+            config BOARD_APP_NAME
+                string "config board app name"
+                default "/XiUOS_hc32f4a0_app.bin"
+        endmenu
+    endmenu
+
+endmenu
+
+menu "Hardware feature"
+source "$KERNEL_DIR/resources/Kconfig"
+endmenu
+
+source "$KERNEL_DIR/Kconfig"

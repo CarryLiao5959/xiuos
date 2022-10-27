@@ -102,6 +102,9 @@ extern "C" {
 #define SERIAL_RB_BUFSZ         128
 #endif
 
+#define EOK 0
+#define x_err_t int
+
 struct PinDevIrq
 {
     int irq_mode;//< RISING/FALLING/HIGH/LOW
@@ -141,6 +144,7 @@ struct SerialDataCfg
     uint8_t serial_bit_order;
     uint8_t serial_invert_mode;
     uint16_t serial_buffer_size;
+    int32 serial_timeout;
 
     uint8_t is_ext_uart;
     uint8_t ext_uart_no;
@@ -153,6 +157,10 @@ enum IoctlDriverType
     SPI_TYPE,
     I2C_TYPE,
     PIN_TYPE,
+    LCD_TYPE,
+    ADC_TYPE,
+    DAC_TYPE,
+    WDT_TYPE,
     DEFAULT_TYPE,
 };
 
@@ -168,6 +176,22 @@ FAR void *malloc(size_t size);
 FAR void *realloc(FAR void *oldmem, size_t size);
 FAR void *calloc(size_t n, size_t elem_size);
 void free(FAR void *mem);
+
+/*********************shell***********************/
+//for int func(int argc, char *agrv[])
+#define PRIV_SHELL_CMD_MAIN_ATTR 
+
+//for int func(int i, char ch, char *str)
+#define PRIV_SHELL_CMD_FUNC_ATTR 
+
+/**
+ * @brief Priv-shell Command definition 
+ * 
+ * @param _func Command function 
+ * @param _desc Command description 
+ * @param _attr Command attributes if need
+ */
+#define PRIV_SHELL_CMD_FUNCTION(_func, _desc, _attr) 
 
 /**********************mutex**************************/
 
@@ -201,7 +225,7 @@ int PrivOpen(const char *path, int flags);
 int PrivRead(int fd, void *buf, size_t len);
 int PrivWrite(int fd, const void *buf, size_t len);
 int PrivClose(int fd);
-int PrivIoctl(int fd, int cmd, unsigned long args);
+int PrivIoctl(int fd, int cmd, void *args);
 
 /*********************memory***********************/
 

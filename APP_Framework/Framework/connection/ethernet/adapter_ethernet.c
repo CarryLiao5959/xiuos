@@ -122,8 +122,4 @@ int AdapterEthernetTest(void)
     
     return 0;
 }
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(AdapterEthernetTest,a ethernet adpter sample);
-#elif definded ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, AdapterEthernetTest, AdapterEthernetTest, show adapter ethernet information);
-#endif
+PRIV_SHELL_CMD_FUNCTION(AdapterEthernetTest, a ethernet test sample, PRIV_SHELL_CMD_MAIN_ATTR);

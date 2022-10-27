@@ -62,11 +62,11 @@ void SignAndVerifyTest()
 
     SM9Init();
 
-	KPrintf("------------------------------below is ks---------------------------------\n");
+	printf("------------------------------below is ks---------------------------------\n");
     Big8wPrint(&ks);
 
 	Ppub_s = G2PointMult(ks, P2);
-    KPrintf("------------------------------below is Ppub_s-----------------------------\n");
+    printf("------------------------------below is Ppub_s-----------------------------\n");
     Big8wPrint(&Ppub_s.x.high);
     Big8wPrint(&Ppub_s.x.low);
     Big8wPrint(&Ppub_s.y.high);
@@ -75,79 +75,79 @@ void SignAndVerifyTest()
     JoinIDhid(ID_Alice, 5, hid, Id_Alice_hid);
 
     t1 = Big8wAddMod(H(Id_Alice_hid, 5 + 1, 0x01), ks, curve.N);
-    KPrintf("------------------------------below is t1---------------------------------\n");
+    printf("------------------------------below is t1---------------------------------\n");
     Big8wPrint(&t1);
 
     t2 = Big8wMultMod(ks, Big8wReverse(t1, curve.N), curve.N);
-    KPrintf("------------------------------below is t2---------------------------------\n");
+    printf("------------------------------below is t2---------------------------------\n");
     Big8wPrint(&t2);
 
     dsA = G1pointMult(t2, P1);
-    KPrintf("------------------------------below is dsA--------------------------------\n");
+    printf("------------------------------below is dsA--------------------------------\n");
     Big8wPrint(&dsA.x);
     Big8wPrint(&dsA.y);
 
     g = BiLinearPairing(P1, Ppub_s);
-    KPrintf("------------------------below is bilineapairing---------------------------\n");
+    printf("------------------------below is bilineapairing---------------------------\n");
     Q12Print(&g);
 
     w = Q12PowerMod(g, r);
-    KPrintf("------------------------------below is w----------------------------------\n");
+    printf("------------------------------below is w----------------------------------\n");
     Q12Print(&w);
 
     msg_w = (uint8_t*)(malloc(msglen + BIG8W_BYTESIZE * 12));
     JoinMsgW(message, msglen, &w, msg_w);
     h = H(msg_w, msglen + BIG8W_BYTESIZE * 12, 0x02);
-    KPrintf("------------------------------below is h----------------------------------\n");
+    printf("------------------------------below is h----------------------------------\n");
     Big8wPrint(&h);
 
     big8w L = Big8wMinusMod(r, h, curve.N);
-    KPrintf("------------------------------below is L----------------------------------\n");
+    printf("------------------------------below is L----------------------------------\n");
     Big8wPrint(&L);
 
     G1point S = G1pointMult(L, dsA);
-    KPrintf("------------------------------below is S----------------------------------\n");
+    printf("------------------------------below is S----------------------------------\n");
     Big8wPrint(&S.x);
     Big8wPrint(&S.y);
-    KPrintf("\n");
+    printf("\n");
 
     // verify the  signature
     g = BiLinearPairing(P1, Ppub_s);
-    KPrintf("------------------------below is bilineapairing---------------------------\n");
+    printf("------------------------below is bilineapairing---------------------------\n");
     Q12Print(&g);
 
     t = Q12PowerMod(g, h);
-    KPrintf("-----------------------------below is t-----------------------------------\n");
+    printf("-----------------------------below is t-----------------------------------\n");
     Q12Print(&t);
 
     h1 = H(Id_Alice_hid, 5 + 1, 0x01);
-    KPrintf("-----------------------------below is h1----------------------------------\n");
+    printf("-----------------------------below is h1----------------------------------\n");
     Big8wPrint(&h1);
 
     P = G2PointAdd(Ppub_s, G2PointMult(h1, P2));
-    KPrintf("------------------------------below is P----------------------------------\n");
+    printf("------------------------------below is P----------------------------------\n");
     G2pointPrint(&P);
 
     u = BiLinearPairing(S, P);
-    KPrintf("------------------------------below is u----------------------------------\n");
+    printf("------------------------------below is u----------------------------------\n");
     Q12Print(&u);
 
     w = Q12MultMod(u, t);
-    KPrintf("------------------------------below is w----------------------------------\n");
+    printf("------------------------------below is w----------------------------------\n");
     Q12Print(&w);
 
     h2 = H(msg_w, msglen + BIG8W_BYTESIZE * 12, 0x02);
-    KPrintf("------------------------------below is h2---------------------------------\n");
+    printf("------------------------------below is h2---------------------------------\n");
     Big8wPrint(&h2);
-    KPrintf("------------------------------below is h----------------------------------\n");
+    printf("------------------------------below is h----------------------------------\n");
     Big8wPrint(&h);
     
     if (Big8wEqual(&h2, &h)) 
-        KPrintf("\nh2 = h, test verify success!\n");
+        printf("\nh2 = h, test verify success!\n");
 
     sig = SM9Sign(message, msglen, dsA, Ppub_s);
     if (SM9VerifySignature(ID_Alice, 5, hid, message, msglen, sig, Ppub_s))
-        KPrintf("SM9 Sign and VerifySignature API run success!\n");
+        printf("SM9 Sign and VerifySignature API run success!\n");
 
     
     /*
@@ -172,8 +172,8 @@ void SignAndVerifyTest()
 
     end = clock();
     end_start = end - start;
-	KPrintf("\n");
-    KPrintf("runtime of sign in:  %d ms\n", end_start);
+	printf("\n");
+    printf("runtime of sign in:  %d ms\n", end_start);
     */
 
     free(Id_Alice_hid);
@@ -239,21 +239,21 @@ void SM9KeyExchangeTest()
     SM9Init();
 
 	Ppub_e = G1pointMult(ke, P1);
-    KPrintf("------------------------------below is Ppub_e-----------------------------\n");
+    printf("------------------------------below is Ppub_e-----------------------------\n");
     Big8wPrint(&Ppub_e.x);
     Big8wPrint(&Ppub_e.y);
 
     JoinIDhid(ID_Alice, 5, hid, Id_Alice_hid);
     t1 = Big8wAddMod(H(Id_Alice_hid, 5 + 1, 0x01), ke, curve.N);
-    KPrintf("-----------------------------below is t1----------------------------------\n");
+    printf("-----------------------------below is t1----------------------------------\n");
     Big8wPrint(&t1);
 
     t2 = Big8wMultMod(ke, Big8wReverse(t1, curve.N), curve.N);
-    KPrintf("-----------------------------below is t2----------------------------------\n");
+    printf("-----------------------------below is t2----------------------------------\n");
     Big8wPrint(&t2);
 
     deA = G2PointMult(t2, P2);
-    KPrintf("------------------------------below is deA--------------------------------\n");
+    printf("------------------------------below is deA--------------------------------\n");
     Big8wPrint(&deA.x.high);
     Big8wPrint(&deA.x.low);
     Big8wPrint(&deA.y.high);
@@ -262,15 +262,15 @@ void SM9KeyExchangeTest()
 	JoinIDhid(ID_Bob, 3, hid, ID_Bob_hid);
 
 	t3 = Big8wAddMod(H(ID_Bob_hid, 3 + 1, 0x01), ke, curve.N);
-	KPrintf("-----------------------------below is t3----------------------------------\n");
+	printf("-----------------------------below is t3----------------------------------\n");
     Big8wPrint(&t3);
 
 	t4 = Big8wMultMod(ke, Big8wReverse(t3, curve.N), curve.N);
-	KPrintf("-----------------------------below is t4----------------------------------\n");
+	printf("-----------------------------below is t4----------------------------------\n");
     Big8wPrint(&t4);
 
 	deB = G2PointMult(t4, P2);
-	KPrintf("------------------------------below is deB--------------------------------\n");
+	printf("------------------------------below is deB--------------------------------\n");
     Big8wPrint(&deB.x.high);
     Big8wPrint(&deB.x.low);
     Big8wPrint(&deB.y.high);
@@ -279,208 +279,208 @@ void SM9KeyExchangeTest()
 	JoinIDhid(ID_Bob, 3, hid, ID_Bob_hid);
 
 	h1 = H(ID_Bob_hid, 3 + 1, 0x01);
-	KPrintf("-----------------------------below is h1----------------------------------\n");
+	printf("-----------------------------below is h1----------------------------------\n");
     Big8wPrint(&h1);
 
 	QB = G1pointAdd(Ppub_e, G1pointMult(h1, P1));
-	KPrintf("-----------------------------below is QB----------------------------------\n");
+	printf("-----------------------------below is QB----------------------------------\n");
     Big8wPrint(&QB.x);
 	Big8wPrint(&QB.y);
 
 	RA = G1pointMult(rA, QB);
-	KPrintf("-----------------------------below is RA----------------------------------\n");
+	printf("-----------------------------below is RA----------------------------------\n");
     Big8wPrint(&RA.x);
 	Big8wPrint(&RA.y);
 
 	JoinIDhid(ID_Alice, 5, hid, Id_Alice_hid);
 	h1 = H(Id_Alice_hid, 5 + 1, 0x01);
-	KPrintf("-----------------------------below is h1----------------------------------\n");
+	printf("-----------------------------below is h1----------------------------------\n");
     Big8wPrint(&h1);
 
 	QA = G1pointAdd(Ppub_e, G1pointMult(h1, P1));
-	KPrintf("-----------------------------below is QA----------------------------------\n");
+	printf("-----------------------------below is QA----------------------------------\n");
     Big8wPrint(&QA.x);
 	Big8wPrint(&QA.y);
 
 	RB = G1pointMult(rB, QA);
-	KPrintf("-----------------------------below is RB----------------------------------\n");
+	printf("-----------------------------below is RB----------------------------------\n");
     Big8wPrint(&RB.x);
 	Big8wPrint(&RB.y);
 
 	g1 = BiLinearPairing(RA, deB);
-	KPrintf("-----------------------------below is g1----------------------------------\n");
+	printf("-----------------------------below is g1----------------------------------\n");
 	Q12Print(&g1);
 
 	g2 = BiLinearPairing(Ppub_e, P2);
 	g2 = Q12PowerMod(g2, rB);
-	KPrintf("-----------------------------below is g2----------------------------------\n");
+	printf("-----------------------------below is g2----------------------------------\n");
 	Q12Print(&g2);
 
 	g3 = Q12PowerMod(g1, rB);
-	KPrintf("-----------------------------below is g3----------------------------------\n");
+	printf("-----------------------------below is g3----------------------------------\n");
 	Q12Print(&g3);
 
     JoinIDAIDBRARBg123(ID_Alice, 5, ID_Bob, 3, &RA, &RB, &g1, &g2, &g3, strA);
 
     KDF(strA, 5 + 3 + BIG8W_BYTESIZE * 2 * 2 + BIG8W_BYTESIZE * 12 * 3, klen, SKB);
-    KPrintf("-----------------------------below is SKB---------------------------------\n");
+    printf("-----------------------------below is SKB---------------------------------\n");
 	for (i = 0; i < klen/8; i++){
-        KPrintf("%02x", SKB[i]);
+        printf("%02x", SKB[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
-    }
-	KPrintf("\n");
-
-	KPrintf("-----------------------------below is SB----------------------------------\n");
-	HashTwice(ID_Alice, 5, ID_Bob, 3, &RA, &RB, &g1, &g2, &g3, 0x82, SB);
-	HashTwice(ID_Alice, 5, ID_Bob, 3, &RA, &RB, &g1, &g2, &g3, 0x83, S2);
-	for (i = 0; i < 256/8; i++){
-        KPrintf("%02x", SB[i]);
-        if (((i+1)&0x3) == 0)
-			KPrintf(" ");
-        if (((i + 1) % 32) == 0)
-            KPrintf("\n");
-    }
-	KPrintf("\n");
-
-	g1 = BiLinearPairing(Ppub_e, P2);
-	g1 = Q12PowerMod(g1, rA);
-	KPrintf("-----------------------------below is g1----------------------------------\n");
-	Q12Print(&g1);
-
-	g2 = BiLinearPairing(RB, deA);
-	KPrintf("-----------------------------below is g2----------------------------------\n");
-	Q12Print(&g2);
-
-	g3 = Q12PowerMod(g2, rA);
-	KPrintf("-----------------------------below is g3----------------------------------\n");
-	Q12Print(&g3);
-
-	KPrintf("-----------------------------below is S1----------------------------------\n");
-	HashTwice(ID_Alice, 5, ID_Bob, 3, &RA, &RB, &g1, &g2, &g3, 0x82, S1);
-
-	for (i = 0; i < 256/8; i++){
-        KPrintf("%02x", S1[i]);
-        if (((i+1)&0x3) == 0)
-			KPrintf(" ");
-        if (((i + 1) % 32) == 0)
-            KPrintf("\n");
-    }
-	KPrintf("\n");
-
-	KDF(strA, 5 + 3 + BIG8W_BYTESIZE * 2 * 2 + BIG8W_BYTESIZE * 12 * 3, klen, SKA);
-	KPrintf("-----------------------------below is SKA---------------------------------\n");
-	for (i = 0; i < klen/8; i++){
-        KPrintf("%02x", SKA[i]);
-        if (((i+1)&0x3) == 0)
-			KPrintf(" ");
-        if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
 	printf("\n");
 
-	KPrintf("-----------------------------below is SA----------------------------------\n");
+	printf("-----------------------------below is SB----------------------------------\n");
+	HashTwice(ID_Alice, 5, ID_Bob, 3, &RA, &RB, &g1, &g2, &g3, 0x82, SB);
+	HashTwice(ID_Alice, 5, ID_Bob, 3, &RA, &RB, &g1, &g2, &g3, 0x83, S2);
+	for (i = 0; i < 256/8; i++){
+        printf("%02x", SB[i]);
+        if (((i+1)&0x3) == 0)
+			printf(" ");
+        if (((i + 1) % 32) == 0)
+            printf("\n");
+    }
+	printf("\n");
+
+	g1 = BiLinearPairing(Ppub_e, P2);
+	g1 = Q12PowerMod(g1, rA);
+	printf("-----------------------------below is g1----------------------------------\n");
+	Q12Print(&g1);
+
+	g2 = BiLinearPairing(RB, deA);
+	printf("-----------------------------below is g2----------------------------------\n");
+	Q12Print(&g2);
+
+	g3 = Q12PowerMod(g2, rA);
+	printf("-----------------------------below is g3----------------------------------\n");
+	Q12Print(&g3);
+
+	printf("-----------------------------below is S1----------------------------------\n");
+	HashTwice(ID_Alice, 5, ID_Bob, 3, &RA, &RB, &g1, &g2, &g3, 0x82, S1);
+
+	for (i = 0; i < 256/8; i++){
+        printf("%02x", S1[i]);
+        if (((i+1)&0x3) == 0)
+			printf(" ");
+        if (((i + 1) % 32) == 0)
+            printf("\n");
+    }
+	printf("\n");
+
+	KDF(strA, 5 + 3 + BIG8W_BYTESIZE * 2 * 2 + BIG8W_BYTESIZE * 12 * 3, klen, SKA);
+	printf("-----------------------------below is SKA---------------------------------\n");
+	for (i = 0; i < klen/8; i++){
+        printf("%02x", SKA[i]);
+        if (((i+1)&0x3) == 0)
+			printf(" ");
+        if (((i + 1) % 32) == 0)
+            printf("\n");
+    }
+	printf("\n");
+
+	printf("-----------------------------below is SA----------------------------------\n");
 	HashTwice(ID_Alice, 5, ID_Bob, 3, &RA, &RB, &g1, &g2, &g3, 0x83, SA);
 	for (i = 0; i < 256/8; i++){
-        KPrintf("%02x", SA[i]);
+        printf("%02x", SA[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-	KPrintf("\n");
+	printf("\n");
 
-	KPrintf("-----------------------------below is S2----------------------------------\n");
+	printf("-----------------------------below is S2----------------------------------\n");
 	for (i = 0; i < 256/8; i++){
-        KPrintf("%02x", S2[i]);
+        printf("%02x", S2[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-    KPrintf("\n");
+    printf("\n");
 
     // Following is test of API, random big number generated in SM9KeyExchangeProduceR, so result is different from the former.
     // To get the same result, you should delete the line "*r = RandomNumGenerate();" in function SM9KeyExchangeR. (or set as note)
 
-    KPrintf("---------------------------SM9 key exchange API test----------------------\n");
+    printf("---------------------------SM9 key exchange API test----------------------\n");
 
     SM9KeyExchangeProduceR(ID_Bob, 3, &rA, &RA, Ppub_e);
-    KPrintf("-----------------------------below is RA----------------------------------\n");
+    printf("-----------------------------below is RA----------------------------------\n");
     Big8wPrint(&RA.x);
 	Big8wPrint(&RA.y);
 
     SM9KeyExchangeProduceR(ID_Alice, 5, &rB, &RB, Ppub_e);
-    KPrintf("-----------------------------below is RB----------------------------------\n");
+    printf("-----------------------------below is RB----------------------------------\n");
     Big8wPrint(&RB.x);
 	Big8wPrint(&RB.y);
 
     SM9KeyExchangeProduceKey(&RA, &RB, &rA, klen, ID_Alice, 5, ID_Bob, 3, &g1, &g2, &g3, SKA, true, Ppub_e, deA);
-    KPrintf("-----------------------------below is g1----------------------------------\n");
+    printf("-----------------------------below is g1----------------------------------\n");
 	Q12Print(&g1);
 
-	KPrintf("-----------------------------below is g2----------------------------------\n");
+	printf("-----------------------------below is g2----------------------------------\n");
 	Q12Print(&g2);
 
-	KPrintf("-----------------------------below is g3----------------------------------\n");
+	printf("-----------------------------below is g3----------------------------------\n");
 	Q12Print(&g3);
 
-    KPrintf("-----------------------------below is SKA---------------------------------\n");
+    printf("-----------------------------below is SKA---------------------------------\n");
 	for (i = 0; i < klen/8; i++){
-        KPrintf("%02x", SKA[i]);
+        printf("%02x", SKA[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-	KPrintf("\n");
+	printf("\n");
 
     // g1,g2,g3 changed
     // SM9KeyExchangeProduceKey(&RA, &RB, &rB, klen, ID_Alice, 5, ID_Bob, 3, &g1, &g2, &g3, SKB, false, Ppub_e, deB);
 
     SM9KeyExchangeVerifyKey(&g1, &g2, &g3, &RA, &RB, ID_Alice, 5, ID_Bob, 3, S1, SA);
-    KPrintf("-----------------------------below is SA----------------------------------\n");
+    printf("-----------------------------below is SA----------------------------------\n");
 	for (i = 0; i < 256/8; i++){
-        KPrintf("%02x", SA[i]);
+        printf("%02x", SA[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-	KPrintf("\n");
+	printf("\n");
 
-	KPrintf("-----------------------------below is S1----------------------------------\n");
+	printf("-----------------------------below is S1----------------------------------\n");
 	for (i = 0; i < 256/8; i++){
-        KPrintf("%02x", S1[i]);
+        printf("%02x", S1[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-    KPrintf("\n");
+    printf("\n");
 
     SM9KeyExchangeVerifyKey(&g1, &g2, &g3, &RA, &RB, ID_Alice, 5, ID_Bob, 3, SB, S2);
-    KPrintf("-----------------------------below is SB----------------------------------\n");
+    printf("-----------------------------below is SB----------------------------------\n");
 	for (i = 0; i < 256/8; i++){
-        KPrintf("%02x", SB[i]);
+        printf("%02x", SB[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-	KPrintf("\n");
+	printf("\n");
 
-	KPrintf("-----------------------------below is S2----------------------------------\n");
+	printf("-----------------------------below is S2----------------------------------\n");
 	for (i = 0; i < 256/8; i++){
-        KPrintf("%02x", S2[i]);
+        printf("%02x", S2[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-    KPrintf("\n");
+    printf("\n");
     
     free(strA);
     free(strB);
@@ -535,25 +535,25 @@ void SM9PackDepackTest()
     SM9Init();
 
 	Ppub_e = G1pointMult(ke, P1);
-    KPrintf("-----------------------------below is Ppub_e------------------------------\n");
+    printf("-----------------------------below is Ppub_e------------------------------\n");
     Big8wPrint(&Ppub_e.x);
     Big8wPrint(&Ppub_e.y);
 
     JoinIDhid(ID_Bob, 3, hid, ID_Bob_hid);
     t1 = H(ID_Bob_hid, 3 + 1, 0x01);
-    KPrintf("-----------------------------below is H1()--------------------------------\n");
+    printf("-----------------------------below is H1()--------------------------------\n");
     Big8wPrint(&t1);
     t1 = Big8wAddMod(t1, ke, curve.N);
-    KPrintf("-----------------------------below is t1----------------------------------\n");
+    printf("-----------------------------below is t1----------------------------------\n");
     Big8wPrint(&t1);
 
     t1 = Big8wReverse(t1, curve.N);
     t2 = Big8wMultMod(ke, t1, curve.N);
-    KPrintf("-----------------------------below is t2----------------------------------\n");
+    printf("-----------------------------below is t2----------------------------------\n");
     Big8wPrint(&t2);
 
     deB = G2PointMult(t2, P2);
-	KPrintf("------------------------------below is deB--------------------------------\n");
+	printf("------------------------------below is deB--------------------------------\n");
     Big8wPrint(&deB.x.high);
     Big8wPrint(&deB.x.low);
     Big8wPrint(&deB.y.high);
@@ -562,53 +562,53 @@ void SM9PackDepackTest()
     QB = G1pointAdd(
         G1pointMult(H(ID_Bob_hid, 3 + 1, 0x01), P1),
         Ppub_e);
-	KPrintf("-----------------------------below is QB----------------------------------\n");
+	printf("-----------------------------below is QB----------------------------------\n");
     Big8wPrint(&QB.x);
 	Big8wPrint(&QB.y);
 
     C =  G1pointMult(r, QB);
-    KPrintf("-----------------------------below is C----------------------------------\n");
+    printf("-----------------------------below is C----------------------------------\n");
     Big8wPrint(&C.x);
     Big8wPrint(&C.y);
 
     g = BiLinearPairing(Ppub_e, P2);
-    KPrintf("-----------------------------below is g----------------------------------\n");
+    printf("-----------------------------below is g----------------------------------\n");
     Q12Print(&g);
 
     w = Q12PowerMod(g, r);
-    KPrintf("-----------------------------below is w----------------------------------\n");
+    printf("-----------------------------below is w----------------------------------\n");
     Q12Print(&w);
 
     JoinCwID(&C, &w, ID_Bob, 3, c_w_id);
 
     KDF(c_w_id, c_w_id_len, klen, K_encap);
-    KPrintf("-----------------------------below is K-----------------------------------\n");
+    printf("-----------------------------below is K-----------------------------------\n");
     for (i = 0; i < klen / 8; i++){
-        KPrintf("%02x", K_encap[i]);
+        printf("%02x", K_encap[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-    KPrintf("\n");
+    printf("\n");
 
 	w = BiLinearPairing(C, deB);
-	KPrintf("-----------------------------below is w'----------------------------------\n");
+	printf("-----------------------------below is w'----------------------------------\n");
     Q12Print(&w);
 
 	JoinCwID(&C, &w, ID_Bob, 3, c_w_id);
 
     KDF(c_w_id, c_w_id_len, klen, K_encap);
-    KPrintf("-----------------------------below is K'----------------------------------\n");
+    printf("-----------------------------below is K'----------------------------------\n");
     for (i = 0; i < klen / 8; i++){
-        KPrintf("%02x", K_encap[i]);
+        printf("%02x", K_encap[i]);
         if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-    KPrintf("\n");
-    KPrintf("pack and depack done\n");
+    printf("\n");
+    printf("pack and depack done\n");
 
     free(ID_Bob_hid);
     free(K_encap);
@@ -671,22 +671,22 @@ void SM9EncryptDecryptTest()
     SM9Init();
 
     Ppub_e = G1pointMult(ke, P1);
-	KPrintf("-----------------------------below is Ppub_e------------------------------\n");
+	printf("-----------------------------below is Ppub_e------------------------------\n");
     Big8wPrint(&Ppub_e.x);
     Big8wPrint(&Ppub_e.y);
 
 	JoinIDhid(ID_Bob, 3, hid, ID_Bob_hid);
 	t1 = Big8wAddMod(H(ID_Bob_hid, 3 + 1, 0x01), ke, curve.N);
-	KPrintf("-----------------------------below is t1----------------------------------\n");
+	printf("-----------------------------below is t1----------------------------------\n");
     Big8wPrint(&t1);
 
 	t1 = Big8wReverse(t1, curve.N);
     t2 = Big8wMultMod(ke, t1, curve.N);
-    KPrintf("-----------------------------below is t2----------------------------------\n");
+    printf("-----------------------------below is t2----------------------------------\n");
     Big8wPrint(&t2);
 
     deB = G2PointMult(t2, P2);
-	KPrintf("------------------------------below is deB--------------------------------\n");
+	printf("------------------------------below is deB--------------------------------\n");
     Big8wPrint(&deB.x.high);
     Big8wPrint(&deB.x.low);
     Big8wPrint(&deB.y.high);
@@ -695,46 +695,46 @@ void SM9EncryptDecryptTest()
 	QB = G1pointAdd(
         G1pointMult(H(ID_Bob_hid, 3 + 1, 0x01), P1),
         Ppub_e);
-	KPrintf("-----------------------------below is QB----------------------------------\n");
+	printf("-----------------------------below is QB----------------------------------\n");
     Big8wPrint(&QB.x);
 	Big8wPrint(&QB.y);
 
 	C1 = G1pointMult(r, QB);
-	KPrintf("-----------------------------below is C1----------------------------------\n");
+	printf("-----------------------------below is C1----------------------------------\n");
     Big8wPrint(&C1.x);
 	Big8wPrint(&C1.y);
 
 	g = BiLinearPairing(Ppub_e, P2);
-	KPrintf("-----------------------------below is g-----------------------------------\n");
+	printf("-----------------------------below is g-----------------------------------\n");
 	Q12Print(&g);
 
 	w = Q12PowerMod(g, r);
-	KPrintf("-----------------------------below is w-----------------------------------\n");
+	printf("-----------------------------below is w-----------------------------------\n");
 	Q12Print(&w);
 
     JoinCwID(&C1, &w, ID_Bob, 3, C_w_id);
 	KDF(C_w_id, c_w_id_len, klen, K);
-	KPrintf("-----------------------------below is K-----------------------------------\n");
+	printf("-----------------------------below is K-----------------------------------\n");
 	for (i = 0; i < klen / 8; i++) {
-		KPrintf("%02x", K[i]);
+		printf("%02x", K[i]);
 		if (((i+1)&0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
 	}
-	KPrintf("\n");
+	printf("\n");
 
     XOR(message, mlen / 8, K, C2);
 
-	KPrintf("-----------------------------below is C2----------------------------------\n");
+	printf("-----------------------------below is C2----------------------------------\n");
 	for (i = 0; i < mlen / 8; i++) {
-		KPrintf("%02x", C2[i]);
+		printf("%02x", C2[i]);
 		if (((i + 1) & 0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
 	}
-	KPrintf("\n");
+	printf("\n");
 
 	for (i = 0; i < mlen / 8; i++)
 		C2K2[i] = C2[i];
@@ -742,15 +742,15 @@ void SM9EncryptDecryptTest()
 		C2K2[i] = K[i];
 
 	sm3(C2K2, (mlen / 8) + (K2_len / 8), C3);
-	KPrintf("----------------------------below is C3-----------------------------------\n");
+	printf("----------------------------below is C3-----------------------------------\n");
 	for (i = 0; i < 256/8; i++) {
-		KPrintf("%02x", C3[i]);
+		printf("%02x", C3[i]);
 		if (((i + 1) & 0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
 	}
-	KPrintf("\n");
+	printf("\n");
 
 	i = 0;
 	Big8wIntou8string(&C1.x, C, i);
@@ -764,44 +764,44 @@ void SM9EncryptDecryptTest()
 	for (; i < BIG8W_BYTESIZE * 2 + (256 / 8) + (mlen / 8); i++)
 		C[i] = C2[i - (BIG8W_BYTESIZE * 2 + 256 / 8)];
 
-	KPrintf("----------------------------below is C------------------------------------\n");
+	printf("----------------------------below is C------------------------------------\n");
 	for (i = 0; i < BIG8W_BYTESIZE * 2 + (256 / 8) + (mlen / 8); i++) {
-		KPrintf("%02x", C[i]);
+		printf("%02x", C[i]);
 		if (((i + 1) & 0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
 	}
-	KPrintf("\n");
+	printf("\n");
 
     // decrypt
 	w = BiLinearPairing(C1, deB);
-	KPrintf("----------------------------below is w'-----------------------------------\n");
+	printf("----------------------------below is w'-----------------------------------\n");
 	Q12Print(&w);
 
 	JoinCwID(&C1, &w, ID_Bob, 3, C_w_id);
 	KDF(C_w_id, c_w_id_len, klen, K);
-	KPrintf("----------------------------below is K'----------------------------------\n");
+	printf("----------------------------below is K'----------------------------------\n");
 	for (i = 0; i < (klen / 8); i++) {
-		KPrintf("%02x", K[i]);
+		printf("%02x", K[i]);
 		if (((i + 1) & 0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
 	}
-	KPrintf("\n");
+	printf("\n");
 
 	XOR(C2, mlen / 8, K, message);
 
-	KPrintf("----------------------------below is M'----------------------------------\n");
+	printf("----------------------------below is M'----------------------------------\n");
 	for (i = 0; i < mlen / 8; i++) {
-		KPrintf("%02x", message[i]);
+		printf("%02x", message[i]);
 		if (((i + 1) & 0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
 	}
-	KPrintf("\n");
+	printf("\n");
 
 	for (i = 0; i < mlen / 8; i++)
 		C2K2[i] = C2[i];
@@ -809,53 +809,53 @@ void SM9EncryptDecryptTest()
 		C2K2[i] = K[i];
 
 	sm3(C2K2, (mlen / 8) + (K2_len / 8), C3);
-	KPrintf("----------------------------below is u-----------------------------------\n");
+	printf("----------------------------below is u-----------------------------------\n");
 	for (i = 0; i < 256 / 8; i++) {
-		KPrintf("%02x", C3[i]);
+		printf("%02x", C3[i]);
 		if (((i + 1) & 0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
 	}
-	KPrintf("\n");
+	printf("\n");
 
-	KPrintf("decrypted message:\n%s\n", message);
+	printf("decrypted message:\n%s\n", message);
 
 
-    KPrintf("-------------SM9EncryptWithKDF and SM9DecryptWithKDF test----------------\n");
+    printf("-------------SM9EncryptWithKDF and SM9DecryptWithKDF test----------------\n");
     SM9EncryptWithKDF(message, mlen, K2_len, ID_Bob, 3, hid, Ppub_e, C);
-    KPrintf("------------------below is C, encrypted message--------------------------\n");
+    printf("------------------below is C, encrypted message--------------------------\n");
 	for (i = 0; i < Cbyteslen_KDF; i++) {
-		KPrintf("%02x", C[i]);
+		printf("%02x", C[i]);
 		if (((i + 1) & 0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
 	}
-	KPrintf("\n");
+	printf("\n");
 
     SM9DecryptWithKDF(ID_Bob, 3, message, 20 * 8, K2_len, C, deB);
-    KPrintf("---------------below is M, decrypted message in test.c-------------------\n");
-    KPrintf("message:\n%s\n", message);
+    printf("---------------below is M, decrypted message in test.c-------------------\n");
+    printf("message:\n%s\n", message);
 
-    KPrintf("-------------SM9EncryptWithSM4 and SM9DecryptWithSM4 test----------------\n");
+    printf("-------------SM9EncryptWithSM4 and SM9DecryptWithSM4 test----------------\n");
     SM9EncryptWithSM4(message, mlen, K1_len, K2_len, ID_Bob, 3, hid, Ppub_e, C_SM4);
-    KPrintf("---------------below is C_SM4 in test.c, encrypted message---------------\n");
+    printf("---------------below is C_SM4 in test.c, encrypted message---------------\n");
 	for (i = 0; i < Cbyteslen_SM4; i++) {
-		KPrintf("%02x", C_SM4[i]);
+		printf("%02x", C_SM4[i]);
 		if (((i + 1) & 0x3) == 0)
-			KPrintf(" ");
+			printf(" ");
         if (((i + 1) % 32) == 0)
-            KPrintf("\n");
+            printf("\n");
     }
-	KPrintf("\n");
+	printf("\n");
 
     if (!SM9DecryptWithSM4(ID_Bob, 3, sm4msg, (mlen / 8), K1_len, K2_len, C_SM4, Cbyteslen_SM4, deB))
-        KPrintf("SM9DecryptWithSM4 failed\n");
-    KPrintf("---------------------below is M, decrypted message-----------------------\n");
+        printf("SM9DecryptWithSM4 failed\n");
+    printf("---------------------below is M, decrypted message-----------------------\n");
     for (i = 0; i < (mlen / 8); i++)
-        KPrintf("%c", sm4msg[i]);
-    KPrintf("\n");
+        printf("%c", sm4msg[i]);
+    printf("\n");
 
     free(C_w_id);
     free(K);

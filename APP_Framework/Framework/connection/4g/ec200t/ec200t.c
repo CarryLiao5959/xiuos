@@ -142,9 +142,6 @@ out:
     return ret;
 }
 
-#ifdef ADD_NUTTX_FETURES
-static int Ec200tIoctl(struct Adapter *adapter, int cmd, void *args){ return 0;}
-#else
 #ifdef ADD_RTTHREAD_FETURES
 static int Ec200tIoctl(struct Adapter *adapter, int cmd, void *args){ return 0;}
 #else
@@ -166,6 +163,7 @@ static int Ec200tIoctl(struct Adapter *adapter, int cmd, void *args)
     serial_cfg.serial_parity_mode = PARITY_NONE;
     serial_cfg.serial_bit_order = STOP_BITS_1;
     serial_cfg.serial_invert_mode = NRZ_NORMAL;
+    serial_cfg.is_ext_uart = 0;
 #ifdef ADAPTER_EC200T_DRIVER_EXT_PORT
     serial_cfg.is_ext_uart = 1;
     serial_cfg.ext_uart_no = ADAPTER_EC200T_DRIVER_EXT_PORT;
@@ -181,7 +179,6 @@ static int Ec200tIoctl(struct Adapter *adapter, int cmd, void *args)
     
     return 0;
 }
-#endif
 #endif
 
 static int Ec200tConnect(struct Adapter *adapter, enum NetRoleType net_role, const char *ip, const char *port, enum IpType ip_type)

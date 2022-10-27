@@ -17,6 +17,7 @@
  * @author AIIT XUOS Lab
  * @date 2021.06.25
  */
+
 #include <transform.h>
 #include <adapter.h>
 #include <stdlib.h>
@@ -80,7 +81,7 @@ int AdapterNbiotInit(void)
 }
 
 /******************TEST*********************/
-int opennb(void)
+int OpenNb(void)
 {
     int ret = 0;
 
@@ -88,23 +89,18 @@ int opennb(void)
 
 #ifdef ADAPTER_BC28
     ret = AdapterDeviceOpen(adapter);
-    if(ret < 0){
+    if(ret < 0) {
         printf("open adapter failed\n");
         return -1;
     }
 
 #endif
 
-     return 0;    
- }
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(opennb,open nb sample);
-#endif
-#ifdef ADD_XIZI_FETURES 
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, opennb, opennb, show adapter nb information);
-#endif
+    return 0;    
+}
+PRIV_SHELL_CMD_FUNCTION(OpenNb, a NBiot open sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
-int closenb(void)
+int CloseNb(void)
 {
     int ret = 0;
 
@@ -112,87 +108,62 @@ int closenb(void)
 
 #ifdef ADAPTER_BC28
     ret = AdapterDeviceClose(adapter);
-    if(ret < 0){
+    if(ret < 0) {
         printf("open adapter failed\n");
         return -1;
     }
-
 #endif
 
-     return 0;    
- }
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(closenb,close nb sample);
-#endif
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, closenb, closenb, show adapter nb information);
-#endif
+    return 0;    
+}
+PRIV_SHELL_CMD_FUNCTION(CloseNb, a NBiot close sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
- int connectnb(int argc, char *argv[])
- {
-     const char *send_msg = argv[1];
-     int ret = 0;
+int ConnectNb(int argc, char *argv[])
+{
+    const char *send_msg = argv[1];
+    int ret = 0;
 
-     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_NBIOT_NAME);
+    struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_NBIOT_NAME);
 
-    
-     ret = AdapterDeviceConnect(adapter, 1, "101.68.82.219","9898",1);
-     if(ret < 0){
-         printf(" adapter send failed\n");
-         return -1;
-     }
-    
+    ret = AdapterDeviceConnect(adapter, 1, "101.68.82.219","9898",1);
+    if(ret < 0) {
+        printf(" adapter send failed\n");
+        return -1;
+    }
 
+    return 0;    
+}
+PRIV_SHELL_CMD_FUNCTION(ConnectNb, a NBiot connect sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
-     return 0;    
- }
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(connectnb,connect nb test);
-#endif
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(2)|SHELL_CMD_DISABLE_RETURN, connectnb, connectnb, show adapter nb information);
-#endif
+int SendNb(int argc, char *argv[])
+{
+    const char *send_msg = argv[1];
+    int msg_len = atoi(argv[2]);
+    int ret = 0;
 
- int sendnb(int argc, char *argv[])
- {
-     const char *send_msg = argv[1];
-     int msg_len = atoi(argv[2]);
-     int ret = 0;
+    struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_NBIOT_NAME);
 
-     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_NBIOT_NAME);
+    printf("send argv1 %s len = %d\n",argv[1],msg_len);
+    ret = AdapterDeviceSend(adapter, send_msg, msg_len);
+    if(ret < 0) {
+        printf(" adapter send failed\n");
+        return -1;
+    }
+    printf("nb send msg %s\n", send_msg);
 
-     printf("send argv1 %s len = %d\n",argv[1],msg_len);
-     ret = AdapterDeviceSend(adapter, send_msg, msg_len);
-     if(ret < 0){
-         printf(" adapter send failed\n");
-         return -1;
-     }
-     printf("nb send msg %s\n", send_msg);
+    return 0;    
+}
+PRIV_SHELL_CMD_FUNCTION(SendNb, a NBiot send sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
+int RecvNb(void)
+{
+    char recv_msg[128];
+    struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_NBIOT_NAME);
+    memset(recv_msg,0,128);
+    AdapterDeviceRecv(adapter, recv_msg, 128);
+    PrivTaskDelay(2000);
+    printf("nb recv msg %s\n", recv_msg);
 
-     return 0;    
- }
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(sendnb,send nb test);
-#endif
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN)|SHELL_CMD_PARAM_NUM(2)|SHELL_CMD_DISABLE_RETURN, sendnb, sendnb, show adapter nb information);
-#endif
-
- int recvnb(void)
- {
-     char recv_msg[128];
-     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_NBIOT_NAME);
-     memset(recv_msg,0,128);
-     AdapterDeviceRecv(adapter, recv_msg, 128);
-     PrivTaskDelay(2000);
-     printf("nb recv msg %s\n", recv_msg);
-
-     return 0;    
- }
-#ifdef ADD_RTTHREAD_FETURES
-MSH_CMD_EXPORT(recvnb,receive nb test);
-#endif
-#ifdef ADD_XIZI_FETURES
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC)|SHELL_CMD_PARAM_NUM(0)|SHELL_CMD_DISABLE_RETURN, recvnb, recvnb, show adapter nb information);
-#endif
+    return 0;    
+}
+PRIV_SHELL_CMD_FUNCTION(RecvNb, a NBiot receive sample, PRIV_SHELL_CMD_MAIN_ATTR);

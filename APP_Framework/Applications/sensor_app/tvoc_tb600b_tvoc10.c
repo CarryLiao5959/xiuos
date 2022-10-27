@@ -18,11 +18,7 @@
  * @date 2021.12.15
  */
 
-#ifdef ADD_XIZI_FETURES
-# include <user_api.h>
-#endif
 #include <sensor.h>
-
 
 /**
  * @description: Read a tvoc
@@ -34,7 +30,7 @@ void TvocTb600bTvoc10(void)
     SensorQuantityOpen(tvoc);
     int32_t result = 0;
 
-    result = SensorQuantityRead(tvoc);
+    result = SensorQuantityReadValue(tvoc);
 
     printf("tvoc concentration is : %dppb\n", result);
     SensorQuantityClose(tvoc);

@@ -50,6 +50,10 @@ if ADD_NUTTX_FETURES
                 config ADAPTER_HC08_DRIVER
                         string "HC08 device extra uart driver path"
                         default "/dev/extuart_dev2"
+
+                config ADAPTER_HC08_DRIVER_EXT_PORT
+                        int "if HC08 device using extuart, choose port"
+                        default "2"
         endif
 
 endif

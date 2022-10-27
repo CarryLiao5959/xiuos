@@ -123,7 +123,4 @@ int flashdb_app(void)
 
     return 0;
 }
-
-#ifdef __RT_THREAD_H__
-MSH_CMD_EXPORT(flashdb_app, flashdb test);
-#endif
+PRIV_SHELL_CMD_FUNCTION(flashdb_app, a flashdb test sample, PRIV_SHELL_CMD_MAIN_ATTR);

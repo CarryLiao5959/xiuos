@@ -56,12 +56,12 @@ static int BC28UartOpen(struct Adapter *adapter)
     cfg.serial_bit_order = BIT_ORDER_LSB;
     cfg.serial_invert_mode = NRZ_NORMAL;
     cfg.serial_buffer_size = SERIAL_RB_BUFSZ;
-
+    cfg.is_ext_uart = 0;
     /*aiit board use ch438, so it needs more serial configuration*/
 #ifdef ADAPTER_BC28_DRIVER_EXTUART
     cfg.is_ext_uart = 1;
-    cfg.ext_uart_no         = ADAPTER_BC28_DRIVER_EXT_PORT;
-    cfg.port_configure      = PORT_CFG_INIT;
+    cfg.ext_uart_no = ADAPTER_BC28_DRIVER_EXT_PORT;
+    cfg.port_configure = PORT_CFG_INIT;
 #endif
 
     struct PrivIoctlCfg ioctl_cfg;

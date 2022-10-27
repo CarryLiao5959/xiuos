@@ -94,17 +94,18 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     }
     
     struct SerialDataCfg cfg;
-    cfg.serial_baud_rate    = BAUD_RATE_9600;
-    cfg.serial_data_bits    = DATA_BITS_8;
-    cfg.serial_stop_bits    = STOP_BITS_1;
-    cfg.serial_buffer_size  = 64;
-    cfg.serial_parity_mode  = PARITY_NONE;
-    cfg.serial_bit_order    = 0;
-    cfg.serial_invert_mode  = 0;
+    cfg.serial_baud_rate = BAUD_RATE_9600;
+    cfg.serial_data_bits = DATA_BITS_8;
+    cfg.serial_stop_bits = STOP_BITS_1;
+    cfg.serial_buffer_size = 64;
+    cfg.serial_parity_mode = PARITY_NONE;
+    cfg.serial_bit_order = 0;
+    cfg.serial_invert_mode = 0;
+    cfg.is_ext_uart = 0;
 #ifdef SENSOR_D124_DRIVER_EXTUART    
-    cfg.is_ext_uart         = 1;
-    cfg.ext_uart_no         = SENSOR_DEVICE_D124_DEV_EXT_PORT;
-    cfg.port_configure      = PORT_CFG_INIT;
+    cfg.is_ext_uart = 1;
+    cfg.ext_uart_no = SENSOR_DEVICE_D124_DEV_EXT_PORT;
+    cfg.port_configure = PORT_CFG_INIT;
 #endif
 
     struct PrivIoctlCfg ioctl_cfg;

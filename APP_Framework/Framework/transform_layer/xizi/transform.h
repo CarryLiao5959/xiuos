@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <semaphore.h>
+#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <time.h>
@@ -200,6 +201,24 @@ typedef struct
 #define PRIV_TOUCH_DEV "/dev/touch_dev"
 #define MY_INDEV_X BSP_LCD_Y_MAX
 #define MY_INDEV_Y BSP_LCD_X_MAX
+
+/*********************shell***********************/
+//for int func(int argc, char *agrv[])
+#define PRIV_SHELL_CMD_MAIN_ATTR (SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN))
+
+//for int func(int i, char ch, char *str)
+#define PRIV_SHELL_CMD_FUNC_ATTR (SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC))
+
+/**
+ * @brief Priv-shell Command definition 
+ * 
+ * @param _func Command function 
+ * @param _desc Command description 
+ * @param _attr Command attributes if need
+ */
+#define PRIV_SHELL_CMD_FUNCTION(_func, _desc, _attr)  \
+    SHELL_EXPORT_CMD(_attr, _func, _func, _desc)
+
 /**********************mutex**************************/
 
 int PrivMutexCreate(pthread_mutex_t *p_mutex, const pthread_mutexattr_t *attr);

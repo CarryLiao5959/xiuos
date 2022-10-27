@@ -166,6 +166,23 @@ struct PrivIoctlCfg
     void *args;
 };
 
+/*********************shell***********************/
+//for int func(int argc, char *agrv[])
+#define PRIV_SHELL_CMD_MAIN_ATTR 
+
+//for int func(int i, char ch, char *str)
+#define PRIV_SHELL_CMD_FUNC_ATTR 
+
+/**
+ * @brief Priv-shell Command definition 
+ * 
+ * @param _func Command function 
+ * @param _desc Command description 
+ * @param _attr Command attributes if need
+ */
+#define PRIV_SHELL_CMD_FUNCTION(_func, _desc, _attr)  \
+    MSH_CMD_EXPORT(_func, _desc)
+
 /**********************mutex**************************/
 
 int PrivMutexCreate(pthread_mutex_t *p_mutex, const pthread_mutexattr_t *attr);

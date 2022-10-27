@@ -1,9 +1,9 @@
-SRC_DIR :=
+SRC_DIR := plc_demo
 
 ifeq ($(CONFIG_RESOURCES_LWIP),y)
 
 ifeq ($(CONFIG_USING_CONTROL_PLC_OPCUA), y)
-	SRC_DIR += opcua_demo plc_demo
+	SRC_DIR += opcua_demo 
 endif
 
 endif
