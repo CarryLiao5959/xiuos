@@ -110,5 +110,50 @@ void readwrite(const char* filename)
 }
 
 MSH_CMD_EXPORT(readwrite, usb host read write test);
+#endif
 
+#ifdef BSP_USING_CAN
+static rt_device_t can_dev;            /* CAN 设备句柄 */
+static void can2_test(void)
+{
+   
+    struct rt_can_msg msg = {0};
+    rt_err_t res;
+    rt_size_t  size;
+    rt_thread_t thread;
+    /* 查找 CAN 设备 */
+    can_dev = rt_device_find("can2");
+    if (!can_dev)
+    {
+        rt_kprintf("find can2 failed!\n");
+        return;
+    }
+
+    /* 以中断接收及发送方式打开 CAN 设备 */
+    res = rt_device_open(can_dev, RT_DEVICE_FLAG_INT_TX | RT_DEVICE_FLAG_INT_RX);
+    RT_ASSERT(res == RT_EOK);
+    /* 创建数据接收线程 */
+    msg.id = 0x78;              /* ID 为 0x78 */
+    msg.ide = RT_CAN_STDID;     /* 标准格式 */
+    msg.rtr = RT_CAN_DTR;       /* 数据帧 */
+    msg.len = 8;                /* 数据长度为 8 */
+    /* 待发送的 8 字节数据 */
+    msg.data[0] = 0x00;
+    msg.data[1] = 0x11;
+    msg.data[2] = 0x22;
+    msg.data[3] = 0x33;
+    msg.data[4] = 0x44;
+    msg.data[5] = 0x55;
+    msg.data[6] = 0x66;
+    msg.data[7] = 0x77;
+    /* 发送一帧 CAN 数据 */
+    size = rt_device_write(can_dev, 0, &msg, sizeof(msg));
+    if (size == 0)
+    {
+        rt_kprintf("can dev write data failed!\n");
+    }
+    rt_device_close(can_dev);
+   
+}
+MSH_CMD_EXPORT(can2_test, can2 test);
 #endif
