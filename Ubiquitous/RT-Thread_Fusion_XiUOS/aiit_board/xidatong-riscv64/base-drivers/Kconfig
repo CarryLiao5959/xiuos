@@ -119,6 +119,16 @@ menu "On-chip Peripheral Drivers"
                     default 27
             endif
         endif
+    menuconfig BSP_USING_CAN
+        bool "Enable CAN"
+        select RT_USING_CAN
+        select BSP_USING_UART1
+        default n 
+        if BSP_USING_CAN
+            config BSP_CAN_NCFG_PIN
+                int "CAN nCFG pin number"
+                default 43
+        endif        
 endmenu
 
 menu "Onboard Peripheral Drivers"

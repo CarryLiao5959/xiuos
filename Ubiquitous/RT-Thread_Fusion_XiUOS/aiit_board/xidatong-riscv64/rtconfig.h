@@ -127,6 +127,7 @@
 #define RT_USING_SERIAL_V1
 #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_CAN
 #define RT_USING_I2C
 #define RT_USING_PIN
 #define RT_USING_SPI
@@ -184,6 +185,11 @@
 
 #define __STACKSIZE__ 4096
 #define BSP_USING_UART_HS
+#define BSP_USING_UART1
+#define BSP_UART1_TXD_PIN 19
+#define BSP_UART1_RXD_PIN 18
+#define BSP_UART1_RTS_PIN -1
+#define BSP_UART1_CTS_PIN -1
 #define BSP_USING_UART2
 #define BSP_UART2_TXD_PIN 20
 #define BSP_UART2_RXD_PIN 21
@@ -203,6 +209,8 @@
 #define BSP_SPI1_D1_PIN 10
 #define BSP_SPI1_USING_SS0
 #define BSP_SPI1_SS0_PIN 12
+#define BSP_USING_CAN
+#define BSP_CAN_NCFG_PIN 43
 
 /* Onboard Peripheral Drivers */
 

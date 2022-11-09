@@ -89,6 +89,7 @@ enum HS_GPIO_CONFIG
 #define FPIOA_LCD_MOSI      29
 #define FPIOA_LCD_MISO      23  // can't use GPIOHS30
 #define FPIOA_LCD_NCS       31
+#define FPIOA_CAN_NCFG      4
 
 extern int io_config_init(void);
 
