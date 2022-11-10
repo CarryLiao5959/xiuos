@@ -547,6 +547,7 @@ static size_t _etoa(out_fct_type out, char * buffer, size_t idx, size_t maxlen, 
 #endif  // PRINTF_SUPPORT_FLOAT
 
 // internal vsnprintf
+#ifndef __ARMCC_VERSION
 static int _vsnprintf(out_fct_type out, char * buffer, const size_t maxlen, const char * format, va_list va)
 {
     unsigned int flags, width, precision, n;
@@ -859,9 +860,9 @@ static int _vsnprintf(out_fct_type out, char * buffer, const size_t maxlen, cons
     // return written chars without terminating \0
     return (int)idx;
 }
-
+#endif
 ///////////////////////////////////////////////////////////////////////////////
-
+#ifndef __ARMCC_VERSION
 int lv_snprintf(char * buffer, size_t count, const char * format, ...)
 {
     va_list va;
@@ -875,5 +876,5 @@ int lv_vsnprintf(char * buffer, size_t count, const char * format, va_list va)
 {
     return _vsnprintf(_out_buffer, buffer, count, format, va);
 }
-
+#endif
 #endif /*LV_SPRINTF_CUSTOM*/
