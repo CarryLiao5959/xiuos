@@ -1,13 +1,13 @@
 #include <rtthread.h>
 #include <rtdevice.h>
-#include "drv_io_config.h"
+#include <drv_io_config.h>
 #include <gpiohs.h>
 #include "board.h"
 #include "ch438.h"
-#include "sleep.h"
 #include <math.h>
 
-static rt_uint8_t	offsetadd[] = {0x00,0x10,0x20,0x30,0x08,0x18,0x28,0x38,};		/* Offset address of serial port number */
+/* Offset address of serial port number */
+static rt_uint8_t	offsetadd[] = {0x00,0x10,0x20,0x30,0x08,0x18,0x28,0x38,};		
 struct rt_serial_device *extuart_serial_parm[8];
 
 void CH438_INIT(void)
@@ -17,7 +17,6 @@ void CH438_INIT(void)
 	gpiohs_set_drive_mode(FPIOA_CH438_NRD, GPIO_DM_OUTPUT);
 	gpiohs_set_drive_mode(FPIOA_CH438_ALE, GPIO_DM_OUTPUT);
 	gpiohs_set_drive_mode(FPIOA_CH438_INT, GPIO_DM_INPUT_PULL_UP);
-	gpiohs_set_drive_mode(FPIOA_485_DIR, GPIO_DM_OUTPUT);
 	
 	gpiohs_set_pin(FPIOA_CH438_NWR, GPIO_PV_HIGH);
 	gpiohs_set_pin(FPIOA_CH438_NRD, GPIO_PV_HIGH);
@@ -34,9 +33,6 @@ void CH438_PORT_INIT( rt_uint8_t ext_uart_no,rt_uint32_t BaudRate )
 	rt_uint8_t	REG_IER_ADDR;
 	rt_uint8_t	REG_MCR_ADDR;
 	rt_uint8_t	REG_FCR_ADDR;
-	rt_uint8_t	REG_RBR_ADDR;
-	rt_uint8_t	REG_THR_ADDR;
-	rt_uint8_t	REG_IIR_ADDR;
 	
 	REG_LCR_ADDR = offsetadd[ext_uart_no] | REG_LCR0_ADDR;
 	REG_DLL_ADDR = offsetadd[ext_uart_no] | REG_DLL0_ADDR;
@@ -44,17 +40,16 @@ void CH438_PORT_INIT( rt_uint8_t ext_uart_no,rt_uint32_t BaudRate )
 	REG_IER_ADDR = offsetadd[ext_uart_no] | REG_IER0_ADDR;
 	REG_MCR_ADDR = offsetadd[ext_uart_no] | REG_MCR0_ADDR;
 	REG_FCR_ADDR = offsetadd[ext_uart_no] | REG_FCR0_ADDR;
-	REG_RBR_ADDR = offsetadd[ext_uart_no] | REG_RBR0_ADDR;
-	REG_THR_ADDR = offsetadd[ext_uart_no] | REG_THR0_ADDR;
-	REG_IIR_ADDR = offsetadd[ext_uart_no] | REG_IIR0_ADDR;
-			
-    WriteCH438Data( REG_IER_ADDR, BIT_IER_RESET );             /* Reset the serial port */
-	rt_thread_delay(50);
+
+	/* Reset the serial port */		
+    WriteCH438Data( REG_IER_ADDR, BIT_IER_RESET );             
+	rt_thread_mdelay(50);
 	
 	dlab = ReadCH438Data(REG_IER_ADDR);
 	dlab &= 0xDF;
 	WriteCH438Data(REG_IER_ADDR, dlab);
 	
+	/* set LCR register DLAB bit 1 */
 	dlab = ReadCH438Data(REG_LCR_ADDR);
 	dlab |= 0x80;
 	WriteCH438Data(REG_LCR_ADDR, dlab);
@@ -62,18 +57,25 @@ void CH438_PORT_INIT( rt_uint8_t ext_uart_no,rt_uint32_t BaudRate )
     div = ( Fpclk >> 4 ) / BaudRate;
     DLM = div >> 8;
     DLL = div & 0xff;
-	WriteCH438Data( REG_DLL_ADDR, DLL );             /* Set baud rate */
-    WriteCH438Data( REG_DLM_ADDR, DLM );
-	WriteCH438Data( REG_FCR_ADDR, BIT_FCR_RECVTG1 | BIT_FCR_RECVTG0 | BIT_FCR_FIFOEN );    /* Set FIFO mode */
 
+	/* Set baud rate */
+	WriteCH438Data( REG_DLL_ADDR, DLL );             
+    WriteCH438Data( REG_DLM_ADDR, DLM );
+
+	/* set FIFO mode, 112 bytes */
+	WriteCH438Data( REG_FCR_ADDR, BIT_FCR_RECVTG1 | BIT_FCR_RECVTG0 | BIT_FCR_FIFOEN );
+	
+	/* 8 bit word size, 1 bit stop bit, no crc */
     WriteCH438Data( REG_LCR_ADDR, BIT_LCR_WORDSZ1 | BIT_LCR_WORDSZ0 );
 
-    WriteCH438Data( REG_IER_ADDR, /*BIT_IER_IEMODEM | BIT_IER_IETHRE |  BIT_IER_IELINES | */BIT_IER_IERECV );
+	/* enable interrupt */
+    WriteCH438Data( REG_IER_ADDR, BIT_IER_IERECV );
 
-    WriteCH438Data( REG_MCR_ADDR, BIT_MCR_OUT2  );
+	/* allow interrupt output, DTR and RTS is 1 */
+    WriteCH438Data( REG_MCR_ADDR, BIT_MCR_OUT2 );
 
-	WriteCH438Data(REG_FCR_ADDR,ReadCH438Data(REG_FCR_ADDR)| BIT_FCR_RFIFORST | BIT_FCR_TFIFORST);
-
+	/* release the data in FIFO */
+	WriteCH438Data( REG_FCR_ADDR,ReadCH438Data(REG_FCR_ADDR)| BIT_FCR_TFIFORST );
 }
 
 static void CH438_set_output(void)
@@ -85,9 +87,9 @@ static void CH438_set_output(void)
 	gpiohs_set_drive_mode(FPIOA_CH438_D4, GPIO_DM_OUTPUT);
 	gpiohs_set_drive_mode(FPIOA_CH438_D5, GPIO_DM_OUTPUT);
 	gpiohs_set_drive_mode(FPIOA_CH438_D6, GPIO_DM_OUTPUT);
-	gpiohs_set_drive_mode(FPIOA_CH438_D7, GPIO_DM_OUTPUT);
-	
+	gpiohs_set_drive_mode(FPIOA_CH438_D7, GPIO_DM_OUTPUT);	
 }
+
 static void CH438_set_input(void)
 {
 	gpiohs_set_drive_mode(FPIOA_CH438_D0, GPIO_DM_INPUT_PULL_UP);
@@ -98,32 +100,17 @@ static void CH438_set_input(void)
 	gpiohs_set_drive_mode(FPIOA_CH438_D5, GPIO_DM_INPUT_PULL_UP);
 	gpiohs_set_drive_mode(FPIOA_CH438_D6, GPIO_DM_INPUT_PULL_UP);
 	gpiohs_set_drive_mode(FPIOA_CH438_D7, GPIO_DM_INPUT_PULL_UP);
-	
-}
-
-
-void set_485_input(rt_uint8_t	ch_no)
-{
-	if(ch_no == 1)
-		gpiohs_set_pin(FPIOA_485_DIR, GPIO_PV_LOW);
-}
-
-void set_485_output(rt_uint8_t	ch_no)
-{
-	if(ch_no == 1)
-		gpiohs_set_pin(FPIOA_485_DIR, GPIO_PV_HIGH);
 }
 
 rt_uint8_t ReadCH438Data( rt_uint8_t addr )
 {
 	rt_uint8_t dat = 0;
-
 	gpiohs_set_pin(FPIOA_CH438_NWR,GPIO_PV_HIGH);	
 	gpiohs_set_pin(FPIOA_CH438_NRD,GPIO_PV_HIGH);	
 	gpiohs_set_pin(FPIOA_CH438_ALE,GPIO_PV_HIGH);	
 
 	CH438_set_output();
-	usleep(1);
+	rt_thread_mdelay(1);
 	
 	if(addr &0x80)	gpiohs_set_pin(FPIOA_CH438_D7,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D7,GPIO_PV_LOW);	
 	if(addr &0x40)	gpiohs_set_pin(FPIOA_CH438_D6,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D6,GPIO_PV_LOW);	
@@ -134,20 +121,17 @@ rt_uint8_t ReadCH438Data( rt_uint8_t addr )
 	if(addr &0x02)	gpiohs_set_pin(FPIOA_CH438_D1,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D1,GPIO_PV_LOW);	
 	if(addr &0x01)	gpiohs_set_pin(FPIOA_CH438_D0,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D0,GPIO_PV_LOW);	
 		
-	usleep(1);
+	rt_thread_mdelay(1);
 
 	gpiohs_set_pin(FPIOA_CH438_ALE,GPIO_PV_LOW);	
-
-	usleep(1);		
+	rt_thread_mdelay(1);		
 
 	CH438_set_input();
-	usleep(1);
+	rt_thread_mdelay(1);
 	
 	gpiohs_set_pin(FPIOA_CH438_NRD,GPIO_PV_LOW);	
-	
-	usleep(1);	
-	
-	dat = 0;
+	rt_thread_mdelay(1);	
+
 	if (gpiohs_get_pin(FPIOA_CH438_D7))	dat |= 0x80;
 	if (gpiohs_get_pin(FPIOA_CH438_D6))	dat |= 0x40;
 	if (gpiohs_get_pin(FPIOA_CH438_D5))	dat |= 0x20;
@@ -159,21 +143,19 @@ rt_uint8_t ReadCH438Data( rt_uint8_t addr )
 	
 	gpiohs_set_pin(FPIOA_CH438_NRD,GPIO_PV_HIGH);	
 	gpiohs_set_pin(FPIOA_CH438_ALE,GPIO_PV_HIGH);	
-
-	usleep(1);
+	rt_thread_mdelay(1);
 
 	return dat;
 }
 	
-
-static void WriteCH438Data( rt_uint8_t addr, rt_uint8_t dat)
+static void WriteCH438Data( rt_uint8_t addr, rt_uint8_t dat )
 {
 	gpiohs_set_pin(FPIOA_CH438_ALE,GPIO_PV_HIGH);	
 	gpiohs_set_pin(FPIOA_CH438_NRD,GPIO_PV_HIGH);	
 	gpiohs_set_pin(FPIOA_CH438_NWR,GPIO_PV_HIGH);	
 
 	CH438_set_output();
-	usleep(1);	
+	rt_thread_mdelay(1);	
 	
 	if(addr &0x80)	gpiohs_set_pin(FPIOA_CH438_D7,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D7,GPIO_PV_LOW);	
 	if(addr &0x40)	gpiohs_set_pin(FPIOA_CH438_D6,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D6,GPIO_PV_LOW);	
@@ -184,10 +166,10 @@ static void WriteCH438Data( rt_uint8_t addr, rt_uint8_t dat)
 	if(addr &0x02)	gpiohs_set_pin(FPIOA_CH438_D1,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D1,GPIO_PV_LOW);	
 	if(addr &0x01)	gpiohs_set_pin(FPIOA_CH438_D0,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D0,GPIO_PV_LOW);	
 	
-	usleep(1);	
+	rt_thread_mdelay(1);	
 	
 	gpiohs_set_pin(FPIOA_CH438_ALE,GPIO_PV_LOW);	
-	usleep(1);
+	rt_thread_mdelay(1);
 	
 	if(dat &0x80)	gpiohs_set_pin(FPIOA_CH438_D7,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D7,GPIO_PV_LOW);	
 	if(dat &0x40)	gpiohs_set_pin(FPIOA_CH438_D6,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D6,GPIO_PV_LOW);	
@@ -198,16 +180,14 @@ static void WriteCH438Data( rt_uint8_t addr, rt_uint8_t dat)
 	if(dat &0x02)	gpiohs_set_pin(FPIOA_CH438_D1,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D1,GPIO_PV_LOW);	
 	if(dat &0x01)	gpiohs_set_pin(FPIOA_CH438_D0,GPIO_PV_HIGH);	else	gpiohs_set_pin(FPIOA_CH438_D0,GPIO_PV_LOW);	
 	
-	usleep(1);	
+	rt_thread_mdelay(1);	
 
 	gpiohs_set_pin(FPIOA_CH438_NWR,GPIO_PV_LOW);	
-
-	usleep(1);	
+	rt_thread_mdelay(1);	
 	
 	gpiohs_set_pin(FPIOA_CH438_NWR,GPIO_PV_HIGH);	
 	gpiohs_set_pin(FPIOA_CH438_ALE,GPIO_PV_HIGH);	
-	
-	usleep(1);	
+	rt_thread_mdelay(1);	
 
 	CH438_set_input();
 
@@ -264,7 +244,6 @@ static rt_err_t extuart_control(struct rt_serial_device *serial, int cmd, void *
 			gpiohs_irq_register(FPIOA_CH438_INT, 1, Ch438Irq, (void*)serial);
 			register_flag = 1;
 		}
-		
 		break;
     }
     return (RT_EOK);
@@ -278,7 +257,6 @@ static int drv_extuart_putc(struct rt_serial_device *serial, char c)
 	REG_LSR_ADDR = offsetadd[ext_uart_no] | REG_LSR0_ADDR;
 	REG_THR_ADDR = offsetadd[ext_uart_no] | REG_THR0_ADDR;
 
-
 	if((ReadCH438Data( REG_LSR_ADDR ) & BIT_LSR_TEMT) != 0)
 	{
 		WriteCH438Block( REG_THR_ADDR, 1, &c );
@@ -286,7 +264,6 @@ static int drv_extuart_putc(struct rt_serial_device *serial, char c)
 	} else {
 		return 0;
 	}
-	
 }
 
 static int drv_extuart_getc(struct rt_serial_device *serial)
@@ -332,8 +309,8 @@ int rt_hw_ch438_init(void)
         extserial->config           = config;
         extserial->config.baud_rate = 115200;
 		extserial->config.reserved  = 0; ///< extern uart port
-
-        extuart_serial_parm[0] = &extserial0;
+        
+		extuart_serial_parm[0] = &extserial0;
 
         ret = rt_hw_serial_register(extserial,
                               "extuart_dev0",
@@ -349,7 +326,7 @@ int rt_hw_ch438_init(void)
         extserial  = &extserial1;
         extserial->ops              = &extuart_ops;
         extserial->config           = config;
-        extserial->config.baud_rate = 115200;
+        extserial->config.baud_rate = 9600;
 		extserial->config.reserved = 1; ///< extern uart port
 
         extuart_serial_parm[1] = &extserial1;
@@ -373,14 +350,13 @@ int rt_hw_ch438_init(void)
 
         extuart_serial_parm[2] = &extserial2;
 
-       ret = rt_hw_serial_register(extserial,
+       	ret = rt_hw_serial_register(extserial,
                               "extuart_dev2",
                               RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX,
                               extuart);
 		if(ret < 0){
 			rt_kprintf("extuart_dev2 register failed.\n");
 		}
-
     }
 	{
         static struct rt_serial_device  extserial3;
@@ -391,15 +367,15 @@ int rt_hw_ch438_init(void)
         extserial->config.baud_rate = 9600;
 		extserial->config.reserved = 3; ///< extern uart port
 
-       ret = rt_hw_serial_register(extserial,
+		extuart_serial_parm[3] = &extserial3;
+
+       	ret = rt_hw_serial_register(extserial,
                               "extuart_dev3",
                               RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX,
                               extuart);
 		if(ret < 0){
 			rt_kprintf("extuart_dev3 register failed.\n");
 		}
-
-		extuart_serial_parm[3] = &extserial3;
     }
 	{
         static struct rt_serial_device  extserial4;
@@ -410,15 +386,15 @@ int rt_hw_ch438_init(void)
         extserial->config.baud_rate = 9600;
 		extserial->config.reserved = 4; ///< extern uart port
 
-       ret = rt_hw_serial_register(extserial,
+		extuart_serial_parm[4] = &extserial4;
+
+       	ret = rt_hw_serial_register(extserial,
                               "extuart_dev4",
                               RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX,
                               extuart);
 		if(ret < 0){
 			rt_kprintf("extuart_dev4 register failed.\n");
 		}
-
-		extuart_serial_parm[4] = &extserial4;
     }
 	{
         static struct rt_serial_device  extserial5;
@@ -429,15 +405,15 @@ int rt_hw_ch438_init(void)
         extserial->config.baud_rate = 115200;
 		extserial->config.reserved = 5; ///< extern uart port
 
-       ret = rt_hw_serial_register(extserial,
+		extuart_serial_parm[5] = &extserial5;
+
+       	ret = rt_hw_serial_register(extserial,
                               "extuart_dev5",
                               RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX,
                               extuart);
 		if(ret < 0){
 			rt_kprintf("extuart_dev5 register failed.\n");
 		}
-
-		extuart_serial_parm[5] = &extserial5;
     }
 	{
         static struct rt_serial_device  extserial6;
@@ -448,15 +424,15 @@ int rt_hw_ch438_init(void)
         extserial->config.baud_rate = 57600;
 		extserial->config.reserved = 6; ///< extern uart port
 
-       ret = rt_hw_serial_register(extserial,
+		extuart_serial_parm[6] = &extserial6;
+
+       	ret = rt_hw_serial_register(extserial,
                               "extuart_dev6",
                               RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX,
                               extuart);
 		if(ret < 0){
 			rt_kprintf("extuart_dev6 register failed.\n");
 		}
-
-		extuart_serial_parm[6] = &extserial6;
     }
 	{
         static struct rt_serial_device  extserial7;
@@ -464,18 +440,18 @@ int rt_hw_ch438_init(void)
         extserial  = &extserial7;
         extserial->ops              = &extuart_ops;
         extserial->config           = config;
-        extserial->config.baud_rate = 9600;
+        extserial->config.baud_rate = 115200;
 		extserial->config.reserved = 7; ///< extern uart port
 
-       ret = rt_hw_serial_register(extserial,
+		extuart_serial_parm[7] = &extserial7;
+
+       	ret = rt_hw_serial_register(extserial,
                               "extuart_dev7",
                               RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX,
                               extuart);
 		if(ret < 0){
 			rt_kprintf("extuart_dev7 register failed.\n");
 		}
-		extuart_serial_parm[7] = &extserial7;
-
     }
 
 	CH438_INIT();

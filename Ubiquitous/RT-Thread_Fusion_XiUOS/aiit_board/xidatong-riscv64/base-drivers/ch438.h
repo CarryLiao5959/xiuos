@@ -37,7 +37,6 @@
 #define REG_DLL1_ADDR       0x10      /* Baud rate divisor latch low 8-bit byte address */
 #define REG_DLM1_ADDR       0x11      /* Baud rate divisor latch high 8-bit byte address */
 
-
 /* CH438serial port2 register address */
 
 #define REG_RBR2_ADDR       0x20      /* serial port2receive buffer register address */
@@ -52,8 +51,6 @@
 #define REG_SCR2_ADDR       0x27      /* serial port2the user can define the register address */
 #define REG_DLL2_ADDR       0x20      /* Baud rate divisor latch low 8-bit byte address */
 #define REG_DLM2_ADDR       0x21      /* Baud rate divisor latch high 8-bit byte address */
-
-
 
 /* CH438serial port3 register address */
 
@@ -70,7 +67,6 @@
 #define REG_DLL3_ADDR       0x30      /* Baud rate divisor latch low 8-bit byte address */
 #define REG_DLM3_ADDR       0x31      /* Baud rate divisor latch high 8-bit byte address */
 
-
 /* CH438serial port4 register address */
 
 #define REG_RBR4_ADDR       0x08      /* serial port4receive buffer register address */
@@ -85,8 +81,6 @@
 #define REG_SCR4_ADDR       0x0F      /* serial port4the user can define the register address */
 #define REG_DLL4_ADDR       0x08      /* Baud rate divisor latch low 8-bit byte address */
 #define REG_DLM4_ADDR       0x09      /* Baud rate divisor latch high 8-bit byte address */
-
-
 
 /* CH438serial port5 register address */
 
@@ -103,7 +97,6 @@
 #define REG_DLL5_ADDR       0x18      /* Baud rate divisor latch low 8-bit byte address */
 #define REG_DLM5_ADDR       0x19      /* Baud rate divisor latch high 8-bit byte address */
 
-
 /* CH438serial port6 register address */
 
 #define REG_RBR6_ADDR       0x28      /* serial port6receive buffer register address */
@@ -118,7 +111,6 @@
 #define REG_SCR6_ADDR       0x2F      /* serial port6the user can define the register address */
 #define REG_DLL6_ADDR       0x28      /* Baud rate divisor latch low 8-bit byte address */
 #define REG_DLM6_ADDR       0x29      /* Baud rate divisor latch high 8-bit byte address */
-
 
 /* CH438serial port7 register address */
 
@@ -135,9 +127,7 @@
 #define REG_DLL7_ADDR       0x38      /* Baud rate divisor latch low 8-bit byte address */
 #define REG_DLM7_ADDR       0x39      /* Baud rate divisor latch high 8-bit byte address */
 
-
 #define REG_SSR_ADDR        0x4F       /* pecial status register address */
-
 
 /* IER register bit */
 
@@ -230,18 +220,13 @@
 
 #define CH438_IIR_FIFOS_ENABLED 0xC0  /* use FIFO */
 
-
 #define Fpclk           1843200         /* Define the internal clock frequency  */
-
 
 void CH438_INIT(void);
 void CH438_PORT_INIT( rt_uint8_t ext_uart_no,rt_uint32_t	BaudRate );
 rt_uint8_t ReadCH438Data( rt_uint8_t addr );
 void  CH438UARTSend( rt_uint8_t	ext_uart_no,rt_uint8_t *Data, rt_uint8_t Num );
 rt_uint8_t  CH438UARTRcv( rt_uint8_t	ext_uart_no, rt_uint8_t* buf );
-void set_485_input(rt_uint8_t	ch_no);
-void set_485_output(rt_uint8_t	ch_no);
-
 
 static void CH438_set_output(void);
 static void CH438_set_input(void);
