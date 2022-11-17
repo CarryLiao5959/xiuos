@@ -91,6 +91,11 @@ enum HS_GPIO_CONFIG
 #define FPIOA_LCD_NCS       31
 #define FPIOA_CAN_NCFG      4
 
+// WIFI PIN.define
+#define BSP_WIFI_TX      6
+#define BSP_WIFI_RX      7
+#define BSP_WIFI_EN      8
+
 extern int io_config_init(void);
 
 #endif

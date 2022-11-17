@@ -33,6 +33,15 @@ int main(void)
     sprintf(info2,"build %s %s",__DATE__,__TIME__);
     printf("%s %s \n",info1,info2); 
     FrameworkInit();
+
+    #ifdef ADAPTER_ESP8285_WIFI
+    #include <drv_io_config.h>
+    rt_pin_mode(BSP_WIFI_EN, PIN_MODE_OUTPUT);
+    rt_pin_write(BSP_WIFI_EN, PIN_LOW);
+    rt_thread_mdelay(50);
+    rt_pin_write(BSP_WIFI_EN, PIN_HIGH);
+    #endif 
+
     #ifdef BSP_USING_LCD
     #include <drv_lcd.h>
     #include "drv_lt768_lcd.h"

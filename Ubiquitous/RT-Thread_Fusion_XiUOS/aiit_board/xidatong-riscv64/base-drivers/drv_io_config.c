@@ -77,6 +77,7 @@ static struct io_config
 #endif
 
 #ifdef BSP_USING_UART1
+#ifdef BSP_USING_CAN
     IOCONFIG(BSP_UART1_TXD_PIN, FUNC_UART1_TX),
     IOCONFIG(BSP_UART1_RXD_PIN, FUNC_UART1_RX),
     #if BSP_UART1_RTS_PIN >= 0
@@ -85,6 +86,11 @@ static struct io_config
     #if BSP_UART1_CTS_PIN >= 0
     IOCONFIG(BSP_UART1_CTS_PIN, FUNC_UART1_CTS),
     #endif      
+#endif  
+#ifdef ADAPTER_ESP8285_WIFI
+    IOCONFIG(BSP_WIFI_RX, FUNC_UART1_TX),
+    IOCONFIG(BSP_WIFI_TX, FUNC_UART1_RX), 
+#endif      
 #endif
 #ifdef BSP_USING_UART2
     IOCONFIG(BSP_UART2_TXD_PIN, FUNC_UART2_TX),

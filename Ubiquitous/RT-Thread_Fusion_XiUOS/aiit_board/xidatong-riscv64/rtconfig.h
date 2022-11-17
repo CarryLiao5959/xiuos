@@ -126,7 +126,7 @@
 #define RT_USING_SERIAL
 #define RT_USING_SERIAL_V1
 #define RT_SERIAL_USING_DMA
-#define RT_SERIAL_RB_BUFSZ 64
+#define RT_SERIAL_RB_BUFSZ 256
 #define RT_USING_CAN
 #define RT_USING_I2C
 #define RT_USING_PIN
@@ -209,8 +209,6 @@
 #define BSP_SPI1_D1_PIN 10
 #define BSP_SPI1_USING_SS0
 #define BSP_SPI1_SS0_PIN 12
-#define BSP_USING_CAN
-#define BSP_CAN_NCFG_PIN 43
 
 /* Onboard Peripheral Drivers */
 
@@ -266,6 +264,7 @@
 #define ADAPTER_EC200T_PWRKEY 97
 #define ADAPTER_EC200T_PIN_DRIVER "/dev/pin_dev"
 #define ADAPTER_EC200T_DRIVER "/dev/uart2"
+#define CONNECTION_ADAPTER_WIFI
 #define CONNECTION_ADAPTER_BLUETOOTH
 #define ADAPTER_HC08
 #define ADAPTER_BLUETOOTH_HC08 "hc08-1"
