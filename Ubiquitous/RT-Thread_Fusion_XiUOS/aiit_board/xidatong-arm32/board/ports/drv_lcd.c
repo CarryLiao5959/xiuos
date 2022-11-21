@@ -136,13 +136,13 @@ static void drv_lcd_set_pixel_dot(rt_uint16_t x1, rt_uint16_t y1, rt_uint16_t x2
 {
     rt_uint16_t i = 0;
     rt_uint16_t j = 0;
-
+    rt_uint16_t *p = (rt_uint16_t*)color;
     for(i = y1; i <= y2; i++) 
     {
         for(j = x1; j <= x2; j++) 
         {
-            frame_buffer[i][j] =(*(rt_uint16_t*)color);
-            (rt_uint16_t*)color += 1;
+            frame_buffer[i][j] = *p;
+            p += 1;
         }
     }
 }
