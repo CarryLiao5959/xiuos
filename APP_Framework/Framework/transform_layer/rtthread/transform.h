@@ -200,6 +200,11 @@ typedef struct
     uint16_t press;
 }TouchDataParam;
 
+struct TouchDataStandard
+{
+    uint16_t x;
+    uint16_t y;
+};
 #define PRIV_SYSTICK_GET (rt_tick_get())
 #define PRIV_LCD_DEV "/dev/lcd"
 #define MY_DISP_HOR_RES LCD_WIDTH
