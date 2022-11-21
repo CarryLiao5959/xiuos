@@ -190,42 +190,30 @@ menu "Onboard Peripheral Drivers"
     bool "Enable CH438"
     default y
         if BSP_USING_CH438
-        config BSP_CH438_ALE_PIN
-            int "ale pin number for ch438"
-            default 24
-        config BSP_CH438_NWR_PIN
-            int "nwr pin number for ch438"
-            default 25
-        config BSP_CH438_NRD_PIN
-            int "nrd pin number for ch438"
-            default 26
-        config BSP_CH438_D0_PIN
-            int "d0 pin number for ch438"
-            default 27
-        config BSP_CH438_D1_PIN
-            int "d1 pin number for ch438"
-            default 28
-        config BSP_CH438_D2_PIN
-            int "d2 pin number for ch438"
-            default 29
-        config BSP_CH438_D3_PIN
-            int "d3 pin number for ch438"
-            default 30
-        config BSP_CH438_D4_PIN
-            int "d4 pin number for ch438"
-            default 31
-        config BSP_CH438_D5_PIN
-            int "d5 pin number for ch438"
-            default 32
-        config BSP_CH438_D6_PIN
-            int "d6 pin number for ch438"
-            default 33
-        config BSP_CH438_D7_PIN
-            int "d7 pin number for ch438"
-            default 34
-        config BSP_CH438_INT_PIN
-            int "int pin number for ch438"
-            default 35
+            config CONFIG_CH438_EXTUART0
+                bool "Enable CH438_EXTUART0"
+                default n
+            config CONFIG_CH438_EXTUART1
+                bool "Enable CH438_EXTUART1"
+                default n
+            config CONFIG_CH438_EXTUART2
+                bool "Enable CH438_EXTUART2"
+                default n
+            config CONFIG_CH438_EXTUART3
+                bool "Enable CH438_EXTUART3"
+                default n
+            config CONFIG_CH438_EXTUART4
+                bool "Enable CH438_EXTUART4"
+                default n
+            config CONFIG_CH438_EXTUART5
+                bool "Enable CH438_EXTUART5"
+                default n
+            config CONFIG_CH438_EXTUART6
+                bool "Enable CH438_EXTUART6"
+                default n
+            config CONFIG_CH438_EXTUART7
+                bool "Enable CH438_EXTUART7"
+                default n
         endif
     menuconfig BSP_USING_CH376
     bool "Enable CH376"

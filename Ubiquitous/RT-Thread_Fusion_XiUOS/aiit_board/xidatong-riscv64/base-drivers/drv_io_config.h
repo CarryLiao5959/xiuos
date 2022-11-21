@@ -44,6 +44,7 @@ enum HS_GPIO_CONFIG
     GPIO_ALLOC_START /* index of gpio driver start */
 };
 
+// CH438 FPIOA.define
 #define FPIOA_CH438_ALE   11
 #define FPIOA_CH438_NWR   12
 #define FPIOA_CH438_NRD   13
@@ -56,9 +57,8 @@ enum HS_GPIO_CONFIG
 #define FPIOA_CH438_D6    20
 #define FPIOA_CH438_D7    21
 #define FPIOA_CH438_INT   22
-#define FPIOA_485_DIR     23
 
-//PIN.define
+// CH438 PIN.define
 #define BSP_CH438_ALE_PIN   24
 #define BSP_CH438_NWR_PIN   25
 #define BSP_CH438_NRD_PIN   26
