@@ -24,6 +24,9 @@ if GetDepend('BSP_USING_LCD_XIDATONG'):
     src += ['ports/ok1052lcd.c']
     src += ['ports/drv_lcd.c']
     src += ['../../../../rt-thread/bsp/imxrt/libraries/MIMXRT1050/MIMXRT1052/drivers/fsl_elcdif.c']
+if GetDepend('BSP_USING_I2C1'):
+    src += ['ports/touch.c']
+    src += ['ports/drv_touch.c']
 group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH, CPPDEFINES=CPPDEFINES)
 
 Return('group')
