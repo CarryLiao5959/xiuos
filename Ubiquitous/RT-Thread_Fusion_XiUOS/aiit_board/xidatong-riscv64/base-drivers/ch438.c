@@ -272,7 +272,8 @@ static int drv_extuart_putc(struct rt_serial_device *serial, char c)
 	
 	REG_LSR_ADDR = offsetadd[ext_uart_no] | REG_LSR0_ADDR;
 	REG_THR_ADDR = offsetadd[ext_uart_no] | REG_THR0_ADDR;
-
+	
+	rt_thread_mdelay(1);	
 	if((ReadCH438Data( REG_LSR_ADDR ) & BIT_LSR_TEMT) != 0)
 	{
 		WriteCH438Block( REG_THR_ADDR, 1, &c );
@@ -291,6 +292,7 @@ static int drv_extuart_getc(struct rt_serial_device *serial)
 	REG_LSR_ADDR = offsetadd[ext_uart_no] | REG_LSR0_ADDR;
 	REG_RBR_ADDR = offsetadd[ext_uart_no] | REG_RBR0_ADDR;
 
+	rt_thread_mdelay(1);
 	if((ReadCH438Data(REG_LSR_ADDR) & BIT_LSR_DATARDY) == 0x01)
 	{
 		dat = ReadCH438Data( REG_RBR_ADDR );

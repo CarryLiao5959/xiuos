@@ -22,7 +22,10 @@ if GetDepend('BSP_USING_CH376'):
 
 if GetDepend('BSP_USING_CAN'):
     src += ['can_test.c']
-    
+
+if GetDepend('BSP_USING_CH438'):
+    src += ['ch438_test.c']
+
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')
