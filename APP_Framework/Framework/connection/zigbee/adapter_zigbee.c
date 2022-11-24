@@ -124,10 +124,8 @@ int SendZigbee(int argc, char *argv[])
 {
     const char *send_msg = argv[1];
     int ret = 0;
-
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_ZIGBEE_NAME);
 
-    printf("send argv1 %s\n",argv[1]);
     ret = AdapterDeviceSend(adapter, send_msg, strlen(send_msg));
     if(ret < 0) {
         printf(" adapter send failed\n");
@@ -141,13 +139,14 @@ PRIV_SHELL_CMD_FUNCTION(SendZigbee, a ZigBee send sample, PRIV_SHELL_CMD_MAIN_AT
 
 int RecvZigbee(void)
 {
-    char recv_msg[128];
+    char recv_msg[128]={0};
     struct Adapter* adapter =  AdapterDeviceFindByName(ADAPTER_ZIGBEE_NAME);
-    memset(recv_msg,0,128);
-    AdapterDeviceRecv(adapter, recv_msg, 128);
-    PrivTaskDelay(2000);
-    printf("zigbee recv msg %s\n", recv_msg);
-    
+    while(1) {
+        AdapterDeviceRecv(adapter, recv_msg, 128);
+        printf("zigbee recv msg : %s\n", recv_msg);
+        PrivTaskDelay(2000);
+        memset(recv_msg,0,128);
+    }
     return 0;    
 }
 PRIV_SHELL_CMD_FUNCTION(RecvZigbee, a ZigBee receive sample, PRIV_SHELL_CMD_MAIN_ATTR);

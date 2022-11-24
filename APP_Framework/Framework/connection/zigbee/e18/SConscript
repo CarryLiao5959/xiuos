@@ -1,0 +1,10 @@
+from building import *
+import os
+
+cwd = GetCurrentDir()
+src = []
+if GetDepend(['ADAPTER_E18']):
+    src += ['e18.c']
+group = DefineGroup('connection zigbee e18', src, depend = [], CPPPATH = [cwd])
+
+Return('group')

@@ -75,5 +75,30 @@ if ADD_NUTTX_FETURES
 endif
 
 if ADD_RTTHREAD_FETURES
+        config ADAPTER_E18_MODEPIN
+        int "E18 MODE pin number"
+        default "46"
 
+        config ADAPTER_E18_PIN_DRIVER
+                string "E18 device pin driver path"
+                default "/dev/pin"
+                
+        config ADAPTER_E18_DRIVER_EXTUART
+                bool "Using extra uart to support zigbee"
+                default y
+
+        config ADAPTER_E18_DRIVER
+                string "E18 device uart driver path"
+                default "/dev/extuart_dev1"
+                depends on !ADAPTER_E18_DRIVER_EXTUART
+
+        if ADAPTER_E18_DRIVER_EXTUART
+                config ADAPTER_E18_DRIVER
+                        string "E18 device extra uart driver path"
+                        default "/dev/extuart_dev1"
+
+                config ADAPTER_E18_DRIVER_EXT_PORT
+                        int "if E18 device using extuart, choose port"
+                        default "1"
+        endif
 endif

@@ -44,6 +44,8 @@ static int E18HardwareModeGet()
 {
 #ifdef ADD_NUTTX_FETURES
     return E18_AS_HEX_MODE;
+#elif defined(ADD_RTTHREAD_FETURES)
+    return E18_AS_HEX_MODE;
 #else
     int ret = 0;
     int pin_fd;
@@ -170,6 +172,8 @@ static int E18NetworkModeConfig(struct Adapter *adapter)
 out:
 #ifdef ADD_NUTTX_FETURES
     if(E18_AS_HEX_MODE == mode)
+#elif defined(ADD_RTTHREAD_FETURES)
+    if(E18_AS_HEX_MODE == mode)
 #else
     if(E18_AS_AT_MODE == mode)
 #endif
@@ -242,6 +246,8 @@ static int E18NetRoleConfig(struct Adapter *adapter)
 
 out:
 #ifdef ADD_NUTTX_FETURES
+    if(E18_AS_HEX_MODE == mode)
+#elif defined(ADD_RTTHREAD_FETURES)
     if(E18_AS_HEX_MODE == mode)
 #else
     if(E18_AS_AT_MODE == mode)
@@ -389,6 +395,8 @@ static int E18Join(struct Adapter *adapter, unsigned char *priv_net_group)
     // }
     if(!ret){
 #ifdef ADD_NUTTX_FETURES
+        if(E18_AS_HEX_MODE == mode)
+#elif defined(ADD_RTTHREAD_FETURES)
         if(E18_AS_HEX_MODE == mode)
 #else
         if(E18_AS_AT_MODE == mode)

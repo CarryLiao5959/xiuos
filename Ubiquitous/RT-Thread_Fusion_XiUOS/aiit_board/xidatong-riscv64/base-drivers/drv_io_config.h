@@ -96,6 +96,9 @@ enum HS_GPIO_CONFIG
 #define BSP_WIFI_RX      7
 #define BSP_WIFI_EN      8
 
+// E18 PIN.define
+#define BSP_E18_MODE     46
+
 extern int io_config_init(void);
 
 #endif

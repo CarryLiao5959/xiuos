@@ -21,6 +21,7 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <stdio.h>
+#include <drv_io_config.h>
 //#define LED_G   12
 extern int FrameworkInit(void);
 int main(void)
@@ -33,9 +34,11 @@ int main(void)
     sprintf(info2,"build %s %s",__DATE__,__TIME__);
     printf("%s %s \n",info1,info2); 
     FrameworkInit();
+    #ifdef ADAPTER_E18
+    rt_pin_mode(BSP_E18_MODE, PIN_MODE_OUTPUT);
+    #endif
 
     #ifdef ADAPTER_ESP8285_WIFI
-    #include <drv_io_config.h>
     rt_pin_mode(BSP_WIFI_EN, PIN_MODE_OUTPUT);
     rt_pin_write(BSP_WIFI_EN, PIN_LOW);
     rt_thread_mdelay(50);
