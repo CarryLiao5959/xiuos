@@ -196,26 +196,41 @@ static int Esp07sWifiSetUp(struct Adapter *adapter)
         return -1;
     }
     PrivTaskDelay(2000);
+
+    printf("%s check %d adapter %p wifi %p param %p\n", __func__, __LINE__, adapter, param,
+        adapter->adapter_param);
+
     /* config as softAP+station mode */
     ret = AtCmdConfigAndCheck(agent, "AT+CWMODE=3\r\n", "OK");
     if(ret < 0) {
         printf("%s %d cmd[AT+CWMODE=3] config failed!\n",__func__,__LINE__);
         return -1;
     }
+
+//    printf("%s check %d pwd %s\n", __func__, __LINE__, param->wifi_pwd);
+
     PrivTaskDelay(2000);
     /* connect the router */
     memset(cmd,0,sizeof(cmd));
-    strncpy(cmd,"AT+CWJAP=",strlen("AT+CWJAP="));
+    strcpy(cmd,"AT+CWJAP=");//strlen("AT+CWJAP="));
     strncat(cmd,"\"",1);
-    strncat(cmd,param->wifi_ssid,strlen(param->wifi_ssid));
+
+//    printf("%s check %d len %d\n", __func__, __LINE__, strlen(param->wifi_pwd));
+
+    strncat(cmd,param->wifi_ssid,128);
 
     strncat(cmd,"\"",1);
     strncat(cmd,",",1);
     strncat(cmd,"\"",1);
+
+//    printf("%s check %d len %d\n", __func__, __LINE__, strlen(param->wifi_pwd));
+
     strncat(cmd,param->wifi_pwd,strlen(param->wifi_pwd));
 
     strncat(cmd,"\"",1);
     strcat(cmd,"\r\n");
+
+    printf("%s check %d\n", __func__, __LINE__);
 
     ret = AtCmdConfigAndCheck(agent, cmd, "OK");
     if(ret < 0) {
@@ -223,12 +238,17 @@ static int Esp07sWifiSetUp(struct Adapter *adapter)
         return -1;
     }
 
+    printf("%s check %d\n", __func__, __LINE__);
+
     /* check the wifi ip address */
     ATReplyType reply = CreateATReply(256);
     if (NULL == reply) {
         printf("%s %d at_create_resp failed!\n",__func__,__LINE__);
         return -1;
     }
+
+    printf("%s check %d\n", __func__, __LINE__);
+
     ret = ATOrderSend(agent, REPLY_TIME_OUT, reply, "AT+CIFSR\r\n");
     if(ret < 0){
         printf("%s %d ATOrderSend AT+CIFSR failed.\n",__func__,__LINE__);
@@ -238,7 +258,7 @@ static int Esp07sWifiSetUp(struct Adapter *adapter)
 
     result = GetReplyText(reply);
     if (!result) {
-        printf("%s %n get reply failed.\n",__func__,__LINE__);
+        printf("%s %d get reply failed.\n",__func__,__LINE__);
         ret = -1;
         goto __exit;
     }
@@ -355,7 +375,7 @@ static int Esp07sWifiNetstat(struct Adapter *adapter)
 
     result = GetReplyText(reply);
     if (!result) {
-        printf("%s %n get reply failed.\n",__func__,__LINE__);
+        printf("%s %d get reply failed.\n",__func__,__LINE__);
         ret = -1;
         goto __exit;
     }

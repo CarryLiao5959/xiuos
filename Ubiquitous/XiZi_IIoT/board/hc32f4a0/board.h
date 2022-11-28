@@ -35,11 +35,11 @@ Modification:
 
 #include <stdint.h>
 
-extern int __bss_end;
+extern int __heap_start;
 extern unsigned int g_service_table_start;
 extern unsigned int g_service_table_end;
 
-#define MEMORY_START_ADDRESS    (&__bss_end)
+#define MEMORY_START_ADDRESS    (&__heap_start)
 #define HC32F4_SRAM_SIZE         512
 #define MEMORY_END_ADDRESS      (0x1FFE0000 + HC32F4_SRAM_SIZE * 1024)
 

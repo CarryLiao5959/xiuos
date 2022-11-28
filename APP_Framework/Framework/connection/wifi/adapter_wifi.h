@@ -31,8 +31,8 @@
 
 struct WifiParam
 {
-    uint8_t wifi_ssid[128];
-    uint8_t wifi_pwd[128];
+    char wifi_ssid[128];
+    char wifi_pwd[128];
 };
 
 

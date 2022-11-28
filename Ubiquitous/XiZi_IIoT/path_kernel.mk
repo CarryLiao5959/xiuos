@@ -100,6 +100,16 @@ KERNELPATHS += \
 	-I$(KERNEL_ROOT)/include #
 endif
 
+ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/edu-riscv64)
+KERNELPATHS += \
+	-I$(BSP_ROOT)/include \
+    -I$(BSP_ROOT)/third_party_driver/include \
+	-I$(BSP_ROOT)/third_party_driver \
+	-I$(BSP_ROOT)/third_party_driver/drivers \
+	-I$(BSP_ROOT)/third_party_driver/lcd \
+	-I$(KERNEL_ROOT)/include #
+endif
+
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/kd233)
 KERNELPATHS += \
 	-I$(BSP_ROOT)/include \
@@ -328,13 +338,24 @@ endif
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/imxrt1176-sbc)
-KERNELPATHS :=-I$(BSP_ROOT) \
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/arch/arm/cortex-m7 \
 	-I$(BSP_ROOT)/include \
 	-I$(BSP_ROOT)/third_party_driver \
 	-I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver/CMSIS/Include \
+	-I$(BSP_ROOT)/third_party_driver/ethernet \
+	-I$(BSP_ROOT)/third_party_driver/ethernet/mdio/enet \
+	-I$(BSP_ROOT)/third_party_driver/ethernet/mdio/enet_qos \
+	-I$(BSP_ROOT)/third_party_driver/ethernet/phy/ksz8081 \
+	-I$(BSP_ROOT)/third_party_driver/ethernet/phy/ksz9131rnx \
+	-I$(BSP_ROOT)/third_party_driver/cm7 \
+	-I$(BSP_ROOT)/xip \
 	-I$(KERNEL_ROOT)/include \
+	-I$(KERNEL_ROOT)/resources/include \
+	
+ifeq ($(CONFIG_RESOURCES_LWIP),y)
+KERNELPATHS += \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/compat \
@@ -343,9 +364,8 @@ KERNELPATHS :=-I$(BSP_ROOT) \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/apps \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/priv \
 	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/prot \
-	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch \
-	-I$(KERNEL_ROOT)/resources/include \
-	-I$(BSP_ROOT)/xip #
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch 
+endif
 endif
 
 ifeq ($(BSP_ROOT),$(KERNEL_ROOT)/board/stm32f103-nano)
@@ -380,6 +400,12 @@ KERNELPATHS += \
 	-I$(BSP_ROOT)/include \
 	-I$(BSP_ROOT)/third_party_driver/include \
 	-I$(BSP_ROOT)/third_party_driver/CMSIS/include \
+	-I$(BSP_ROOT)/third_party_driver/spi/third_party_spi_lora/sx12xx/inc \
+	-I$(BSP_ROOT)/third_party_driver/spi/third_party_spi_lora/sx12xx/src/radio \
+	-I$(BSP_ROOT)/third_party_driver/usb/hc32_usb_driver \
+	-I$(BSP_ROOT)/third_party_driver/usb/hc32_usb_driver/usb_host_lib \
+	-I$(BSP_ROOT)/third_party_driver/usb/hc32_usb_driver/usb_host_lib/host_class/msc \
+	-I$(BSP_ROOT)/third_party_driver/usb/hc32_usb_driver/usb_host_lib/host_core \
 	-I$(KERNEL_ROOT)/include #
 endif
 

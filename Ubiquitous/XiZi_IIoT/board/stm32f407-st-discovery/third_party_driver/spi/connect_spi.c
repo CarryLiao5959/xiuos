@@ -110,7 +110,7 @@ static x_err_t Stm32SpiInit(struct Stm32Spi *spi_drv, struct SpiMasterParam *cfg
 
     SPI_InitTypeDef *spi_init = &spi_drv->init;
 
-    if (cfg->spi_work_mode & DEV_SPI_SLAVE){
+    if (cfg->spi_work_mode & SPI_DEV_SLAVE){
         spi_init->SPI_Mode = SPI_Mode_Slave;
     }
     else{

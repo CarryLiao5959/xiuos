@@ -28,7 +28,6 @@ Modification:
 #ifndef __FSL_DEVICE_REGISTERS_H__
 #define __FSL_DEVICE_REGISTERS_H__
 
-#define CPU_MIMXRT1176DVMAA_cm7
 /*
  * Include the cpu specific register header files.
  *

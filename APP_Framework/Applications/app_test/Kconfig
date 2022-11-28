@@ -26,8 +26,139 @@ menu "test app"
                     endif
                 endif
 
+            menuconfig USER_TEST_FS
+                bool "Config test fs with sd or usb"
+                default n
+                if USER_TEST_FS
+                    if ADD_XIZI_FETURES
+                        config FPATH
+                            string "Set test file path"
+                            default "/test_file"
+                    endif
+                endif
+
+
+            menuconfig USER_TEST_GPIO
+                select BSP_USING_GPIO
+                select RESOURCES_PIN
+                select BSP_USING_LED
+                select BSP_USING_KEY
+                bool "Config test gpio with led and key"
+                default n
+                if USER_TEST_GPIO
+                    if ADD_XIZI_FETURES
+                        config GPIO_DEV_DRIVER
+                            string "Set gpio dev path"
+                            default "/dev/pin_dev"
+                    endif
+                endif
+
+            menuconfig USER_TEST_LORA
+                select BSP_USING_UART
+                select BSP_USING_GPIO
+                select RESOURCES_PIN
+                select BSP_USING_UART2
+                select BSP_USING_LORA
+                bool "Config test uart(loraE220)"
+                default n
+                if USER_TEST_LORA
+                    if ADD_XIZI_FETURES
+                        config LORA_UART_DEV_DRIVER
+                            string "Set uart dev path"
+                            default "/dev/uart2_dev2"
+                        config LORA_PIN_DEV_DRIVER
+                            string "Set pin dev path"
+                            default "/dev/pin_dev"
+                    endif
+                endif
+
+            menuconfig USER_TEST_RS485
+                select BSP_USING_UART
+                select BSP_USING_GPIO
+                select RESOURCES_PIN
+                select BSP_USING_UART1
+                bool "Config test uart(RS485)"
+                default n
+                if USER_TEST_RS485
+                    if ADD_XIZI_FETURES
+                        config RS485_UART_DEV_DRIVER
+                            string "Set uart dev path"
+                            default "/dev/uart1_dev1"
+                        config RS485_PIN_DEV_DRIVER
+                            string "Set pin dev path"
+                            default "/dev/pin_dev"
+                    endif
+                endif
+
+            menuconfig USER_TEST_RTC
+                select BSP_USING_RTC
+                bool "Config test rtc"
+                default n
+                if USER_TEST_RTC
+                    if ADD_XIZI_FETURES
+                        config RTC_DEV_DRIVER
+                            string "Set rtc dev path"
+                            default "/dev/rtc_dev"
+                    endif
+                endif
+
+            menuconfig USER_TEST_HWTIMER
+                select BSP_USING_HWTIMER
+                select BSP_USING_GPIO
+                bool "Config test hwtimer"
+                default n
+                if USER_TEST_HWTIMER
+                    if ADD_XIZI_FETURES
+                        config HWTIMER_PIN_DEV_DRIVER
+                            string "Set pin dev path"
+                            default "/dev/pin_dev"
+                    endif
+                endif
+
+            menuconfig USER_TEST_WDT
+                select BSP_USING_WDT0
+                bool "Config test watchdog"
+                default n
+                if USER_TEST_WDT
+                    if ADD_XIZI_FETURES
+                        config WDT0_DEV_DRIVER
+                            string "Set wdt dev path"
+                            default "/dev/wdt0_dev0"
+                    endif
+                endif
+
+            menuconfig USER_TEST_LCD_EDU
+                select BSP_USING_LCD
+                bool "Config test lcd in PrivOpen"
+                default n
+                if USER_TEST_LCD_EDU
+                    if ADD_XIZI_FETURES
+                        config EDU_LCD_DEV_DRIVER
+                            string "Set lcd dev path"
+                            default "/dev/lcd_dev"
+                    endif
+                endif
+
+            menuconfig USER_TEST_I2C
+                select BSP_USING_I2C
+                bool "Config test i2c"
+                default n
+                if USER_TEST_I2C
+                    if ADD_XIZI_FETURES
+                        config I2C_DEV_DRIVER
+                            string "Set i2c dev path"
+                            default "/dev/i2c1_dev0"
+                    endif
+                endif
+
             config USER_TEST_SEMC
                 bool "Config test semc sdram"
                 default n
+
+            config USER_TEST_LCD
+                bool "Config test lcd device"
+                default n
+
+                
         endif
 endmenu

@@ -48,9 +48,9 @@
 #include "lwip/mem.h"
 #include "lwip/pbuf.h"
 #include "lwip/sys.h"
+#include "lwip/timeouts.h"
 #include "netif/etharp.h"
 #include "err.h"
-#include "ethernetif.h"
 
 #include "main.h"
 #include <string.h>
@@ -101,7 +101,7 @@ extern ETH_DMA_Rx_Frame_infos *DMA_RX_FRAME_infos;
 
 
 
-void ethernetif_input( void * pvParameters );
+
 void LoopGetMacPkg(void * pvParameters);
 
 static void arp_timer(void *arg);
@@ -140,7 +140,7 @@ void LwIP_Pkt_Handle(struct netif *netif)
 
 void Time_Update_LwIP(void)
 {
-  LocalTime += MS_PER_SYSTICK_F407;
+  LocalTime += MS_PER_SYSTICK;
 }
 
 
@@ -413,7 +413,7 @@ void LoopGetMacPkg(void * pvParameters)
  *         ERR_MEM if private data couldn't be allocated
  *         any other err_t on error
  */
-err_t ethernetif_init(struct netif *netif)
+err_t ethernetif0_init(struct netif *netif)
 {
   LWIP_ASSERT("netif != NULL", (netif != NULL));
 

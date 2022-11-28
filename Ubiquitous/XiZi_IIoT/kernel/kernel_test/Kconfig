@@ -62,4 +62,7 @@ menuconfig KERNEL_TEST
         config KERNEL_TEST_SPI_FLASH
             bool "Config test spi flash"
             default n
+        config KERNEL_TEST_SOFT_SPI_SD
+            bool "Config test soft spi sd"
+            default n
     endif

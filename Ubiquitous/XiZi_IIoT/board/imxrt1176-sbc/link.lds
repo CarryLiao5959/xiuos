@@ -48,16 +48,15 @@ Modification:
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x0400;
-STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x1000;
+STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x2000;
 
-/* Specify the memory areas */
+/* Specify the memory areas- */
 MEMORY
 {
   /* define flash 32MB */
   m_boot_data           (RX)  : ORIGIN = 0x30000000, LENGTH = 0x00001000
   m_image_vertor_table  (RX)  : ORIGIN = 0x30001000, LENGTH = 0x00001000  
-  m_interrupts          (RX)  : ORIGIN = 0x30002000, LENGTH = 0x00000400
+  m_interrupts          (RX)  : ORIGIN = 0x30002000, LENGTH = 0x00001000
   m_text                (RX)  : ORIGIN = 0x30002400, LENGTH = 0x01FFDC00
 
 /* define itcm 256KB */
@@ -91,12 +90,14 @@ SECTIONS
   {
     KEEP(*(.boot_hdr.conf))
   } > m_boot_data
-
+  
   .image_vertor_table :
   {
+    . = ALIGN(4);
     KEEP(*(.boot_hdr.ivt))
     KEEP(*(.boot_hdr.boot_data))
     KEEP(*(.boot_hdr.dcd_data))
+    . = ALIGN(4);
   } > m_image_vertor_table
 
   /* The startup code goes first into internal RAM */
@@ -240,15 +241,15 @@ SECTIONS
     *(NonCacheable.init)
     . = ALIGN(4);
     __noncachedata_init_end__ = .;   /* create a global symbol at initialized ncache data end */
-  } > sram_dtcm_cm7
+  } > NCACHE_REGION
   . = __noncachedata_init_end__;
   .ncache :
   {
     *(NonCacheable)
-    . = ALIGN(4);
+    . = ALIGN(8192);
     __noncachedata_end__ = .;     /* define a global symbol at ncache data end */
     __NCACHE_REGION_END = .;
-  } > sram_dtcm_cm7
+  } > NCACHE_REGION
 
   __DATA_END = __NDATA_ROM + (__noncachedata_init_end__ - __noncachedata_start__);
   text_end = ORIGIN(m_text) + LENGTH(m_text);

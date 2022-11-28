@@ -35,7 +35,7 @@ CSRCS += k210_leds.c
 endif
 
 ifeq ($(CONFIG_K210_LCD),y)
-CSRCS += k210_lcd.c lcd_demo.c
+CSRCS += k210_lcd.c
 endif
 
 ifeq ($(CONFIG_DEV_GPIO),y)
@@ -44,6 +44,22 @@ endif
 
 ifeq ($(CONFIG_BSP_USING_CH438),y)
 CSRCS += k210_ch438.c ch438_demo.c
+endif
+
+ifeq ($(CONFIG_BSP_USING_CH376),y)
+CSRCS += k210_ch376.c ch376_demo.c
+endif
+
+ifeq ($(CONFIG_BSP_USING_ENET),y)
+CSRCS += k210_w5500.c
+endif
+
+ifeq ($(CONFIG_BSP_USING_TOUCH),y)
+CSRCS += k210_touch.c
+endif
+
+ifeq ($(CONFIG_BSP_USING_CAN),y)
+CSRCS += can_demo.c
 endif
 
 include $(TOPDIR)/boards/Board.mk

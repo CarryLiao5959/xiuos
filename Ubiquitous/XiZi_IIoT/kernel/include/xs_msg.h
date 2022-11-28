@@ -33,7 +33,7 @@ struct MsgQueue
 {
     struct IdNode        id;
     void                 *msg_buf;
-	uint16               index;
+	int16                index;
     uint16               num_msgs;
     uint16               each_len;
     uint16               max_msgs;

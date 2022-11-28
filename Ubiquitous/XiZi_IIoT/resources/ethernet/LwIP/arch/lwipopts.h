@@ -265,7 +265,6 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
 typedef unsigned int nfds_t;
 #endif
 
-#define FSL_FEATURE_PHYKSZ8081_USE_RMII50M_MODE
 
 #define MEMP_LIB_MALLOC                 1
 #define MEMP_MEM_MALLOC                 1

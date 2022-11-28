@@ -35,9 +35,11 @@ menu "aiit-arm32-board feature"
 
         menu "config board peripheral"
             config MOUNT_SDCARD
-                bool "mount cd card"
+                bool
                 default n
-                select  BSP_USING_SDIO
+            config MOUNT_USB
+                bool
+                default n
         endmenu
     endmenu
 endmenu

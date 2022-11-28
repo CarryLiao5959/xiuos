@@ -16,7 +16,6 @@
 #include <transform.h>
 
 
-
 extern int FrameworkInit();
 extern void ApplicationOtaTaskInit(void);
 int main(void)

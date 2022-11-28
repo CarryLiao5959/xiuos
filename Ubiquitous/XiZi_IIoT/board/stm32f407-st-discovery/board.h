@@ -40,6 +40,8 @@ extern int __stack_end__;
 extern unsigned int g_service_table_start;
 extern unsigned int g_service_table_end;
 
+#define configMAC_ADDR {0x02, 0x12, 0x13, 0x10, 0x15, 0x11}
+
 #define STM32_USE_SDIO			0
 
 #define STM32_EXT_SRAM          0

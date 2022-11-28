@@ -139,6 +139,8 @@ This function initializes the Ethernet driver.
 //------------------------------------------------------------------------------
 tOplkError edrv_init(const tEdrvInitParam* pEdrvInitParam_p)
 {
+    uint8_t enet_port = 0; ///< use enet port 0
+
     // Check parameter validity
     ASSERT(pEdrvInitParam_p != NULL);
 
@@ -153,7 +155,7 @@ tOplkError edrv_init(const tEdrvInitParam* pEdrvInitParam_p)
 
     edrvInstance_l.fStartCommunication = TRUE;
 
-    lwip_config_net(lwip_ipaddr, lwip_netmask, lwip_gwaddr);
+    lwip_config_net(enet_port, lwip_ipaddr, lwip_netmask, lwip_gwaddr);
     gnetif.input = ethernetInput;
     edrvInstance_l.pNetif = &gnetif;
 

@@ -62,7 +62,10 @@ extern int32 s_xSemaphore;
 
 
 /* Private functions ---------------------------------------------------------*/
-
+void *ethernetif_config_enet_set(uint8_t enet_port)
+{
+  return NONE;
+}
 /**
   * @brief  ETH_BSP_Config
   * @param  None

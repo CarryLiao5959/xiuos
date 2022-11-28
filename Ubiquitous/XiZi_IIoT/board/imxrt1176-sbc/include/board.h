@@ -24,20 +24,30 @@ Modification:
 #include "fsl_common.h"
 #include "fsl_gpio.h"
 #include "fsl_clock.h"
-// #include "fsl_enet.h"
+#include "fsl_enet.h"
 #include "clock_config.h"
+#include "pin_mux.h"
 #include <xizi.h>
 #include <arch_interrupt.h>
+
+#define BOARD_NET_COUNT (2)
+/* MAC address configuration. */
+#define configMAC_ADDR {0x02, 0x12, 0x13, 0x10, 0x15, 0x11}
+#define configMAC_ADDR_ETH1 {0x02, 0x12, 0x13, 0x10, 0x15, 0x12}
+
+/*! @brief The ENET0 PHY address. */
+#define BOARD_ENET0_PHY_ADDRESS (0x02U) /* Phy address of enet port 0. */
+
+/*! @brief The ENET1 PHY address. */
+#define BOARD_ENET1_PHY_ADDRESS (0x07U) /* Phy address of enet port 1. */
+
+#define BOARD_FLASH_SIZE    (0x1000000U)
 
 extern int heap_start;
 extern int heap_end;
 #define HEAP_BEGIN          (&heap_start)
 #define HEAP_END            (&heap_end)
-
-#define BOARD_FLASH_SIZE    (0x1000000U)
-
 #define HEAP_SIZE           ((uint32_t)HEAP_END - (uint32_t)HEAP_BEGIN)
-
 
 void InitBoardHardware(void);
 
@@ -56,9 +66,6 @@ void InitBoardHardware(void);
 #define NVIC_PRIORITYGROUP_3         0x00000004U /*!< 3 bits for pre-emption priority
                                                       1 bits for subpriority */
 #define NVIC_PRIORITYGROUP_4         0x00000003U /*!< 4 bits for pre-emption priority*/
-
-/*! @brief The ENET PHY address. */
-#define BOARD_ENET0_PHY_ADDRESS (0x0U) /* Phy address of enet port 0. */
 
 
 

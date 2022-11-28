@@ -50,6 +50,10 @@ extern int Stm32HwRtcInit();
 extern int HwSdioInit();
 extern int Stm32HwAdcInit(void);
 extern int Stm32HwDacInit(void);
+extern int Stm32HwUsbInit(void);
+#ifdef BSP_USING_LWIP
+extern int ETH_BSP_Config();
+#endif
 
 static void ClockConfiguration()
 {
@@ -136,12 +140,21 @@ struct InitSequenceDesc _board_init[] =
 #ifdef BSP_USING_SDIO
     {"hw sdcard init", HwSdioInit},
 #endif
+#ifdef BSP_USING_USB
+#ifdef BSP_USING_STM32_USBH
+	{ "hw usb", Stm32HwUsbInit },
+#endif
+#endif
 #ifdef BSP_USING_ADC
     {"hw adc init", Stm32HwAdcInit},
 #endif
 #ifdef BSP_USING_DAC
     {"hw dac init", Stm32HwDacInit},
 #endif
+#ifdef BSP_USING_LWIP
+    {"ETH_BSP", ETH_BSP_Config},
+#endif
+
 	{ " NONE ",NONE },
 };
 void InitBoardHardware()

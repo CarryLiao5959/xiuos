@@ -25,7 +25,6 @@
 #include <nuttx/config.h>
 
 #include <nuttx/board.h>
-
 #include <arch/board/board.h>
 
 #include "k210_fpioa.h"
@@ -37,23 +36,12 @@
 
 void board_autoled_initialize(void)
 {
-  k210_fpioa_config(BOARD_LED_PAD, BOARD_LED_IO_FUNC | K210_IOFLAG_GPIOHS);
-  k210_gpiohs_set_direction(BOARD_LED_IO, GPIO_DM_OUTPUT);
-  k210_gpiohs_set_value(BOARD_LED_IO, true); /* LED off */
 }
 
 void board_autoled_on(int led)
 {
-  if (led == LED_PANIC)
-    {
-      k210_gpiohs_set_value(BOARD_LED_IO, false);
-    }
 }
 
 void board_autoled_off(int led)
 {
-  if (led == LED_PANIC)
-    {
-      k210_gpiohs_set_value(BOARD_LED_IO, true);
-    }
 }

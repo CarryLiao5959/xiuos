@@ -29,16 +29,12 @@
 #include "lwip/dhcp.h"
 #include "lwip/prot/dhcp.h"
 #include "netif/ethernet.h"
-#include "enet_ethernetif.h"
 
 #include <shell.h>
+#include <assert.h>
+#include <sys_arch.h>
 #include "board.h"
-
-#include "pin_mux.h"
-#include "clock_config.h"
-#include "fsl_gpio.h"
-#include "fsl_iomuxc.h"
-#include "sys_arch.h"
+#include "connect_ethernet.h"
 
 #define LWIP_DHCP_TIME 10000 // 10s
 
@@ -123,9 +119,10 @@ void LwipDHCPTest(void)
 {
     u32_t dhcp_time;
     static int flag = 0;
+    uint8_t enet_port = 0; ///< test enet port 0
     char ip_addr[4] = {0, 0, 0, 0};
 
-    lwip_config_net(ip_addr, ip_addr, ip_addr);
+    lwip_config_net(enet_port, ip_addr, ip_addr, ip_addr);
     set_lwip_bit(LWIP_PRINT_FLAG);
 
     dhcp_start(&gnetif);

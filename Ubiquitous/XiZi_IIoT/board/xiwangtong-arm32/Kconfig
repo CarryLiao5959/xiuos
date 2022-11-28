@@ -42,7 +42,10 @@ menu "xiwangtong-arm32 feature"
 
     menu "config board peripheral"
         config MOUNT_SDCARD
-            bool "mount sd card"
+            bool
+            default n
+        config MOUNT_USB
+            bool
             default n
     endmenu
 

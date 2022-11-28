@@ -51,6 +51,9 @@ void InitBoardHardware(void);
 /*! @brief The board name */
 #define BOARD_NAME "IMXRT1050"
 
+#define configMAC_ADDR {0x02, 0x12, 0x13, 0x10, 0x15, 0x11}
+
+
 #define NVIC_PRIORITYGROUP_0         0x00000007U /*!< 0 bits for pre-emption priority
                                                       4 bits for subpriority */
 #define NVIC_PRIORITYGROUP_1         0x00000006U /*!< 1 bits for pre-emption priority

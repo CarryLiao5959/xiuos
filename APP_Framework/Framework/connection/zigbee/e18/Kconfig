@@ -47,14 +47,24 @@ if ADD_XIZI_FETURES
 endif
 
 if ADD_NUTTX_FETURES
+if ARCH_BOARD_XIDATONG_ARM32
+        config ADAPTER_E18_MODEPIN
+                int "E18 MODE pin number"
+                default "61"
+
+        config ADAPTER_E18_PIN_DRIVER
+                string "E18 device pin driver path"
+                default "/dev/gpio0"
+endif
+if ARCH_BOARD_XIDATONG_ARM32
         config ADAPTER_E18_MODE_PATH
                 string "E18 MODE pin device"
                 default "/dev/gpio2"
-
+endif
         config ADAPTER_E18_DRIVER_EXTUART
                 bool "Using extra uart to support zigbee"
                 default y
-                
+
         config ADAPTER_E18_DRIVER
                 string "E18 device uart driver path"
                 default "/dev/ttyS1"

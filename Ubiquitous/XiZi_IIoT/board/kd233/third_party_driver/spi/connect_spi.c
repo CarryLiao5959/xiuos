@@ -393,9 +393,15 @@ static int BoardSpiDevBend(struct SpiDmaParam *spi_initparam)
     static struct SpiHardwareDevice spi_device2;
     memset(&spi_device2, 0, sizeof(struct SpiHardwareDevice));
 
-    spi_initparam->spi_slave_id[SPI_DEVICE_SLAVE_ID_2] = SPI_DEVICE_SLAVE_ID_2;
-    spi_initparam->spi_cs_gpio_pin[SPI_DEVICE_SLAVE_ID_2] = SPI1_CS2_PIN;
-    spi_initparam->spi_cs_select_id[SPI_DEVICE_SLAVE_ID_2] = SPI_CHIP_SELECT_2;
+    static struct SpiSlaveParam spi_slaveparam2;
+    memset(&spi_slaveparam2, 0, sizeof(struct SpiSlaveParam));
+
+    spi_slaveparam2.spi_slave_id = SPI_DEVICE_SLAVE_ID_2;
+    spi_slaveparam2.spi_cs_gpio_pin = SPI1_CS2_PIN;
+    spi_slaveparam2.spi_cs_select_id = SPI_CHIP_SELECT_2;
+
+    spi_device2.spi_param.spi_dma_param = spi_initparam;
+    spi_device2.spi_param.spi_slave_param = &spi_slaveparam2;   
 
     spi_device2.spi_dev_done = &(spi_dev_done);
 
@@ -416,9 +422,15 @@ static int BoardSpiDevBend(struct SpiDmaParam *spi_initparam)
     static struct SpiHardwareDevice spi_device3;
     memset(&spi_device3, 0, sizeof(struct SpiHardwareDevice));
 
-    spi_initparam->spi_slave_id[SPI_DEVICE_SLAVE_ID_3] = SPI_DEVICE_SLAVE_ID_3;
-    spi_initparam->spi_cs_gpio_pin[SPI_DEVICE_SLAVE_ID_3] = SPI1_CS3_PIN;
-    spi_initparam->spi_cs_select_id[SPI_DEVICE_SLAVE_ID_3] = SPI_CHIP_SELECT_3;
+    static struct SpiSlaveParam spi_slaveparam3;
+    memset(&spi_slaveparam3, 0, sizeof(struct SpiSlaveParam));
+
+    spi_slaveparam3.spi_slave_id = SPI_DEVICE_SLAVE_ID_3;
+    spi_slaveparam3.spi_cs_gpio_pin = SPI1_CS3_PIN;
+    spi_slaveparam3.spi_cs_select_id = SPI_CHIP_SELECT_3;
+
+    spi_device3.spi_param.spi_dma_param = spi_initparam;
+    spi_device3.spi_param.spi_slave_param = &spi_slaveparam3; 
 
     spi_device3.spi_dev_done = &(spi_dev_done);
 

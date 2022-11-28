@@ -28,12 +28,13 @@ Modification:
 #include <board.h>
 #include <connect_usb.h>
 
-#define BSP_USING_NXP_USBH
 #ifdef BSP_USING_NXP_USBH
 
 /*! @brief USB host msd command instance global variable */
 extern usb_host_msd_command_instance_t g_MsdCommandInstance;
 usb_host_handle g_HostHandle;
+
+static void UsbHostTask(void* parameter);
 
 extern usb_status_t USB_HostMsdReadApi(usb_host_msd_command_instance_t *msdCommandInstance, uint8_t *buffer, uint32_t pos, uint32_t block_size, uint32_t block_num);
 extern usb_status_t USB_HostMsdWriteApi(usb_host_msd_command_instance_t *msdCommandInstance, const uint8_t *buffer, uint32_t pos, uint32_t block_size, uint32_t block_num);
@@ -149,6 +150,22 @@ void UsbUnmountFileSystem()
 {
     UnmountFileSystem(UDISK_MOUNTPOINT);
 }
+
+#ifdef MOUNT_USB
+int MountUsb(void)
+{
+    int32 usb_host_task = 0;
+    usb_host_task = KTaskCreate("usbh", UsbHostTask, NONE,
+                           USB_HOST_STACK_SIZE, 8);
+    if(usb_host_task < 0) {		
+		KPrintf("usb_host_task create failed ...%s %d.\n", __FUNCTION__,__LINE__);
+		return ERROR;
+	}
+
+    StartupKTask(usb_host_task);
+    return 0;
+}
+#endif
 #endif
 
 static uint32 UsbHostOpen(void *dev)
@@ -259,7 +276,6 @@ static int BoardUsbDevBend(void)
 int Imxrt1052HwUsbHostInit(void)
 {
     x_err_t ret = EOK;
-    int32 usb_host_task = 0;
 
     static struct UsbBus usb_bus;
     memset(&usb_bus, 0, sizeof(struct UsbBus));
@@ -280,15 +296,6 @@ int Imxrt1052HwUsbHostInit(void)
         KPrintf("BoardUsbDevBend error ret %u\n", ret);
         return ERROR;
     }
-
-    usb_host_task = KTaskCreate("usbh", UsbHostTask, NONE,
-                           USB_HOST_STACK_SIZE, 8);
-    if(usb_host_task < 0) {		
-		KPrintf("usb_host_task create failed ...%s %d.\n", __FUNCTION__,__LINE__);
-		return ERROR;
-	}
-
-    StartupKTask(usb_host_task);
 
     return ret;
 }

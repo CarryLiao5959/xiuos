@@ -21,6 +21,9 @@ endif
 ifeq ($(CONFIG_BOARD_XIDATONG_RISCV64_EVB),y)
 SRC_DIR +=k210
 endif
+ifeq ($(CONFIG_BOARD_EDU_RISCV64_EVB),y)
+SRC_DIR +=k210
+endif
 
 ifeq ($(CONFIG_BOARD_GAPUINO),y)
 SRC_DIR +=gap8

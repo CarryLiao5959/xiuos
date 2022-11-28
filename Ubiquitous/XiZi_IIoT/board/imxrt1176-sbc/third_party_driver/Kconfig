@@ -14,3 +14,12 @@ menuconfig BSP_USING_GPIO
     if BSP_USING_GPIO
         source "$BSP_DIR/third_party_driver/gpio/Kconfig"
     endif
+
+menuconfig BSP_USING_LWIP
+    bool "Using LwIP device"
+    default n
+    select RESOURCES_LWIP
+
+    if BSP_USING_LWIP
+        source "$BSP_DIR/third_party_driver/ethernet/Kconfig"
+    endif

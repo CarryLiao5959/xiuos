@@ -28,27 +28,27 @@ extern "C" {
 #endif
 
 #define SPI_MAX_CLOCK            40000000
-#define spi_device_max_num  4
+#define spi_device_max_num       4
 
-#define SPI_LINE_CPHA     (1<<0)                           
-#define SPI_LINE_CPOL     (1<<1)                          
+#define SPI_LINE_CPHA            (1 << 0)                           
+#define SPI_LINE_CPOL            (1 << 1)                          
 
-#define SPI_LSB       (0<<2)                             
-#define SPI_MSB      (1<<2)                             
+#define SPI_LSB                  (0 << 2)                             
+#define SPI_MSB                  (1 << 2)                             
 
-#define SPI_MASTER           (0<<3)                            
-#define DEV_SPI_SLAVE    (1<<3)      
+#define SPI_DEV_MASTER           (0 << 3)                            
+#define SPI_DEV_SLAVE            (1 << 3)      
 
-#define SPI_MODE_0             (0 | 0)                        
-#define SPI_MODE_1             (0 | SPI_LINE_CPHA)              
-#define SPI_MODE_2             (SPI_LINE_CPOL | 0)            
-#define SPI_MODE_3             (SPI_LINE_CPOL | SPI_LINE_CPHA)    
-#define SPI_MODE_MASK    (SPI_LINE_CPHA | SPI_LINE_CPOL | SPI_MSB)
+#define SPI_MODE_0               (0 | 0)                        
+#define SPI_MODE_1               (0 | SPI_LINE_CPHA)              
+#define SPI_MODE_2               (SPI_LINE_CPOL | 0)            
+#define SPI_MODE_3               (SPI_LINE_CPOL | SPI_LINE_CPHA)    
+#define SPI_MODE_MASK            (SPI_LINE_CPHA | SPI_LINE_CPOL | SPI_MSB)
 
-#define SPI_CS_HIGH  (1<<4)                            
-#define SPI_NO_CS      (1<<5)                           
-#define SPI_3WIRE        (1<<6)                             
-#define SPI_READY        (1<<7)   
+#define SPI_CS_HIGH              (1 << 4)                            
+#define SPI_NO_CS                (1 << 5)                           
+#define SPI_3WIRE                (1 << 6)                             
+#define SPI_READY                (1 << 7)   
 
 struct SpiDataStandard
 {
@@ -83,9 +83,10 @@ struct SpiDmaParam
 
 struct SpiSlaveParam
 {
-    uint8 spi_slave_id;
-    uint8 spi_cs_gpio_pin;
-    uint8 spi_cs_select_id;
+    uint32 spi_slave_id;
+    uint32 spi_cs_gpio_pin;
+    uint32 spi_cs_gpio_port;
+    uint32 spi_cs_select_id;
 };
 
 typedef struct

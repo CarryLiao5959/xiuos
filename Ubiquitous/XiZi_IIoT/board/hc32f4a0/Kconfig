@@ -28,6 +28,12 @@ menu "hc32f4a0 feature"
         endmenu
     endmenu
 
+    config MOUNT_SDCARD
+        bool
+        default n
+    config MOUNT_USB
+        bool
+        default n
 endmenu
 
 menu "Hardware feature"

@@ -301,7 +301,41 @@ menu "Onboard Peripheral Drivers"
 
         endif
 	endif
-
+    menuconfig BSP_USING_LCD_XIDATONG
+	bool "Enable LCD"
+	default n
+    if BSP_USING_LCD_XIDATONG
+        config LCD_WIDTH
+            int "display panel width, pixels per line"
+            default 480
+        config LCD_HEIGHT
+            int "display panel height, how many lines per panel"
+            default 272
+        config LCD_HFP
+            int "horizontal front porch"
+            default 4
+        config LCD_HBP
+            int "horizontal back porch."
+            default 8
+        config LCD_HSW
+            int " HSYNC pulse width"
+            default 41
+        config LCD_VFP
+            int "Vrtical front porch"
+            default 4
+        config LCD_VBP
+            int "Vertical back porch"
+            default 2
+        config LCD_VSW
+            int "VSYNC pulse width"
+            default 10
+        config LCD_BL_PIN
+            int "lcd backlight control pin number"
+            default 63
+        config LCD_RST_PIN
+            int "lcd reset pin"
+            default 999
+    endif
 endmenu
 
 

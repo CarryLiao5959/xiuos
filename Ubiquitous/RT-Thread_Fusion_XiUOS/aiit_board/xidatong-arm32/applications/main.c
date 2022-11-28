@@ -157,3 +157,87 @@ static void can2_test(void)
 }
 MSH_CMD_EXPORT(can2_test, can2 test);
 #endif
+
+#ifdef BSP_USING_I2C1
+#include <touch.h>
+#include "drv_touch.h"
+static rt_thread_t  ok_1052_touch_thread = RT_NULL;
+static rt_sem_t     ok_1052_touch_sem = RT_NULL;
+static rt_device_t  dev = RT_NULL;
+
+/* 读取数据线程入口函数 */
+static void ok_1052_touch_entry(void *parameter)
+{
+    TouchDataStandard_drv *read_data;
+    read_data = (TouchDataStandard_drv *)rt_malloc(sizeof(TouchDataStandard_drv) * 1);
+
+    while (1)
+    {
+        /* 请求信号量 */
+        rt_sem_take(ok_1052_touch_sem, RT_WAITING_FOREVER);
+        /* 读取五个点的触摸信息 */
+        if (rt_device_read(dev, 0, read_data, 1) == 1)
+        {
+           
+                
+                    rt_kprintf("X:%d Y:%d \n",
+                                read_data->x,
+                                read_data->y);
+            
+        }
+        /* 打开中断 */
+        rt_device_control(dev, RT_TOUCH_CTRL_ENABLE_INT, RT_NULL);
+    }
+}
+
+/* 接收回调函数 */
+static rt_err_t rx_callback(rt_device_t dev, rt_size_t size)
+{
+    /* 关闭中断 */
+    rt_device_control(dev, RT_TOUCH_CTRL_DISABLE_INT, RT_NULL);
+    /* 释放信号量 */
+    rt_sem_release(ok_1052_touch_sem);
+    return 0;
+}
+
+static int ok_1052_touch_sample(void)
+{
+    /* 查找 Touch 设备 */
+    dev = rt_device_find("touch");
+
+    if (dev == RT_NULL)
+    {
+        rt_kprintf("can't find device:%s\n", "touch");
+        return -1;
+    }
+    /* 以中断的方式打开设备 */
+    if (rt_device_open(dev, RT_DEVICE_FLAG_INT_RX) != RT_EOK)
+    {
+        rt_kprintf("open device failed!");
+        return -1;
+    }
+    /* 设置接收回调 */
+    rt_device_set_rx_indicate(dev, rx_callback);
+    /* 创建信号量 */
+    ok_1052_touch_sem = rt_sem_create("dsem", 0, RT_IPC_FLAG_PRIO);
+
+    if (ok_1052_touch_sem == RT_NULL)
+    {
+        rt_kprintf("create dynamic semaphore failed.\n");
+        return -1;
+    }
+    /* 创建读取数据线程 */
+    ok_1052_touch_thread = rt_thread_create("touch1052",
+                                     ok_1052_touch_entry,
+                                     RT_NULL,
+                                     512,
+                                     5,
+                                     10);
+    /* 启动线程 */
+    if (ok_1052_touch_thread != RT_NULL)
+        rt_thread_startup(ok_1052_touch_thread);
+
+    return 0;
+}
+MSH_CMD_EXPORT(ok_1052_touch_sample, ok_1052_touch_sample);
+#endif

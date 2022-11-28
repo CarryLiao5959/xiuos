@@ -12,10 +12,10 @@
 
 /**
 * @file connect_spi.h
-* @brief define aiit-riscv64-board spi function and struct
+* @brief define edu-riscv64 board spi function and struct
 * @version 1.0 
 * @author AIIT XUOS Lab
-* @date 2021-04-25
+* @date 2022-10-25
 */
 
 #ifndef CONNECT_SPI_H

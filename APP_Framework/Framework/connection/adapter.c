@@ -169,7 +169,7 @@ int AdapterDeviceOpen(struct Adapter *adapter)
         
         result = priv_done->open(adapter);
         if (0 == result) {
-            printf("Device %s open success.\n", adapter->name);
+            printf("Device %s %p open success.\n", adapter->name, adapter->adapter_param);
             adapter->adapter_status = INSTALL;
         } else {
             if (adapter->fd) {
@@ -187,7 +187,7 @@ int AdapterDeviceOpen(struct Adapter *adapter)
         
         result = ip_done->open(adapter);
         if (0 == result) {
-            printf("Device %s open success.\n", adapter->name);
+            printf("Device %s param %p open success.\n", adapter->name, adapter->adapter_param);
             adapter->adapter_status = INSTALL;
         } else {
             if (adapter->fd) {

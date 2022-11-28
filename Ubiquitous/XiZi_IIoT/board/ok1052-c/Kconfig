@@ -42,7 +42,10 @@ menu "ok1052-c feature"
 
     menu "config board peripheral"
         config MOUNT_SDCARD
-            bool "mount cd card"
+            bool
+            default n
+        config MOUNT_USB
+            bool
             default n
     endmenu
 

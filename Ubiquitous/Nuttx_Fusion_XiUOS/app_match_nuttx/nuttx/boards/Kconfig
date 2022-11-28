@@ -2367,6 +2367,11 @@ config ARCH_BOARD_CUSTOM
 		Don't see the board you want?  You must first select the exact MCU part
 		number, then the boards supporting that part will be available for selection.
 
+config ARCH_BOARD_HC32F4A0
+	bool "HDSC HC32F4A0 Board"
+	---help---
+		none
+
 endchoice
 
 if ARCH_BOARD_CUSTOM
@@ -2667,6 +2672,7 @@ config ARCH_BOARD
 	default "spresense"                if ARCH_BOARD_SPRESENSE
 	default "xx3803"                   if ARCH_BOARD_XX3803
 	default "xx3823"                   if ARCH_BOARD_XX3823
+	default "hc32f4a0"                 if ARCH_BOARD_HC32F4A0
 
 comment "Common Board Options"
 
@@ -3427,6 +3433,9 @@ source "boards/sparc/bm3803/xx3803/Kconfig"
 endif
 if ARCH_BOARD_XX3823
 source "boards/sparc/bm3823/xx3823/Kconfig"
+endif
+if ARCH_BOARD_HC32F4A0
+source "boards/arm/hc32/hc32f4a0/Kconfig"
 endif
 
 comment "Board-Common Options"

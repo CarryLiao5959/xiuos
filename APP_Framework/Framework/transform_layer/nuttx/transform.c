@@ -139,9 +139,29 @@ static int PrivSerialIoctl(int fd, int cmd, void *args)
 {
     struct SerialDataCfg *serial_cfg = (struct SerialDataCfg *)args;
     unsigned long serial_baud_rate = (unsigned long)serial_cfg->serial_baud_rate;
+    struct termios term;
+
+    /* Extended serial port */
     if(serial_cfg->is_ext_uart == 1)
     {
         return ioctl(fd, OPE_INT, serial_baud_rate);
+    }
+
+    /* Standard serial port,only the baud rate is set */
+    else if(serial_cfg->is_ext_uart == 0)
+    {  
+        if(ioctl(fd, TCGETS, (unsigned long)&term) < 0)
+        {
+            return -1;
+        }
+        if ((cfsetispeed(&term, serial_baud_rate) < 0) ||(cfsetospeed(&term, serial_baud_rate) < 0))
+        {
+            return -1;
+        }
+        if(ioctl(fd, TCSETS, (unsigned long)&term) < 0)
+        {
+            return -1;
+        }
     }
     return 0;
 }

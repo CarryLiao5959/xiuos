@@ -4,4 +4,16 @@ ifeq ($(CONFIG_BSP_USING_UART),y)
   SRC_FILES += hc32_ll_usart.c
 endif
 
+ifeq ($(CONFIG_BSP_USING_SDIO),y)
+  SRC_FILES += hc32_ll_sdioc.c
+endif
+
+ifeq ($(CONFIG_BSP_USING_SPI),y)
+  SRC_FILES += hc32_ll_spi.c
+endif
+
+ifeq ($(CONFIG_BSP_USING_USB),y)
+  SRC_FILES += hc32_ll_usb.c
+endif
+
 include $(KERNEL_ROOT)/compiler.mk

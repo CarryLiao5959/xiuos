@@ -56,6 +56,10 @@ Modification:
 #include <connect_sdio.h>
 #endif
 
+#ifdef BSP_USING_USB
+#include <connect_usb.h>
+#endif
+
 #ifdef BSP_USING_WDT
 #include <connect_wdt.h>
 #endif
@@ -301,6 +305,12 @@ struct InitSequenceDesc _board_init[] =
 
 #ifdef BSP_USING_SDIO
 	{ "sdio", Imxrt1052HwSdioInit },
+#endif
+
+#ifdef BSP_USING_USB
+#ifdef BSP_USING_NXP_USBH
+	{ "nxp hw usb", Imxrt1052HwUsbHostInit },
+#endif
 #endif
 
 #ifdef BSP_USING_I2C

@@ -18,8 +18,8 @@
  * @date 2022.04.26
  */
 
-#ifndef __BOARDS_ARM_IMXRT_XIDATONG_SRC_IMXRT_CH438_H
-#define __BOARDS_ARM_IMXRT_XIDATONG_SRC_IMXRT_CH438_H
+#ifndef __BOARDS_XIDATONG_SRC_RISCV64_CH438_H
+#define __BOARDS_XIDATONG_SRC_RISCV64_CH438_H
 
 /****************************************************************************
  * Included Files
@@ -53,6 +53,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+#include <nuttx/board.h>
 #include <arch/board/board.h>
 #include "riscv_internal.h"
 
@@ -289,39 +290,6 @@
 
 #define Fpclk    1843200       /* Define the internal clock frequency*/
 
-
-/* Define CH438 PIN NUM */
-#define CH438_ALE_PIN       24
-#define CH438_NWR_PIN       25
-#define CH438_NRD_PIN       26
-
-#define CH438_D0_PIN        27
-#define CH438_D1_PIN        28
-#define CH438_D2_PIN        29
-#define CH438_D3_PIN        30
-#define CH438_D4_PIN        31
-#define CH438_D5_PIN        32
-#define CH438_D6_PIN        33
-#define CH438_D7_PIN        34
-
-#define CH438_INT_PIN       35
-
-/* Define ch438 FPIOA NUMBER */
-#define FPIOA_CH438_ALE   11
-#define FPIOA_CH438_NWR   12
-#define FPIOA_CH438_NRD   13
-
-#define FPIOA_CH438_D0    14
-#define FPIOA_CH438_D1    15
-#define FPIOA_CH438_D2    16
-#define FPIOA_CH438_D3    17
-#define FPIOA_CH438_D4    18
-#define FPIOA_CH438_D5    29
-#define FPIOA_CH438_D6    20
-#define FPIOA_CH438_D7    31
-
-#define FPIOA_CH438_INT   22
-
 /* ch438 debug */
 #ifdef CONFIG_DEBUG_CH438_ERROR
 #  define ch438err    _err
@@ -354,5 +322,5 @@
 void board_ch438_initialize(void);
 #endif
 
-#endif /* __BOARDS_ARM_IMXRT_XIDATONG_SRC_IMXRT_CH438_H */
+#endif /* __BOARDS_XIDATONG_SRC_RISCV64_CH438_H */
 

@@ -396,7 +396,7 @@ static const struct LoraDevDone lora_done =
  * @param bus_name spi bus name
  * @param dev_name spi dev name
  * @param drv_name spi drv name
- * @param flash_name flash dev name
+ * @param lora_name lora name
  */
 SpiLoraDeviceType SpiLoraInit(char *bus_name, char *dev_name, char *drv_name, char *lora_name)
 {
@@ -493,7 +493,7 @@ int LoraSx12xxSpiDeviceInit(void)
     return EOK;
 }
 
-//#define LORA_TEST
+#define LORA_TEST
 #ifdef LORA_TEST
 /*Just for lora test*/
 static struct Bus *bus;
@@ -504,11 +504,11 @@ void LoraOpen(void)
 {
     x_err_t ret = EOK;
 
-    ret = LoraSx12xxSpiDeviceInit();
-    if (EOK != ret) {
-        KPrintf("LoraSx12xxSpiDeviceInit failed\n");
-        return;
-    }
+    // ret = LoraSx12xxSpiDeviceInit();
+    // if (EOK != ret) {
+    //     KPrintf("LoraSx12xxSpiDeviceInit failed\n");
+    //     return;
+    // }
 
     bus = BusFind(SPI_BUS_NAME_2);
     dev = BusFindDevice(bus, SX12XX_DEVICE_NAME);

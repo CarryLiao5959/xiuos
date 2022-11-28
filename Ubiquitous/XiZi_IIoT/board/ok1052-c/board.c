@@ -59,6 +59,10 @@ extern int ExtSramInit(void);
 #include <connect_uart.h>
 #endif
 
+#ifdef BSP_USING_USB
+#include <connect_usb.h>
+#endif
+
 #ifdef BSP_USING_ADC
 #include <connect_adc.h>
 #endif
@@ -691,6 +695,12 @@ void InitBoardHardware()
 
 #ifdef BSP_USING_SDIO
     Imxrt1052HwSdioInit();
+#endif
+
+#ifdef BSP_USING_USB
+#ifdef BSP_USING_NXP_USBH
+    Imxrt1052HwUsbHostInit();
+#endif
 #endif
 
 }

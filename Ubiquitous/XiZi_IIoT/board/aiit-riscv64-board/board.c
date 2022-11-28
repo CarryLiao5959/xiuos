@@ -15,23 +15,23 @@
 
 /**
 * @file board.c
-* @brief support aiit-riscv64-board init configure and start-up
+* @brief support edu-riscv64 board init configure and start-up
 * @version 1.0 
 * @author AIIT XUOS Lab
-* @date 2021-04-25
+* @date 2022-10-25
 */
 
 /*************************************************
 File name: board.c
-Description: support aiit-riscv64-board init configure and driver/task/... init
+Description: support edu-riscv64 board init configure and driver/task/... init
 Others: https://canaan-creative.com/developer
 History: 
-1. Date: 2021-04-25
+1. Date: 2022-10-25
 Author: AIIT XUOS Lab
 Modification: 
-1. support aiit-riscv64-board InitBoardHardware
-2. support aiit-riscv64-board Kd233Start
-3. support aiit-riscv64-board shell cmd, include reboot, shutdown
+1. support edu-riscv64 board InitBoardHardware
+2. support edu-riscv64 board Kd233Start
+3. support edu-riscv64 board shell cmd, include reboot, shutdown
 *************************************************/
 
 #include <board.h>
@@ -71,7 +71,7 @@ extern int HwCh376Init(void);
  * @description: Mount USB
  * @return 0
  */
-int  MountUSB(void)
+int  MountUsb(void)
 {
     if (MountFilesystem(USB_BUS_NAME, USB_DEVICE_NAME, USB_DRIVER_NAME, FSTYPE_CH376, "/") == 0)
         KPrintf("usb mount to '/'");

@@ -40,10 +40,35 @@ char *cmd_set_ch = "AT+CH=11";    /*set channel as 11*/
 #define E18_AS_HEX_MODE 0
 #define E18_AS_AT_MODE  1
 
+
 static int E18HardwareModeGet()
 {
 #ifdef ADD_NUTTX_FETURES
+#ifdef CONFIG_ARCH_BOARD_XIDATONG_ARM32
+    int ret = 0;
+    int pin_fd;
+
+    pin_fd = PrivOpen(ADAPTER_E18_PIN_DRIVER, O_RDWR);
+
+    struct PinStat pin_stat;
+    pin_stat.pin = ADAPTER_E18_MODEPIN;
+
+    ret = PrivRead(pin_fd, &pin_stat, 1);
+
+    PrivTaskDelay(200);
+
+    PrivClose(pin_fd);
+
+    if(pin_stat.val == GPIO_HIGH) {
+        printf(" E18 as AT mode\n");
+        return E18_AS_AT_MODE;
+    } else {
+        printf(" E18 as HEX mode\n");
+        return E18_AS_HEX_MODE;
+    }
+#else
     return E18_AS_HEX_MODE;
+#endif
 #elif defined(ADD_RTTHREAD_FETURES)
     return E18_AS_HEX_MODE;
 #else
@@ -68,7 +93,41 @@ static int E18HardwareModeGet()
         printf(" E18 as HEX mode\n");
         return E18_AS_HEX_MODE;
     }
-#endif 
+#endif
+}
+
+static int E18HardwareModeSet(void)
+{
+#ifdef ADD_NUTTX_FETURES
+#ifdef CONFIG_ARCH_BOARD_XIDATONG_ARM32
+    int ret = 0;
+    int pin_fd;
+
+    pin_fd = PrivOpen(ADAPTER_E18_PIN_DRIVER, O_RDWR);
+
+    struct PinStat pin_stat;
+    pin_stat.pin = ADAPTER_E18_MODEPIN;
+    pin_stat.val  = GPIO_HIGH;
+
+//    ret = PrivWrite(pin_fd, &pin_stat, 1);
+
+    ioctl(pin_fd, GPIOC_WRITE, (unsigned long)0);
+
+    PrivTaskDelay(200);
+
+    ret = PrivRead(pin_fd, &pin_stat, 1);
+
+    PrivClose(pin_fd);
+
+    if(pin_stat.val == GPIO_HIGH) {
+        printf(" E18 set AT mode\n");
+        return E18_AS_AT_MODE;
+    } else {
+        printf(" E18 set HEX mode\n");
+        return E18_AS_HEX_MODE;
+    }
+#endif
+#endif
 }
 
 static int E18UartOpen(struct Adapter *adapter)
@@ -190,6 +249,8 @@ static int E18NetRoleConfig(struct Adapter *adapter)
     int ret = 0;
     int mode = -1;
 
+    printf("start %s\n", __func__);
+//    E18HardwareModeSet();
 
     if (NULL == adapter) {
         printf("%s %d adapter is null!\n",__func__,__LINE__);

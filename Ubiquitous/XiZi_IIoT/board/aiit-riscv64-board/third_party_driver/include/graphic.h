@@ -9,21 +9,21 @@
 
 /**
 * @file graphic.h
-* @brief define aiit-riscv64-board lcd operation
+* @brief define edu-riscv64 board lcd operation
 * @version 1.0 
 * @author AIIT XUOS Lab
-* @date 2021-04-25
+* @date 2022-10-25
 */
 
 /*************************************************
 File name: graphic.h
-Description: define aiit-riscv64-board lcd operation
+Description: define edu-riscv64 board lcd operation
 Others: take RT-Thread v4.0.2/include/rtdef.h for references
                 https://github.com/RT-Thread/rt-thread/tree/v4.0.2
 History: 
-1. Date: 2021-04-25
+1. Date: 2022-10-25
 Author: AIIT XUOS Lab
-Modification: add aiit-riscv64-board lcd configure and operation function
+Modification: add edu-riscv64 board lcd configure and operation function
 *************************************************/
 
 #ifndef GRAPHIC_H

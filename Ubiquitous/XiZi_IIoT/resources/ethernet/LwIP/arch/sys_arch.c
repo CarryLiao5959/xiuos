@@ -67,12 +67,21 @@
 
 #include "board.h"
 #include "ethernet.h"
-#include "enet_ethernetif.h"
+#include "connect_ethernet.h"
 #include <transform.h>
 
-char lwip_ipaddr[] = {192, 168, 250, 253};
-char lwip_netmask[] = {255, 255, 255, 0};
-char lwip_gwaddr[] = {192, 168, 250, 252};
+char lwip_ipaddr[20] = {192, 168, 131, 77};
+char lwip_netmask[20] = {255, 255, 254, 0};
+char lwip_gwaddr[20] = {192, 168, 131, 23};
+
+char lwip_eth0_ipaddr[20] = {192, 168, 131, 77};
+char lwip_eth0_netmask[20] = {255, 255, 254, 0};
+char lwip_eth0_gwaddr[20] = {192, 168, 131, 23};
+
+char lwip_eth1_ipaddr[20] = {192, 168, 131, 99};
+char lwip_eth1_netmask[20] = {255, 255, 254, 0};
+char lwip_eth1_gwaddr[20] = {192, 168, 131, 23};
+
 char lwip_flag = 0;
 
 x_ticks_t lwip_sys_now;
@@ -389,7 +398,9 @@ void lwip_tcp_init(void)
   /* USER CODE END 0 */
   /* Initilialize the LwIP stack without RTOS */
   /* add the network interface (IPv4/IPv6) without RTOS */
-  netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif0_init, &tcpip_input);
+#ifdef NETIF_ENET0_INIT_FUNC
+  netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, NETIF_ENET0_INIT_FUNC, &tcpip_input);
+#endif
 
   /* Registers the default network interface */
   netif_set_default(&gnetif);
@@ -463,22 +474,12 @@ void lwip_config_input(struct netif *net)
   }
 }
 
-void lwip_config_net(char *ip, char *mask, char *gw)
+void lwip_config_net(uint8_t enet_port, char *ip, char *mask, char *gw)
 {
-#if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
-  mem_range_t non_dma_memory[] = NON_DMA_MEMORY_ARRAY;
-#endif /* FSL_FEATURE_SOC_LPC_ENET_COUNT */
   ip4_addr_t net_ipaddr, net_netmask, net_gw;
-  ethernetif_config_t cfg = {
-    .phyAddress = BOARD_ENET0_PHY_ADDRESS,
-    .clockName  = kCLOCK_CoreSysClk,
-    .macAddress = configMAC_ADDR,
-#if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
-    .non_dma_memory = non_dma_memory,
-#endif /* FSL_FEATURE_SOC_LPC_ENET_COUNT */
-  };
+  char* eth_cfg;
 
-  ETH_BSP_Config();
+  eth_cfg = ethernetif_config_enet_set(enet_port);
 
   if(chk_lwip_bit(LWIP_INIT_FLAG))
   {
@@ -506,8 +507,18 @@ void lwip_config_net(char *ip, char *mask, char *gw)
 
   lwip_init();
 
-  netif_add(&gnetif, &net_ipaddr, &net_netmask, &net_gw, &cfg, ethernetif0_init,
+  if(0 == enet_port) {
+#ifdef NETIF_ENET0_INIT_FUNC
+    netif_add(&gnetif, &net_ipaddr, &net_netmask, &net_gw, eth_cfg, NETIF_ENET0_INIT_FUNC,
         ethernet_input);
+#endif
+  } else if (1 == enet_port) {
+#ifdef NETIF_ENET1_INIT_FUNC
+    netif_add(&gnetif, &net_ipaddr, &net_netmask, &net_gw, eth_cfg, NETIF_ENET1_INIT_FUNC,
+        ethernet_input);
+#endif
+  }
+  
   netif_set_default(&gnetif);
   netif_set_up(&gnetif);
 
@@ -527,22 +538,12 @@ void lwip_config_net(char *ip, char *mask, char *gw)
   lwip_config_input(&gnetif);
 }
 
-void lwip_config_tcp(char *ip, char *mask, char *gw)
+void lwip_config_tcp(uint8_t enet_port, char *ip, char *mask, char *gw)
 {
-#if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
-  mem_range_t non_dma_memory[] = NON_DMA_MEMORY_ARRAY;
-#endif /* FSL_FEATURE_SOC_LPC_ENET_COUNT */
   ip4_addr_t net_ipaddr, net_netmask, net_gw;
-  ethernetif_config_t cfg = {
-    .phyAddress = BOARD_ENET0_PHY_ADDRESS,
-    .clockName  = kCLOCK_CoreSysClk,
-    .macAddress = configMAC_ADDR,
-#if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
-    .non_dma_memory = non_dma_memory,
-#endif /* FSL_FEATURE_SOC_LPC_ENET_COUNT */
-  };
+  char* eth_cfg;
 
-  ETH_BSP_Config();
+  eth_cfg = ethernetif_config_enet_set(enet_port);
 
   if(chk_lwip_bit(LWIP_INIT_FLAG))
   {
@@ -560,8 +561,17 @@ void lwip_config_tcp(char *ip, char *mask, char *gw)
   IP4_ADDR(&net_netmask, mask[0], mask[1], mask[2], mask[3]);
   IP4_ADDR(&net_gw, gw[0], gw[1], gw[2], gw[3]);
 
-  netif_add(&gnetif, &net_ipaddr, &net_netmask, &net_gw, &cfg, ethernetif0_init,
-        tcpip_input);
+  if(0 == enet_port) {
+#ifdef NETIF_ENET0_INIT_FUNC
+    netif_add(&gnetif, &net_ipaddr, &net_netmask, &net_gw, eth_cfg, NETIF_ENET0_INIT_FUNC,
+        ethernet_input);
+#endif
+  } else if (1 == enet_port) {
+#ifdef NETIF_ENET1_INIT_FUNC
+    netif_add(&gnetif, &net_ipaddr, &net_netmask, &net_gw, eth_cfg, NETIF_ENET1_INIT_FUNC,
+        ethernet_input);
+#endif
+  }
 
   netif_set_default(&gnetif);
   netif_set_up(&gnetif);

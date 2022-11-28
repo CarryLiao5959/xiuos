@@ -1,6 +1,6 @@
 config BSP_USING_STM32_USBH
     bool "Using usb host"
-    default y
+    default n
     if BSP_USING_STM32_USBH
         config USB_BUS_NAME
             string "usb bus name"
@@ -11,5 +11,15 @@ config BSP_USING_STM32_USBH
         config USB_DEVICE_NAME
             string "usb bus device name"
             default "usb_dev"
+        config MOUNT_USB_FS
+            bool "mount usb file system"
+            default y
+            select MOUNT_USB
+
+        if MOUNT_USB_FS
+            config MOUNT_USB_FS_TYPE
+                int "choose file system type : FATFS(0) LWEXT4(3)"
+                default 0 
+        endif
     endif
 

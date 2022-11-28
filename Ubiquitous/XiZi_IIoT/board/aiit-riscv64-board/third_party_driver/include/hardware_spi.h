@@ -19,7 +19,7 @@
 *                https://canaan-creative.com/developer
 * @version 1.0 
 * @author AIIT XUOS Lab
-* @date 2021-04-25
+* @date 2022-10-25
 */
 
 #ifndef __HARDWARE_SPI_H__

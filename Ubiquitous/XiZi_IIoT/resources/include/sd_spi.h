@@ -28,11 +28,11 @@
 extern "C" {
 #endif
 
-#define SPI_SD_FREQUENCY                 400000
+#define SPI_SD_FREQUENCY               400000
 #define SPI_SD_TIMEOUT_NUM                  100
 #define SD_CMD_RESPONE_LENGTH            5
 #define SD_CMD_CSD_LENGTH                     16
-#define SD_BLOCK_LENGTH                         512
+#define SD_BLOCK_LENGTH                       512
 
 #define SD_TIMEOUT(cnt, time)                      \
 do \

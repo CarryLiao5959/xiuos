@@ -44,7 +44,7 @@ extern int Lwext4Init(void);
 extern int LibcSystemInit(void);
 extern int RtcNtpSyncInit(void);
 extern int MountSDCard(void);
-extern int MountUSB(void);
+extern int MountUsb(void);
 extern int DfsMountTable(void);
 extern int userShellInit(void);
 extern int STM32USBHostRegister(void);

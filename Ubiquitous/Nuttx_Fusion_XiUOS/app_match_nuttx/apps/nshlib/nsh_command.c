@@ -596,16 +596,35 @@ static const struct cmdmap_s g_cmdmap[] =
   { "xd",       cmd_xd,       3, 3, "<hex-address> <byte-count>" },
 #endif
 
+#if defined(CONFIG_BSP_USING_CH376) && !defined(CONFIG_NSH_DISABLE_CH376)
+  { "ch376",    cmd_Ch376,     1, 1, "[ch376 demo cmd.]" },
+#endif
+
+#if defined(CONFIG_BSP_USING_ENET) && !defined(CONFIG_NSH_DISABLE_W5500)
+  { "w5500",    cmd_w5500,     1, 1, "[w5500 demo cmd.]" },
+#endif
+
+#if defined(CONFIG_BSP_USING_TOUCH) && !defined(CONFIG_NSH_DISABLE_TOUCH)
+  { "touch",    cmd_Touch,     1, 1, "[gt911 touch screen demo cmd.]" },
+#endif
+
 #if defined(CONFIG_BSP_USING_CH438) && !defined(CONFIG_NSH_DISABLE_CH438)
   { "ch438",    cmd_Ch438,     1, 1, "[ch438 demo cmd.]" },
 #endif
 
-#if defined(CONFIG_K210_LCD) && !defined(CONFIG_NSH_DISABLE_LCD)
-  { "lcd",      cmd_Lcd,     1, 1, "[LCD demo cmd.]" },
+#if defined(CONFIG_USER_TEST_LCD) && !defined(CONFIG_NSH_DISABLE_USER_TEST_LCD)
+  { "lcd",      cmd_Lcd,      1, 1, "[LCD demo cmd.]" },
 #endif
 
 #if defined(CONFIG_USER_TEST_SEMC) && !defined(CONFIG_NSH_DISABLE_USER_TEST_SEMC)
   { "sram",      cmd_Extsram,     1, 1, "[Extra sdram demo cmd.]" },
+#endif
+
+#if defined(CONFIG_SOCKET_DEMO) && !defined(CONFIG_NSH_DISABLE_SOCKET_DEMO)
+  { "udpsend",      cmd_Udpsend,     1, 2, "[Udp send demo cmd.]" },
+  { "udprecv",      cmd_Udprecv,     1, 2, "[Udp recv demo cmd.]" },
+  { "tcpsend",      cmd_Tcpsend,     1, 2, "[Tcp send demo cmd.]" },
+  { "tcprecv",      cmd_Tcprecv,     1, 2, "[Tcp recv demo cmd.]" },
 #endif
 
 #if defined(CONFIG_APPLICATION_SENSOR_HCHO_TB600B_WQ_HCHO1OS) && !defined(CONFIG_NSH_DISABLE_HCHO_TB600B_WQ_HCHO1OS)
@@ -705,12 +724,20 @@ static const struct cmdmap_s g_cmdmap[] =
   { "AdapterBlueToothTest",       cmd_AdapterBlueToothTest,       1, 1, "[BlueTooth hc08 test.]" },
 #endif
 
-#if defined(CONFIG_ADAPTER_ESP07S_WIFI) && !defined(CONFIG_NSH_DISABLE_ADAPTER_WIFI_TEST)
+#if (defined(CONFIG_ADAPTER_ESP07S_WIFI) || defined(CONFIG_ADAPTER_ESP8285_WIFI)) && !defined(CONFIG_NSH_DISABLE_ADAPTER_WIFI_TEST)
   { "wifitest",       cmd_AdapterWifiTest,       1, 8, "[WIFI test.]" },
 #endif
 
 #if defined(CONFIG_K210_FFT_TEST) && !defined(CONFIG_NSH_DISABLE_K210_FFT)
   { "fft",       cmd_fft,       1, 1, "[K210 fft function.]" },
+#endif
+
+#if defined(CONFIG_MUSL_LIBC) && !defined(CONFIG_NSH_DISABLE_MUSL_TEST)
+  { "testmusl",       cmd_musl,       1, 1, "[test musl function.]" },
+#endif
+
+#if defined(CONFIG_BSP_USING_CAN) && !defined(CONFIG_NSH_DISABLE_CAN_TEST)
+  { "cantest",       cmd_cantest,       1, 1, "[test can function.]" },
 #endif
 
   { NULL,       NULL,         1, 1, NULL }

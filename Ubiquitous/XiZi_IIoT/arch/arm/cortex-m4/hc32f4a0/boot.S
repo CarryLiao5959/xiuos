@@ -48,7 +48,7 @@ Modification:
 ;  <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ;</h>
 */
-                .equ        Stack_Size, 0x00002000
+                .equ        Stack_Size, 0x00004000
 
                 .section    .stack
                 .align      3
@@ -59,26 +59,6 @@ __StackLimit:
                 .size       __StackLimit, . - __StackLimit
 __StackTop:
                 .size       __StackTop, . - __StackTop
-
-
-/*
-;<h> Heap Configuration
-;  <o> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-;</h>
-*/
-                .equ        Heap_Size, 0x00002000
-
-                .if         Heap_Size != 0                     /* Heap is provided */
-                .section    .heap
-                .align      3
-                .globl      __HeapBase
-                .globl      __HeapLimit
-__HeapBase:
-                .space      Heap_Size
-                .size       __HeapBase, . - __HeapBase
-__HeapLimit:
-                .size       __HeapLimit, . - __HeapLimit
-                .endif
 
 /*
 ;<h> Reset handler start.

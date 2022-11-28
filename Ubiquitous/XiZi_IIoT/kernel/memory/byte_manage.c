@@ -527,7 +527,7 @@ static void SmallMemInit(struct ByteMemory *byte_memory)
 
 #ifdef MEM_STATS
     /* statistic static memory information */
-    byte_memory->dynamic_buddy_manager.static_memory = SMALL_SIZE_64B(SIZEOF_64B) + SMALL_SIZE_32B(SIZEOF_32B);
+    byte_memory->dynamic_buddy_manager.static_memory = SMALL_NUMBER_64B * SIZEOF_64B + SMALL_NUMBER_32B * SIZEOF_32B;
 #endif
 }
 
@@ -1174,10 +1174,10 @@ void ShowMemory(void);
 void ShowMemory(void)
 {
 	int i = 0;
-	KPrintf("total memory: %d\n", ByteManager.dynamic_buddy_manager.dynamic_buddy_end - ByteManager.dynamic_buddy_manager.dynamic_buddy_start);
+	KPrintf("total memory: %d\n", ByteManager.dynamic_buddy_manager.dynamic_buddy_end - ByteManager.dynamic_buddy_manager.dynamic_buddy_start - SIZEOF_32B);
 	KPrintf("used memory : %d\n", ByteManager.dynamic_buddy_manager.active_memory);
 	KPrintf("maximum allocated memory: %d\n", ByteManager.dynamic_buddy_manager.max_ever_usedmem);
-	KPrintf("total cache szie: %d, %d/%d[32B],%d/%d[64B]\n", ByteManager.dynamic_buddy_manager.static_memory,ByteManager.static_manager[0].block_free_count,SMALL_NUMBER_32B,ByteManager.static_manager[1].block_free_count,SMALL_NUMBER_64B);
+	KPrintf("total cache size: %d, %d/%d[32B],%d/%d[64B]\n", ByteManager.dynamic_buddy_manager.static_memory,ByteManager.static_manager[0].block_free_count,SMALL_NUMBER_32B,ByteManager.static_manager[1].block_free_count,SMALL_NUMBER_64B);
 #ifdef MEM_EXTERN_SRAM
 	for(i = 0; i < EXTSRAM_MAX_NUM; i++) {
 		if(NONE != ExtByteManager[i].done){

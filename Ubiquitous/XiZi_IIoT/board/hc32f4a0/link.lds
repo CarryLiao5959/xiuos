@@ -216,20 +216,18 @@ SECTIONS
         __end__ = .;
         PROVIDE(end = .);
         PROVIDE(_end = .);
-        *(.heap*)
-        . = ALIGN(8);
-        __HeapLimit = .;
 
         __StackLimit = .;
         *(.stack*)
         . = ALIGN(8);
         __StackTop = .;
+
+        __heap_start = .;
     } >RAM
 
     .ARM.attributes 0 : { *(.ARM.attributes) }
 
     PROVIDE(_stack = __StackTop);
-    PROVIDE(_Min_Heap_Size = __HeapLimit - __HeapBase);
     PROVIDE(_Min_Stack_Size = __StackTop - __StackLimit);
 
     __RamEnd = ORIGIN(RAM) + LENGTH(RAM);

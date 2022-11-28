@@ -4,6 +4,15 @@ export CFLAGS := -mcpu=cortex-m7 -mthumb  -ffunction-sections -fdata-sections -D
 export AFLAGS := -c -mcpu=cortex-m7 -mthumb -ffunction-sections -fdata-sections -x assembler-with-cpp -Wa,-mimplicit-it=thumb  -gdwarf-2
 
 ### if use USB function, use special lds file because USB uses ITCM
+ifeq ($(CONFIG_LIB_MUSLLIB), y)
+export LFLAGS += -nostdlib -nostdinc # -fno-builtin -nodefaultlibs
+export LIBCC := -lgcc
+export LINK_MUSLLIB := $(KERNEL_ROOT)/lib/musllib/libmusl.a
+endif
+
+ifeq ($(CONFIG_RESOURCES_LWIP), y)
+export LINK_LWIP := $(KERNEL_ROOT)/resources/ethernet/LwIP/liblwip.a
+endif
 
 ifeq ($(CONFIG_BSP_USING_USB),y)
 export LFLAGS := -mcpu=cortex-m7 -mthumb -ffunction-sections -fdata-sections -Wl,--gc-sections,-Map=XiZi-ok1052-c.map,-cref,-u,Reset_Handler -T $(BSP_ROOT)/link-usb.lds

@@ -389,7 +389,7 @@ static const struct LoraDevDone lora_done =
  * @param bus_name spi bus name
  * @param dev_name spi dev name
  * @param drv_name spi drv name
- * @param flash_name flash dev name
+ * @param lora_name lora name
  */
 SpiLoraDeviceType SpiLoraInit(char *bus_name, char *dev_name, char *drv_name, char *lora_name)
 {

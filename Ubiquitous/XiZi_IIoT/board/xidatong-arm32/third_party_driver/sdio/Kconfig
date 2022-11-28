@@ -12,7 +12,7 @@ if BSP_USING_SDIO
         default "sdio_dev"
 
     config MOUNT_SDCARD_FS
-        bool "mount cd card file system"
+        bool "mount sd card file system"
         default n
         select MOUNT_SDCARD
 

@@ -53,7 +53,9 @@
 #include <bus_usb.h>
 #include <dev_usb.h>
 #ifdef RESOURCES_USB_HOST
+#ifdef BSP_USING_STM32_USBH
 #include <stm32_usb_host.h>
+#endif
 #endif
 #endif
 

@@ -35,6 +35,10 @@ Modification:
 #include <connect_uart.h>
 #endif
 
+#ifdef BSP_USING_LWIP
+extern int ETH_BSP_Config();
+#endif
+
 #if __CORTEX_M == 7
 void BOARD_ConfigMPU(void)
 {
@@ -368,6 +372,79 @@ void BOARD_ConfigMPU(void)
 }
 #endif
 
+void BOARD_InitModuleClock(void)
+{
+    const clock_sys_pll1_config_t sysPll1Config = {
+        .pllDiv2En = true,
+    };
+    CLOCK_InitSysPll1(&sysPll1Config);
+
+    clock_root_config_t rootCfg = {.mux = 4, .div = 10};
+
+#ifdef BOARD_NETWORK_USE_100M_ENET_PORT
+     /* Generate 50M root clock. */
+    CLOCK_SetRootClock(kCLOCK_Root_Enet1, &rootCfg);
+#endif
+
+#ifdef BOARD_NETWORK_USE_1G_ENET_PORT
+    /* Generate 125M root clock. */
+    rootCfg.mux = 4;
+    rootCfg.div = 4;
+    CLOCK_SetRootClock(kCLOCK_Root_Enet2, &rootCfg);
+#endif
+
+    /* Select syspll2pfd3, 528*18/24 = 396M */
+    CLOCK_InitPfd(kCLOCK_PllSys2, kCLOCK_Pfd3, 24);
+    rootCfg.mux = 7;
+    rootCfg.div = 2;
+    CLOCK_SetRootClock(kCLOCK_Root_Bus, &rootCfg); /* Generate 198M bus clock. */
+}
+
+void IOMUXC_SelectENETClock(void)
+{
+#ifdef BOARD_NETWORK_USE_100M_ENET_PORT
+    IOMUXC_GPR->GPR4 |= 0x3; /* 50M ENET_REF_CLOCK output to PHY and ENET module. */
+#endif
+
+#ifdef BOARD_NETWORK_USE_1G_ENET_PORT
+    IOMUXC_GPR->GPR5 |= IOMUXC_GPR_GPR5_ENET1G_RGMII_EN_MASK; /* bit1:iomuxc_gpr_enet_clk_dir
+                                                                 bit0:GPR_ENET_TX_CLK_SEL(internal or OSC) */
+#endif
+}
+/*!
+ * @brief Utility function for comparing arrays
+ */
+static uint8_t compareArrays(uint8_t a[], uint8_t b[], int len)
+{
+	for (int i=0; i<len; i++)
+	{
+		if (a[i] != b[i])
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+/*!
+ * @brief configure miiMode, miiSpeed based on the MAC address
+ */
+void BOARD_ENETFlexibleConfigure(enet_config_t *config, uint8_t *hwAddr)
+{
+	uint8_t temp_arr[6] = configMAC_ADDR;
+
+	if (compareArrays(hwAddr, temp_arr, 6))
+	{
+		config->miiMode = kENET_RmiiMode;
+		config->miiSpeed = kENET_MiiSpeed100M;
+	}
+	else
+	{
+		config->miiMode = kENET_RgmiiMode;
+		config->miiSpeed = kENET_MiiSpeed1000M;
+	}
+}
+
 /* This is the timer interrupt service routine. */
 void SysTick_Handler(int irqn, void *arg)
 {
@@ -379,6 +456,10 @@ struct InitSequenceDesc _board_init[] =
 {
 #ifdef BSP_USING_GPIO
     // { "hw_pin", Imxrt1052HwGpioInit },
+#endif
+
+#ifdef BSP_USING_LWIP
+    {"ETH_BSP", ETH_BSP_Config},
 #endif
 
 	{ " NONE ",NONE },
@@ -395,6 +476,15 @@ void InitBoardHardware()
     BOARD_ConfigMPU();
     BOARD_InitPins();
     BOARD_BootClockRUN();
+    BOARD_InitModuleClock();
+    IOMUXC_SelectENETClock();
+
+#ifdef BOARD_NETWORK_USE_100M_ENET_PORT
+    BOARD_InitEnetPins();
+#endif
+#ifdef BOARD_NETWORK_USE_1G_ENET_PORT
+    BOARD_InitEnet1GPins();
+#endif
 
     // NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;

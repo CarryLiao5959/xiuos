@@ -1,0 +1,14 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+if ARCH_BOARD_HC32F4A0
+
+config HC32F4A0_BOARD
+	bool "HDSC HC32F4A0 base board"
+	default n
+	---help---
+		Select if you are using the HC32F4A0 base board with the HC32F4A0.
+
+endif

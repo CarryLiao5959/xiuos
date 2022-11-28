@@ -12,7 +12,7 @@
 
 /**
  * @file k210_systemreset.c
- * @briefk210_systemreset.c support reboot
+ * @brief k210 support reboot
  * @version 1.0
  * @author AIIT XUOS Lab
  * @date 2022.06.27

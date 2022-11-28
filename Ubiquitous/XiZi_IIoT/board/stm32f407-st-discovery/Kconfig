@@ -33,6 +33,14 @@ menu "stm32f407-st-discovery feature"
                 default 0x20000000
         endmenu
 
+        menu "config board peripheral"
+            config MOUNT_SDCARD
+                bool
+                default n
+            config MOUNT_USB
+                bool
+                default n
+        endmenu
     endmenu
 
 endmenu

@@ -1,5 +1,9 @@
 SRC_FILES := sleep.c
 
+ifeq ($(CONFIG_BSP_USING_CH376),y)
+  SRC_DIR += ch376
+endif
+
 ifeq ($(CONFIG_BSP_USING_CH438),y)
   SRC_DIR += ch438
 endif
@@ -24,12 +28,24 @@ ifeq ($(CONFIG_BSP_USING_PLIC),y)
   SRC_DIR += plic
 endif
 
+ifeq ($(CONFIG_BSP_USING_RTC),y)
+  SRC_DIR += rtc
+endif
+
+ifeq ($(CONFIG_BSP_USING_HWTIMER),y)
+  SRC_DIR += timer
+endif
+
 ifeq ($(CONFIG_BSP_USING_SYSCLOCK),y)
   SRC_DIR += sys_clock
 endif
 
 ifeq ($(CONFIG_BSP_USING_UART),y)
   SRC_DIR += uart
+endif
+
+ifeq ($(CONFIG_BSP_USING_WDT),y)
+  SRC_DIR += watchdog
 endif
 
 include $(KERNEL_ROOT)/compiler.mk

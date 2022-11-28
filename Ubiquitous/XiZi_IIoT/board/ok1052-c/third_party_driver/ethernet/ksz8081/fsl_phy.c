@@ -21,6 +21,8 @@
  * Definitions
  ******************************************************************************/
 
+#define FSL_FEATURE_PHYKSZ8081_USE_RMII50M_MODE
+
 /*! @brief Defines the timeout macro. */
 #define PHY_TIMEOUT_COUNT 100000
 

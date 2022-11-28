@@ -447,7 +447,7 @@ static uint32 I2cWriteData(struct I2cHardwareDevice *i2c_dev, struct I2cDataStan
             }
         }
 
-        if (msg->flags & I2C_WR) {
+        if (msg->flags == I2C_WR) {
             ret = I2cSendBytes(bus, msg);
             if (ret >= 1)
                 //KPrintf("write %d byte%s", ret, ret == 1 ? "" : "s");

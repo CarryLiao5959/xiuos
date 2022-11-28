@@ -1,3 +1,12 @@
+menuconfig BSP_USING_CH376
+bool "Using CH376 device"
+default n
+select FS_VFS
+select FS_CH376
+if BSP_USING_CH376
+source "$BSP_DIR/third_party_driver/ch376/Kconfig"
+endif
+
 menuconfig BSP_USING_CH438
 bool "Using CH438 device"
 default n
@@ -44,6 +53,22 @@ if BSP_USING_PLIC
 source "$BSP_DIR/third_party_driver/plic/Kconfig"
 endif
 
+menuconfig BSP_USING_RTC
+bool "Using RTC device"
+default n
+select RESOURCES_RTC
+if BSP_USING_RTC
+source "$BSP_DIR/third_party_driver/rtc/Kconfig"
+endif 
+
+menuconfig BSP_USING_HWTIMER
+bool "Using HWTIMER device"
+default n
+select RESOURCES_HWTIMER
+if BSP_USING_HWTIMER
+source "$BSP_DIR/third_party_driver/timer/Kconfig"
+endif 
+
 menuconfig BSP_USING_SYSCLOCK
 bool "Using SYSCLOCK device"
 default y
@@ -58,3 +83,11 @@ select RESOURCES_SERIAL
 if BSP_USING_UART
 source "$BSP_DIR/third_party_driver/uart/Kconfig"
 endif
+
+menuconfig BSP_USING_WDT
+bool "Using WATCHDOG device"
+default n
+select RESOURCES_WDT
+if BSP_USING_WDT
+source "$BSP_DIR/third_party_driver/watchdog/Kconfig"
+endif 

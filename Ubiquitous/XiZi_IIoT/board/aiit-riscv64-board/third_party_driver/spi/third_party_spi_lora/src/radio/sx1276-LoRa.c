@@ -784,12 +784,12 @@ uint32_t SX1276LoraChannelEmpty( void )
 
 	if(result == RF_CHANNEL_EMPTY)
 	{
-		KPrintf("\nLora--信道可用（RF_CHANNEL_EMPTY）\n");
+		KPrintf("\nLora--RF_CHANNEL_EMPTY\n");
 		return 0;
 	}
 	else if(result == RF_CHANNEL_ACTIVITY_DETECTED)
 	{
-		KPrintf("\nLora--信道正被占用（RF_CHANNEL_ACTIVITY_DETECTED）\n");
+		KPrintf("\nLora--RF_CHANNEL_ACTIVITY_DETECTED）\n");
 		return 1;
 	}
 	else

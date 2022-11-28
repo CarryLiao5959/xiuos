@@ -27,6 +27,14 @@
 uint32 UdiskRead_new_api(void *dev, struct BusBlockReadParam *read_param);
 uint32 UdiskWirte_new_api(void *dev, struct BusBlockWriteParam *write_param);
 
+#ifdef MOUNT_USB
+int MountUsb(void)
+{
+    STM32USBHostRegister();
+    return 0;
+}
+#endif
+
 static uint32 UdiskOpenNewApi(void *dev)
 {
     return EOK;

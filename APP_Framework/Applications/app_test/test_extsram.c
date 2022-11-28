@@ -20,6 +20,7 @@
 */
 
 #include <transform.h>
+#include "stdio.h"
 
 /* parameters for sram peripheral */
 // /* stm32f4 Bank3:0X68000000 */
@@ -52,7 +53,7 @@ int ExtsramTest(void)
 #endif
 
     /* write data */
-    printf("Writing the %ld bytes data, waiting....", SRAM_SIZE);
+    printf("Writing the %ld bytes data, waiting....\n", SRAM_SIZE);
     start_time = PrivGetTickTime();
     for (i = 0; i < SRAM_SIZE / data_width; i++)
     {
@@ -90,7 +91,7 @@ int ExtsramTest(void)
         data = *(volatile uint32_t *)(SRAM_BANK_ADDR + i * data_width);
         if (data != 0x55555555)
         {
-            printf("SRAM test failed!");
+            printf("SRAM test failed!\n");
             break;
         }
 #endif

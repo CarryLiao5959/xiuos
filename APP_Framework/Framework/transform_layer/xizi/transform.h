@@ -149,6 +149,7 @@ enum IoctlDriverType
     ADC_TYPE,
     DAC_TYPE,
     WDT_TYPE,
+    RTC_TYPE,
     DEFAULT_TYPE,
 };
 
@@ -192,6 +193,12 @@ typedef struct
     uint16_t y;
     uint16_t press;
 }TouchDataParam;
+
+struct RtcDrvConfigureParam
+{
+    int rtc_operation_cmd;
+    time_t *time;
+};
 
 #define PRIV_SYSTICK_GET (CurrentTicksGain())
 #define PRIV_LCD_DEV "/dev/lcd_dev"

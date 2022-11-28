@@ -53,12 +53,13 @@
 #define LWIP_LOCAL_PORT             4840
 #define LWIP_TARGET_PORT            LWIP_LOCAL_PORT
 
-#define LWIP_DEMO_TIMES             3
+#define LWIP_DEMO_TIMES             10
 #define LWIP_TASK_STACK_SIZE        4096
 #define LWIP_DEMO_TASK_PRIO         20
 
-/* MAC address configuration. */
-#define configMAC_ADDR {0x02, 0x12, 0x13, 0x10, 0x15, 0x11}
+// /* MAC address configuration. */
+// #define configMAC_ADDR {0x02, 0x12, 0x13, 0x10, 0x15, 0x11}
+// #define configMAC_ADDR_ETH1 {0x02, 0x12, 0x13, 0x10, 0x15, 0x12}
 
 /* USER CODE END 0 */
 #define SYS_MBOX_NULL  -1
@@ -88,10 +89,19 @@ extern char lwip_flag;
 extern char lwip_ipaddr[];
 extern char lwip_netmask[];
 extern char lwip_gwaddr[];
+
+extern char lwip_eth0_ipaddr[];
+extern char lwip_eth0_netmask[];
+extern char lwip_eth0_gwaddr[];
+
+extern char lwip_eth1_ipaddr[];
+extern char lwip_eth1_netmask[];
+extern char lwip_eth1_gwaddr[];
+
 extern struct netif gnetif;
 
 void lwip_tcp_init(void);
-void lwip_config_net(char *ip, char *mask, char *gw);
-void lwip_config_tcp(char *ip, char *mask, char *gw);
+void lwip_config_net(uint8_t enet_port, char *ip, char *mask, char *gw);
+void lwip_config_tcp(uint8_t enet_port, char *ip, char *mask, char *gw);
 
 #endif

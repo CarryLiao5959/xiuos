@@ -58,31 +58,44 @@ extern int IoConfigInit(void);
 extern int HwI2cInit(void);
 extern int HwTouchInit(void);
 extern int HwCh438Init(void);
+extern int HwCh376Init(void);
+extern int HwTimerInit(void);
+extern int HwRtcInit(void);
+extern int HwWdtInit(void);
 
-#if defined(FS_VFS) && defined (MOUNT_SDCARD)
+#ifdef FS_CH376
 #include <iot-vfs.h>
-#include <sd_spi.h>
-extern SpiSdDeviceType SpiSdInit(struct Bus *bus, const char *dev_name, const char *drv_name, const char *sd_name);
-
+#ifdef MOUNT_USB
+/**
+ * @description: Mount USB
+ * @return 0
+ */
+int  MountUsb(void)
+{
+    if (MountFilesystem(USB_BUS_NAME, USB_DEVICE_NAME, USB_DRIVER_NAME, FSTYPE_CH376, "/") == 0)
+        KPrintf("usb mount to '/'\n");
+    else
+        KPrintf("usb mount to '/' failed!\n");
+    
+    return 0;
+}
+#endif
+#ifdef MOUNT_SDCARD
 /**
  * @description: Mount SD card
  * @return 0
  */
-int MountSDCard(void)
+
+int  MountSDCard(void)
 {
-    struct Bus *spi_bus;
-    spi_bus = BusFind(SPI_BUS_NAME_1);
-
-    if (NONE == SpiSdInit(spi_bus, SPI_1_DEVICE_NAME_0, SPI_1_DRV_NAME, SPI_SD_NAME)) {
-        KPrintf("MountSDCard SpiSdInit error!\n");
-        return 0;
-    }
+    if (MountFilesystem(SDIO_BUS_NAME,SDIO_DEVICE_NAME ,SDIO_DRIVER_NAME , FSTYPE_CH376, "/") == 0)
+        KPrintf("sd card mount to '/'\n");
+    else
+        KPrintf("sd card mount to '/' failed!\n");
     
-    if (EOK == MountFilesystem(SPI_BUS_NAME_1, SPI_SD_NAME, SPI_1_DRV_NAME, FSTYPE_FATFS, "/"))
-        KPrintf("SPI SD card fatfs mounted\n");
-
     return 0;
 }
+#endif
 #endif
 
 void InitBss(void)
@@ -163,6 +176,21 @@ struct InitSequenceDesc _board_init[] =
 #endif
 #ifdef BSP_USING_I2C
     { "hw_i2c", HwI2cInit },
+#endif
+#ifdef BSP_USING_RTC
+    { "hw_rtc", HwRtcInit },
+#endif
+#ifdef BSP_USING_HWTIMER
+    { "hw_timer" , HwTimerInit },
+#endif
+#ifdef BSP_USING_WDT
+    { "hw_wdt", HwWdtInit },
+#endif
+#ifdef BSP_USING_SDIO
+    { "hw_sdio", HwCh376Init},
+#endif
+#ifdef BSP_USING_USB
+    { "hw_usb", HwCh376Init},
 #endif
 #ifdef BSP_USING_TOUCH
     {"touch", HwTouchInit },

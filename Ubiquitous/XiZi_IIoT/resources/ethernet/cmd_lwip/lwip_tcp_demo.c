@@ -70,6 +70,7 @@ static void LwipTcpSendTask(void *arg)
 void LwipTcpSendTest(int argc, char *argv[])
 {
     LwipTcpSocketParamType param;
+    uint8_t enet_port = 0;
     memset(tcp_demo_msg, 0, LWIP_TEST_MSG_SIZE);
     if(argc >= 2)
     {
@@ -89,7 +90,7 @@ void LwipTcpSendTest(int argc, char *argv[])
         }
     }
     lw_notice("get ipaddr %d.%d.%d.%d:%d\n", tcp_demo_ip[0], tcp_demo_ip[1], tcp_demo_ip[2], tcp_demo_ip[3], tcp_demo_port);
-    lwip_config_tcp(lwip_ipaddr, lwip_netmask, tcp_demo_ip);
+    lwip_config_tcp(enet_port, lwip_ipaddr, lwip_netmask, tcp_demo_ip);
 
     memcpy(param.ip, tcp_demo_ip, 4);
     param.port = tcp_demo_port;
@@ -104,7 +105,9 @@ SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN) |
 
 void LwipTcpRecvTest(void)
 {
-    lwip_config_net(lwip_ipaddr, lwip_netmask, lwip_gwaddr);
+    uint8_t enet_port = 0; ///< test enet port 0
+
+    lwip_config_net(enet_port, lwip_ipaddr, lwip_netmask, lwip_gwaddr);
     tcpecho_raw_init();
 }
 

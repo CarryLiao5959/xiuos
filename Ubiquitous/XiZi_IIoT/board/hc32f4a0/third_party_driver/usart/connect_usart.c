@@ -104,12 +104,22 @@ struct SerialHardwareDevice serial_device_3;
 
 void Uart3RxIrqHandler(void)
 {
+    x_base lock = 0;
+    lock = DISABLE_INTERRUPT();
+
     SerialSetIsr(&serial_device_3, SERIAL_EVENT_RX_IND);
+
+    ENABLE_INTERRUPT(lock);
 }
 
 void Uart3RxErrIrqHandler(void)
 {
+    x_base lock = 0;
+    lock = DISABLE_INTERRUPT();
+
     UartRxErrIsr(&serial_bus_3, &serial_driver_3, &serial_device_3);
+
+    ENABLE_INTERRUPT(lock);
 }
 #endif
 
@@ -120,12 +130,22 @@ struct SerialHardwareDevice serial_device_6;
 
 void Uart6RxIrqHandler(void)
 {
+    x_base lock = 0;
+    lock = DISABLE_INTERRUPT();
+
     SerialSetIsr(&serial_device_6, SERIAL_EVENT_RX_IND);
+
+    ENABLE_INTERRUPT(lock);
 }
 
 void Uart6RxErrIrqHandler(void)
 {
+    x_base lock = 0;
+    lock = DISABLE_INTERRUPT();
+
     UartRxErrIsr(&serial_bus_6, &serial_driver_6, &serial_device_6);
+
+    ENABLE_INTERRUPT(lock);
 }
 #endif
 

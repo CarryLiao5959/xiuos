@@ -30,6 +30,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "hardware_eth_conf.h"
+#include "err.h"
+#include "netif/ethernet.h"
 
 /** @addtogroup STM32F4x7_ETH_Driver
   * @{
@@ -1866,6 +1868,9 @@ void ETH_MMCITConfig(uint32_t ETH_MMC_IT, FunctionalState NewState);
 ITStatus ETH_GetMMCITStatus(uint32_t ETH_MMC_IT);
 uint32_t ETH_GetMMCRegister(uint32_t ETH_MMCReg);
 
+void ethernetif_input( void * pvParameters );
+err_t ethernetif0_init(struct netif *netif);
+#define NETIF_ENET0_INIT_FUNC ethernetif0_init
 #ifdef __cplusplus
 }
 #endif

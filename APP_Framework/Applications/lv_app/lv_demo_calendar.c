@@ -39,7 +39,7 @@ static void event_handler(lv_event_t * e)
 void lv_demo_calendar(void)
 {
     lv_obj_t  * calendar = lv_calendar_create(lv_scr_act());
-    lv_obj_set_size(calendar, 800, 480);//lv_obj_set_size(calendar, 800, 480);
+    lv_obj_set_size(calendar, MY_DISP_HOR_RES, MY_DISP_VER_RES);//lv_obj_set_size(calendar, 800, 480);
     lv_obj_align(calendar, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_event_cb(calendar, event_handler, LV_EVENT_ALL, NULL);
 

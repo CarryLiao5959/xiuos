@@ -25,11 +25,35 @@
 #include <nuttx/pthread.h>
 #include <nuttx/semaphore.h>
 #include <nuttx/time.h>
+#include <sys/ioctl.h>
+#include <nuttx/clock.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <nuttx/wireless/lpwan/sx127x.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <errno.h>
 #include <nuttx/ioexpander/gpio.h>
 #include <termios.h>
+#include <nuttx/arch.h>
+
+#ifdef CONFIG_ADAPTER_SX1278
+#include <nuttx/wireless/lpwan/sx127x.h>
+#endif
+
+#ifdef CONFIG_USER_TEST_LCD
+#ifdef CONFIG_K210_LCD
+#  include "nuttx/lcd/lt768.h"
+#  include "nuttx/lcd/lt768_learn.h"
+#  include "nuttx/lcd/lt768_lib.h"
+#  include "nuttx/lcd/if_port.h"
+#else
+#  include <sys/mman.h>
+#  include <nuttx/video/fb.h>
+#  include <nuttx/video/rgbcolors.h>
+#endif
+#endif
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
@@ -104,6 +128,23 @@ extern "C" {
 
 #define EOK 0
 #define x_err_t int
+
+typedef union {
+    struct {
+        uint16_t blue  : 5;
+        uint16_t green : 6;
+        uint16_t red   : 5;
+    } ch;
+    uint16_t full;
+} lv_color16_t;
+typedef lv_color16_t lv_color_t;
+
+typedef struct
+{
+    uint16_t x;
+    uint16_t y;
+    uint16_t press;
+}TouchDataParam;
 
 struct PinDevIrq
 {

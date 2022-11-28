@@ -8,6 +8,14 @@ if ADAPTER_HFA21_WIFI
     source "$APP_DIR/Framework/connection/wifi/hfa21_wifi/Kconfig"
 endif
 
+config ADAPTER_ESP8285_WIFI
+        bool "Using wifi adapter device esp8285"
+        default n
+
+if ADAPTER_ESP8285_WIFI
+    source "$APP_DIR/Framework/connection/wifi/esp8285_wifi/Kconfig"
+endif 
+
 config ADAPTER_ESP07S_WIFI
         bool "Using wifi adapter device esp07s"
         default n

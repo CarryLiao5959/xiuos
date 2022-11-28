@@ -65,7 +65,7 @@
 extern "C" {
 #endif
 #ifndef _STDBOOL_H
-typedef signed   char                   bool;  
+//typedef signed   char                   bool;  
 #endif
 typedef signed   char                   int8;      
 typedef signed   short                  int16;    
@@ -165,6 +165,61 @@ struct PrivIoctlCfg
     enum IoctlDriverType ioctl_driver_type;
     void *args;
 };
+
+typedef struct 
+{
+    uint16 x_pos;
+    uint16 y_pos;
+    uint16 width;
+    uint16 height;
+    uint8  font_size;
+    uint8 *addr;
+    uint16 font_color;
+    uint16 back_color;
+}LcdStringParam;
+
+typedef struct 
+{
+    uint16 x_startpos;
+    uint16 x_endpos;
+    uint16 y_startpos;
+    uint16 y_endpos;
+    void* pixel_color;
+}LcdPixelParam;
+
+typedef struct 
+{
+    char type; // 0:write string;1:write dot
+    LcdPixelParam pixel_info;
+    LcdStringParam string_info;
+}LcdWriteParam;
+
+typedef struct
+{
+    uint16_t x;
+    uint16_t y;
+    uint16_t press;
+}TouchDataParam;
+
+struct TouchDataStandard
+{
+    uint16_t x;
+    uint16_t y;
+};
+#define PRIV_SYSTICK_GET (rt_tick_get())
+#define PRIV_LCD_DEV "/dev/lcd"
+#define MY_DISP_HOR_RES LCD_WIDTH
+#define MY_DISP_VER_RES LCD_HEIGHT
+
+#define PRIV_TOUCH_DEV "/dev/touch"
+#define MY_INDEV_X LCD_WIDTH
+#define MY_INDEV_Y LCD_HEIGHT
+
+
+
+
+
+
 
 /*********************shell***********************/
 //for int func(int argc, char *agrv[])

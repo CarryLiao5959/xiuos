@@ -66,7 +66,7 @@
 #include "netif/ethernet.h"
 #include "enet_ethernetif.h"
 #include "enet_ethernetif_priv.h"
-
+#include <board.h>
 #include "fsl_enet.h"
 #include "fsl_phy.h"
 #include "fsl_gpio.h"
@@ -93,6 +93,20 @@ void enet_delay(void)
 
 void Time_Update_LwIP(void)
 {
+}
+
+ethernetif_config_t enet_cfg = {
+    .phyAddress = BOARD_ENET0_PHY_ADDRESS,
+    .clockName = kCLOCK_CoreSysClk,
+    .macAddress = configMAC_ADDR,
+#if defined(FSL_FEATURE_SOC_LPC_ENET_COUNT) && (FSL_FEATURE_SOC_LPC_ENET_COUNT > 0)
+    .non_dma_memory = non_dma_memory,
+#endif /* FSL_FEATURE_SOC_LPC_ENET_COUNT */ 
+};
+
+void *ethernetif_config_enet_set(uint8_t enet_port)
+{
+    return (void *)&enet_cfg;
 }
 
 void ethernetif_clk_init(void)

@@ -35,7 +35,10 @@ Modification:
 #include "clock_config.h"
 #include <xizi.h>
 #include <arch_interrupt.h>
+
+#ifdef BSP_USING_LWIP
 #include "enet_ethernetif.h"
+#endif
 
 extern int heap_start;
 extern int heap_end;
@@ -51,6 +54,8 @@ void InitBoardHardware(void);
  ******************************************************************************/
 /*! @brief The board name */
 #define BOARD_NAME "IMXRT1050-EVKB"
+
+#define configMAC_ADDR {0x02, 0x12, 0x13, 0x10, 0x15, 0x11}
 
 /* The UART to use for debug messages. */
 #define BOARD_DEBUG_UART_TYPE kSerialPort_Uart

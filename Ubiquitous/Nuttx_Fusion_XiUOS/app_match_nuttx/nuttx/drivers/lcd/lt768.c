@@ -1,29 +1,40 @@
-/********************* COPYRIGHT  ***********************
-* File Name       : LT768.c
-* Author          : Levetop Electronics
-* Version         : V1.0
-* Date            : 2017-8-25
-* Description     : 操作LT768的寄存器函数
-                    具体操作哪个寄存器请看LT768.h文件
-*********************************************************/
+/*
+* Copyright (c) 2022 AIIT XUOS Lab
+* XiUOS is licensed under Mulan PSL v2.
+* You can use this software according to the terms and conditions of the Mulan PSL v2.
+* You may obtain a copy of Mulan PSL v2 at:
+*        http://license.coscl.org.cn/MulanPSL2
+* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+* See the Mulan PSL v2 for more details.
+*/
+
+/**
+ * @file lt768.c
+ * @brief lt768 register relative driver, inherit from Levetop Electronics
+ * @version 1.0
+ * @author AIIT XUOS Lab
+ * @date 2022.9.19
+ */
 
 #include <syslog.h>
 #include "nuttx/arch.h"
 #include "nuttx/lcd/lt768.h"
-#include "nuttx/lcd/k210_lcd.h"
 
 //==============================================================================
-void LCD_RegisterWrite(unsigned char Cmd,unsigned char Data)
+
+void LCD_RegisterWrite(uint8_t Cmd, uint8_t Data)
 {
     LCD_CmdWrite(Cmd);
     LCD_DataWrite(Data);
 }
 
-unsigned char LCD_RegisterRead(unsigned char Cmd)
+uint8_t LCD_RegisterRead(uint8_t Cmd)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(Cmd);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 
@@ -78,18 +89,18 @@ void Check_SDRAM_Ready(void)
 {
     /*    0: SDRAM is not ready for access
         1: SDRAM is ready for access        */
-    unsigned char temp;
+    uint8_t temp;
 
     do
     {
-        temp=LCD_StatusRead();
+        temp = LCD_StatusRead();
     }
     while((temp&0x04) == 0x00);
 }
 
-unsigned char Power_Saving_Status(void)
+uint8_t Power_Saving_Status(void)
 {
-    unsigned char temp;
+    uint8_t temp;
 
     if((LCD_StatusRead()&0x02)==0x02)
     {
@@ -144,20 +155,20 @@ void Check_Interrupt_Occur(void)
 
 void Check_Busy_Draw(void)
 {
-    unsigned char temp;
+    uint8_t temp;
 
     do
     {
-        temp=LCD_StatusRead();
+        temp = LCD_StatusRead();
     }
     while(temp&0x08);
 }
 
 //[00h]=========================================================================
 
-void LT768_SW_Reset(void)//IC Reset
+void LT768_SW_Reset(void)//IC Reset??
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x00);
     temp = LCD_DataRead();
     temp |= 0x01;
@@ -175,7 +186,7 @@ void Enable_PLL(void)
 {
     /*  0: PLL disable; allow change PLL parameter.
         1: PLL enable; cannot change PLL parameter.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -186,7 +197,7 @@ void LT768_Sleep(void)
 {
     /*  0: Normal mode.
         1: Sleep mode.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -196,7 +207,7 @@ void LT768_WakeUp(void)
 {
     /*  0: Normal mode.
         1: Sleep mode.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -206,7 +217,7 @@ void Key_Scan_Enable(void)
 {
     /*  0: Disable.
         1: Enable.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -216,7 +227,7 @@ void Key_Scan_Disable(void)
 {
     /*  0: Disable.
         1: Enable.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -228,7 +239,7 @@ void TFT_24bit(void)
         01b: 18-bits output, unused pins are set as GPIO.
         10b: 16-bits output, unused pins are set as GPIO.
         11b: LVDS, all 24-bits unused output pins are set as GPIO.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -241,7 +252,7 @@ void TFT_18bit(void)
         01b: 18-bits output, unused pins are set as GPIO.
         10b: 16-bits output, unused pins are set as GPIO.
         11b: LVDS, all 24-bits unused output pins are set as GPIO.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -254,7 +265,7 @@ void TFT_16bit(void)
         01b: 18-bits output, unused pins are set as GPIO.
         10b: 16-bits output, unused pins are set as GPIO.
         11b: LVDS, all 24-bits unused output pins are set as GPIO.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -267,7 +278,7 @@ void TFT_LVDS(void)
         01b: 18-bits output, unused pins are set as GPIO.
         10b: 16-bits output, unused pins are set as GPIO.
         11b: LVDS, all 24-bits unused output pins are set as GPIO.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -280,7 +291,7 @@ void LT768_I2CM_Enable(void)
     /*  I2C master Interface Enable/Disable
         0: Disable
         1: Enable*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -292,7 +303,7 @@ void LT768_I2CM_Disable(void)
     /*  I2C master Interface Enable/Disable
         0: Disable
         1: Enable*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -304,7 +315,7 @@ void Enable_SFlash_SPI(void)
     /*  Serial Flash SPI Interface Enable/Disable
         0: Disable
         1: Enable*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -316,7 +327,7 @@ void Disable_SFlash_SPI(void)
     /*  Serial Flash SPI Interface Enable/Disable
         0: Disable
         1: Enable*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -327,7 +338,7 @@ void Host_Bus_8bit(void)
     /*  Parallel Host Data Bus Width Selection
         0: 8-bit Parallel Host Data Bus.
         1: 16-bit Parallel Host Data Bus.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp &= cClrb0;
@@ -338,7 +349,7 @@ void Host_Bus_16bit(void)
     /*  Parallel Host Data Bus Width Selection
         0: 8-bit Parallel Host Data Bus.
         1: 16-bit Parallel Host Data Bus.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x01);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -349,7 +360,7 @@ void Host_Bus_16bit(void)
 
 void RGB_8b_8bpp(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -358,7 +369,7 @@ void RGB_8b_8bpp(void)
 }
 void RGB_8b_16bpp(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -367,7 +378,7 @@ void RGB_8b_16bpp(void)
 }
 void RGB_8b_24bpp(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -377,7 +388,7 @@ void RGB_8b_24bpp(void)
 
 void RGB_16b_8bpp(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -386,7 +397,7 @@ void RGB_16b_8bpp(void)
 }
 void RGB_16b_16bpp(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -395,7 +406,7 @@ void RGB_16b_16bpp(void)
 }
 void RGB_16b_24bpp_mode1(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -404,7 +415,7 @@ void RGB_16b_24bpp_mode1(void)
 }
 void RGB_16b_24bpp_mode2(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -414,7 +425,7 @@ void RGB_16b_24bpp_mode2(void)
 
 void MemRead_Left_Right_Top_Down(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -423,7 +434,7 @@ void MemRead_Left_Right_Top_Down(void)
 }
 void MemRead_Right_Left_Top_Down(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -432,7 +443,7 @@ void MemRead_Right_Left_Top_Down(void)
 }
 void MemRead_Top_Down_Left_Right(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -441,7 +452,7 @@ void MemRead_Top_Down_Left_Right(void)
 }
 void MemRead_Down_Top_Left_Right(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -450,7 +461,7 @@ void MemRead_Down_Top_Left_Right(void)
 }
 void MemWrite_Left_Right_Top_Down(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -459,7 +470,7 @@ void MemWrite_Left_Right_Top_Down(void)
 }
 void MemWrite_Right_Left_Top_Down(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -468,7 +479,7 @@ void MemWrite_Right_Left_Top_Down(void)
 }
 void MemWrite_Top_Down_Left_Right(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -477,7 +488,7 @@ void MemWrite_Top_Down_Left_Right(void)
 }
 void MemWrite_Down_Top_Left_Right(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x02);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -490,7 +501,7 @@ void Interrupt_Active_Low(void)
     /*  MPU Interrupt active level
         0 : active low.
         1 : active high.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -501,7 +512,7 @@ void Interrupt_Active_High(void)
     /*  MPU Interrupt active level
         0 : active low.
         1 : active high.*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -512,7 +523,7 @@ void ExtInterrupt_Debounce(void)
     /*  External interrupt de-bounce
         0 : without de-bounce
         1 : enable de-bounce (1024 OSC clock)*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -523,7 +534,7 @@ void ExtInterrupt_Nodebounce(void)
     /*  External interrupt de-bounce
         0 : without de-bounce
         1 : enable de-bounce (1024 OSC clock)*/
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -531,7 +542,7 @@ void ExtInterrupt_Nodebounce(void)
 }
 void ExtInterrupt_Input_Low_Level_Trigger(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -540,7 +551,7 @@ void ExtInterrupt_Input_Low_Level_Trigger(void)
 }
 void ExtInterrupt_Input_High_Level_Trigger(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -549,7 +560,7 @@ void ExtInterrupt_Input_High_Level_Trigger(void)
 }
 void ExtInterrupt_Input_Falling_Edge_Trigger(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -558,7 +569,7 @@ void ExtInterrupt_Input_Falling_Edge_Trigger(void)
 }
 void ExtInterrupt_Input_Rising_Edge_Trigger(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -567,7 +578,7 @@ void ExtInterrupt_Input_Rising_Edge_Trigger(void)
 }
 void LVDS_Format1(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -575,7 +586,7 @@ void LVDS_Format1(void)
 }
 void LVDS_Format2(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -583,7 +594,7 @@ void LVDS_Format2(void)
 }
 void Graphic_Mode(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -591,7 +602,7 @@ void Graphic_Mode(void)
 }
 void Text_Mode(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -599,7 +610,7 @@ void Text_Mode(void)
 }
 void Memory_Select_SDRAM(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -608,7 +619,7 @@ void Memory_Select_SDRAM(void)
 }
 void Memory_Select_Graphic_Cursor_RAM(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -617,7 +628,7 @@ void Memory_Select_Graphic_Cursor_RAM(void)
 }
 void Memory_Select_Color_Palette_RAM(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x03);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -640,7 +651,7 @@ void Enable_Resume_Interrupt(void)
     0: Disable.
     1: Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -653,7 +664,7 @@ void Disable_Resume_Interrupt(void)
     0: Disable.
     1: Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -666,7 +677,7 @@ void Enable_ExtInterrupt_Input(void)
     0: Disable.
     1: Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -679,7 +690,7 @@ void Disable_ExtInterrupt_Input(void)
     0: Disable.
     1: Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -692,7 +703,7 @@ void Enable_I2CM_Interrupt(void)
     0: Disable.
     1: Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -705,7 +716,7 @@ void Disable_I2CM_Interrupt(void)
     0: Disable.
     1: Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -718,7 +729,7 @@ void Enable_Vsync_Interrupt(void)
     0: Disable Interrupt.
     1: Enable Interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -731,7 +742,7 @@ void Disable_Vsync_Interrupt(void)
     0: Disable Interrupt.
     1: Enable Interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -744,7 +755,7 @@ void Enable_KeyScan_Interrupt(void)
     0: Disable Key scan interrupt.
     1: Enable Key scan interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -757,7 +768,7 @@ void Disable_KeyScan_Interrupt(void)
     0: Disable Key scan interrupt.
     1: Enable Key scan interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -771,7 +782,7 @@ void Enable_DMA_Draw_BTE_Interrupt(void)
     0: Disable Interrupt.
     1: Enable Interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -785,7 +796,7 @@ void Disable_DMA_Draw_BTE_Interrupt(void)
     0: Disable Interrupt.
     1: Enable Interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -798,7 +809,7 @@ void Enable_PWM1_Interrupt(void)
     0: Disable Interrupt.
     1: Enable Interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -811,7 +822,7 @@ void Disable_PWM1_Interrupt(void)
     0: Disable Interrupt.
     1: Enable Interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -824,7 +835,7 @@ void Enable_PWM0_Interrupt(void)
     0: Disable Interrupt.
     1: Enable Interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -837,7 +848,7 @@ void Disable_PWM0_Interrupt(void)
     0: Disable Interrupt.
     1: Enable Interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0B);
     temp = LCD_DataRead();
     temp &= cClrb0;
@@ -845,7 +856,7 @@ void Disable_PWM0_Interrupt(void)
 }
 
 //[0Ch]=========================================================================
-unsigned char Read_Interrupt_status(void)
+uint8_t Read_Interrupt_status(void)
 {
     /*
     [Bit7]Read Function ..Resume Interrupt Status
@@ -873,7 +884,7 @@ unsigned char Read_Interrupt_status(void)
     0: No interrupt happens.
     1: interrupt happens.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     return temp;
@@ -886,7 +897,7 @@ void Clear_Resume_Interrupt_Flag(void)
     0: No operation.
     1: Clear Resume interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -900,7 +911,7 @@ void Clear_ExtInterrupt_Input_Flag(void)
     0: No operation.
     1: Clear the PS[0] pin edge interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -914,7 +925,7 @@ void Clear_I2CM_Interrupt_Flag(void)
     0: No operation.
     1: Clear the I2C master interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -928,7 +939,7 @@ void Clear_Vsync_Interrupt_Flag(void)
     0: No operation.
     1: Clear the interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -942,7 +953,7 @@ void Clear_KeyScan_Interrupt_Flag(void)
     0: No operation.
     1: Clear the Key Scan interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -957,7 +968,7 @@ void Clear_DMA_Draw_BTE_Interrupt_Flag(void)
     0: No operation.
     1: Clear interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -971,7 +982,7 @@ void Clear_PWM1_Interrupt_Flag(void)
     0: No operation.
     1: Clear interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -985,7 +996,7 @@ void Clear_PWM0_Interrupt_Flag(void)
     0: No operation.
     1: Clear interrupt.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0C);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -999,7 +1010,7 @@ void Mask_Resume_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -1012,7 +1023,7 @@ void Mask_ExtInterrupt_Input_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -1025,7 +1036,7 @@ void Mask_I2CM_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -1038,7 +1049,7 @@ void Mask_Vsync_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -1051,7 +1062,7 @@ void Mask_KeyScan_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -1065,7 +1076,7 @@ void Mask_DMA_Draw_BTE_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -1078,7 +1089,7 @@ void Mask_PWM1_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -1091,7 +1102,7 @@ void Mask_PWM0_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -1105,7 +1116,7 @@ void Enable_Resume_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -1118,7 +1129,7 @@ void Enable_ExtInterrupt_Inpur_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -1131,7 +1142,7 @@ void Enable_I2CM_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -1144,7 +1155,7 @@ void Enable_Vsync_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -1157,7 +1168,7 @@ void Enable_KeyScan_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -1171,7 +1182,7 @@ void Enable_DMA_Draw_BTE_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -1184,7 +1195,7 @@ void Enable_PWM1_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -1197,7 +1208,7 @@ void Enable_PWM0_Interrupt_Flag(void)
     0: Enable.
     1: Mask.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0D);
     temp = LCD_DataRead();
     temp &= cClrb0;
@@ -1212,7 +1223,7 @@ void Enable_GPIOF_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -1225,7 +1236,7 @@ void Enable_GPIOE_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -1238,7 +1249,7 @@ void Enable_GPIOD_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -1252,7 +1263,7 @@ void Enable_GPIOC_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -1265,7 +1276,7 @@ void Enable_XDB15_8_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -1278,7 +1289,7 @@ void Enable_XDB7_0_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -1291,7 +1302,7 @@ void Disable_GPIOF_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -1304,7 +1315,7 @@ void Disable_GPIOE_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -1317,7 +1328,7 @@ void Disable_GPIOD_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -1331,7 +1342,7 @@ void Disable_GPIOC_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -1344,7 +1355,7 @@ void Disable_XDB15_8_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -1357,7 +1368,7 @@ void Disable_XDB7_0_PullUp(void)
     0: Pull-Up Disable
     1: Pull-Up Enable
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0E);
     temp = LCD_DataRead();
     temp &= cClrb0;
@@ -1367,11 +1378,11 @@ void Disable_XDB7_0_PullUp(void)
 void XPDAT18_Set_GPIO_D7(void)
 {
     /*
-    XPDAT[18]  not scan function select
+    XPDAT[18] ? not scan function select
     0: GPIO-D7
     1: KOUT[4]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -1380,11 +1391,11 @@ void XPDAT18_Set_GPIO_D7(void)
 void XPDAT18_Set_KOUT4(void)
 {
     /*
-    XPDAT[18]  not scan function select
+    XPDAT[18] ? not scan function select
     0: GPIO-D7
     1: KOUT[4]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -1393,11 +1404,11 @@ void XPDAT18_Set_KOUT4(void)
 void XPDAT17_Set_GPIO_D5(void)
 {
     /*
-    XPDAT[17]  not scan function select
+    XPDAT[17] ? not scan function select
     0: GPIO-D5
     1: KOUT[2]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -1406,11 +1417,11 @@ void XPDAT17_Set_GPIO_D5(void)
 void XPDAT17_Set_KOUT2(void)
 {
     /*
-    XPDAT[17]  not scan function select
+    XPDAT[17] ? not scan function select
     0: GPIO-D5
     1: KOUT[2]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -1419,11 +1430,11 @@ void XPDAT17_Set_KOUT2(void)
 void XPDAT16_Set_GPIO_D4(void)
 {
     /*
-    XPDAT[16]  not scan function select
+    XPDAT[16] ? not scan function select
     0: GPIO-D4
     1: KOUT[1]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -1432,11 +1443,11 @@ void XPDAT16_Set_GPIO_D4(void)
 void XPDAT16_Set_KOUT1(void)
 {
     /*
-    XPDAT[16]  not scan function select
+    XPDAT[16] ? not scan function select
     0: GPIO-D4
     1: KOUT[1]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -1445,11 +1456,11 @@ void XPDAT16_Set_KOUT1(void)
 void XPDAT9_Set_GPIO_D3(void)
 {
     /*
-    XPDAT[9]  not scan function select
+    XPDAT[9] ? not scan function select
     0: GPIO-D3
     1: KOUT[3]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -1458,11 +1469,11 @@ void XPDAT9_Set_GPIO_D3(void)
 void XPDAT9_Set_KOUT3(void)
 {
     /*
-    XPDAT[9]  not scan function select
+    XPDAT[9] ? not scan function select
     0: GPIO-D3
     1: KOUT[3]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -1471,11 +1482,11 @@ void XPDAT9_Set_KOUT3(void)
 void XPDAT8_Set_GPIO_D2(void)
 {
     /*
-    XPDAT[8]  not scan function select
+    XPDAT[8] ? not scan function select
     0: GPIO-D2
     1: KIN[3]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -1484,11 +1495,11 @@ void XPDAT8_Set_GPIO_D2(void)
 void XPDAT8_Set_KIN3(void)
 {
     /*
-    XPDAT[8]  not scan function select
+    XPDAT[8] ? not scan function select
     0: GPIO-D2
     1: KIN[3]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -1497,11 +1508,11 @@ void XPDAT8_Set_KIN3(void)
 void XPDAT2_Set_GPIO_D6(void)
 {
     /*
-    XPDAT[2]  not scan function select
+    XPDAT[2] ? not scan function select
     0: GPIO-D6
     1: KIN[4]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -1510,11 +1521,11 @@ void XPDAT2_Set_GPIO_D6(void)
 void XPDAT2_Set_KIN4(void)
 {
     /*
-    XPDAT[2]  not scan function select
+    XPDAT[2] ? not scan function select
     0: GPIO-D6
     1: KIN[4]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -1523,11 +1534,11 @@ void XPDAT2_Set_KIN4(void)
 void XPDAT1_Set_GPIO_D1(void)
 {
     /*
-    XPDAT[1]  not scan function select
+    XPDAT[1] ? not scan function select
     0: GPIO-D1
     1: KIN[2]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -1536,11 +1547,11 @@ void XPDAT1_Set_GPIO_D1(void)
 void XPDAT1_Set_KIN2(void)
 {
     /*
-    XPDAT[1]  not scan function select
+    XPDAT[1] ? not scan function select
     0: GPIO-D1
     1: KIN[2]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -1549,11 +1560,11 @@ void XPDAT1_Set_KIN2(void)
 void XPDAT0_Set_GPIO_D0(void)
 {
     /*
-    XPDAT[0]  not scan function select
+    XPDAT[0] ? not scan function select
     0: GPIO-D0
     1: KIN[1]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp &= cClrb0;
@@ -1562,11 +1573,11 @@ void XPDAT0_Set_GPIO_D0(void)
 void XPDAT0_Set_KIN1(void)
 {
     /*
-    XPDAT[0]  not scan function select
+    XPDAT[0] ? not scan function select
     0: GPIO-D0
     1: KIN[1]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x0F);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -1582,7 +1593,7 @@ void Enable_PIP1(void)
     1 : PIP 1 window enable
     PIP 1 window always on top of PIP 2 window.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -1596,7 +1607,7 @@ void Disable_PIP1(void)
     1 : PIP 1 window enable
     PIP 1 window always on top of PIP 2 window.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -1610,7 +1621,7 @@ void Enable_PIP2(void)
     1 : PIP 2 window enable
     PIP 1 window always on top of PIP 2 window.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -1624,7 +1635,7 @@ void Disable_PIP2(void)
     1 : PIP 2 window enable
     PIP 1 window always on top of PIP 2 window.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -1633,10 +1644,10 @@ void Disable_PIP2(void)
 void Select_PIP1_Parameter(void)
 {
     /*
-    0: To configure PIP 1ˇs parameters.
-    1: To configure PIP 2ˇs parameters..
+    0: To configure PIP 1's parameters.
+    1: To configure PIP 2's parameters..
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -1645,10 +1656,10 @@ void Select_PIP1_Parameter(void)
 void Select_PIP2_Parameter(void)
 {
     /*
-    0: To configure PIP 1ˇs parameters.
-    1: To configure PIP 2ˇs parameters..
+    0: To configure PIP 1's parameters.
+    1: To configure PIP 2's parameters..
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -1662,7 +1673,7 @@ void Select_Main_Window_8bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -1677,7 +1688,7 @@ void Select_Main_Window_16bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -1692,7 +1703,7 @@ void Select_Main_Window_24bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x10);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -1708,7 +1719,7 @@ void Select_PIP2_Window_8bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x11);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -1723,7 +1734,7 @@ void Select_PIP2_Window_16bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x11);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -1738,7 +1749,7 @@ void Select_PIP2_Window_24bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x11);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -1753,7 +1764,7 @@ void Select_PIP1_Window_8bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x11);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -1768,7 +1779,7 @@ void Select_PIP1_Window_16bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x11);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -1783,7 +1794,7 @@ void Select_PIP1_Window_24bpp(void)
     01b: 16-bpp generic TFT, i.e. 65K colors.
     1xb: 24-bpp generic TFT, i.e. 1.67M colors.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x11);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -1799,7 +1810,7 @@ void PCLK_Rising(void)
     0: PDAT, DE, HSYNC etc. Drive(/ change) at PCLK falling edge.
     1: PDAT, DE, HSYNC etc. Drive(/ change) at PCLK rising edge.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -1812,7 +1823,7 @@ void PCLK_Falling(void)
     0: PDAT, DE, HSYNC etc. Drive(/ change) at PCLK falling edge.
     1: PDAT, DE, HSYNC etc. Drive(/ change) at PCLK rising edge.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -1825,14 +1836,12 @@ void Display_ON(void)
     0b: Display Off.
     1b: Display On.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
-    syslog(LOG_NOTICE, "Display_ON.pre_read=%02x\n", temp);
     temp |= cSetb6;
     LCD_DataWrite(temp);
     temp = LCD_DataRead();
-    syslog(LOG_NOTICE, "Display_ON.write_read=%02x\n", temp);
 }
 
 void Display_OFF(void)
@@ -1842,7 +1851,7 @@ void Display_OFF(void)
     0b: Display Off.
     1b: Display On.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -1855,7 +1864,7 @@ void Color_Bar_ON(void)
     0b: Disable.
     1b: Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -1868,7 +1877,7 @@ void Color_Bar_OFF(void)
     0b: Disable.
     1b: Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -1882,7 +1891,7 @@ void HSCAN_L_to_R(void)
     1 : From Right to Left
     PIP window will be disabled when HDIR set as 1.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -1896,7 +1905,7 @@ void HSCAN_R_to_L(void)
     1 : From Right to Left
     PIP window will be disabled when HDIR set as 1.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -1910,7 +1919,7 @@ void VSCAN_T_to_B(void)
     1 : From bottom to Top
     PIP window will be disabled when VDIR set as 1.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -1924,7 +1933,7 @@ void VSCAN_B_to_T(void)
     1 : From bottom to Top
     PIP window will be disabled when VDIR set as 1.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -1941,7 +1950,7 @@ void PDATA_Set_RGB(void)
     100b : BRG.
     101b : BGR.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &=0xf8;
@@ -1958,7 +1967,7 @@ void PDATA_Set_RBG(void)
     100b : BRG.
     101b : BGR.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &=0xf8;
@@ -1976,7 +1985,7 @@ void PDATA_Set_GRB(void)
     100b : BRG.
     101b : BGR.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &=0xf8;
@@ -1994,7 +2003,7 @@ void PDATA_Set_GBR(void)
     100b : BRG.
     101b : BGR.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &=0xf8;
@@ -2013,7 +2022,7 @@ void PDATA_Set_BRG(void)
     100b : BRG.
     101b : BGR.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &=0xf8;
@@ -2031,7 +2040,7 @@ void PDATA_Set_BGR(void)
     100b : BRG.
     101b : BGR.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp &=0xf8;
@@ -2042,7 +2051,7 @@ void PDATA_Set_BGR(void)
 
 void PDATA_IDLE_STATE(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x12);
     temp = LCD_DataRead();
     temp |=0x07;
@@ -2058,7 +2067,7 @@ void HSYNC_Low_Active(void)
     0 : Low active.
     1 : High active.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -2071,7 +2080,7 @@ void HSYNC_High_Active(void)
     0 : Low active.
     1 : High active.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -2084,7 +2093,7 @@ void VSYNC_Low_Active(void)
     0 : Low active.
     1 : High active.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -2097,7 +2106,7 @@ void VSYNC_High_Active(void)
     0 : Low active.
     1 : High active.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -2110,7 +2119,7 @@ void DE_Low_Active(void)
     0 : High active.
     1 : Low active.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -2123,7 +2132,7 @@ void DE_High_Active(void)
     0 : High active.
     1 : Low active.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -2133,10 +2142,10 @@ void Idle_DE_Low(void)
 {
     /*
     DE IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pin ¨DE〃 output is low.
-    1 : Pin ¨DE〃 output is high.
+    0 : Pin 'DE' output is low.
+    1 : Pin 'DE' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -2146,10 +2155,10 @@ void Idle_DE_High(void)
 {
     /*
     DE IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pin ¨DE〃 output is low.
-    1 : Pin ¨DE〃 output is high.
+    0 : Pin DE output is low.
+    1 : Pin DE output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -2159,10 +2168,10 @@ void Idle_PCLK_Low(void)
 {
     /*
     PCLK IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pin ¨PCLK〃 output is low.
-    1 : Pin ¨PCLK〃 output is high.
+    0 : Pin 'PCLK' output is low.
+    1 : Pin 'PCLK' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -2171,11 +2180,11 @@ void Idle_PCLK_Low(void)
 void Idle_PCLK_High(void)
 {
     /*
-    PCLK IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pin ¨PCLK〃 output is low.
-    1 : Pin ¨PCLK〃 output is high.
+    PCLK IDLE STATE(When STANDBY or DISPLAY OFF)
+    0 : Pin 'PCLK' output is low.
+    1 : Pin 'PCLK' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -2185,10 +2194,10 @@ void Idle_PDAT_Low(void)
 {
     /*
     PDAT IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pins ¨PDAT[23:0]〃 output is low.
-    1 : Pins ¨PCLK[23:0]〃 output is high.
+    0 : Pins 'PDAT[23:0]' output is low.
+    1 : Pins 'PCLK[23:0]' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -2198,10 +2207,10 @@ void Idle_PDAT_High(void)
 {
     /*
     PDAT IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pins ¨PDAT[23:0]〃 output is low.
-    1 : Pins ¨PCLK[23:0]〃 output is high.
+    0 : Pins 'PDAT[23:0]' output is low.
+    1 : Pins 'PCLK[23:0]' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -2211,10 +2220,10 @@ void Idle_HSYNC_Low(void)
 {
     /*
     HSYNC IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pin ¨HSYNC〃 output is low.
-    1 : Pin ¨HSYNC〃 output is high.
+    0 : Pin 'HSYNC' output is low.
+    1 : Pin 'HSYNC' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -2224,10 +2233,10 @@ void Idle_HSYNC_High(void)
 {
     /*
     HSYNC IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pin ¨HSYNC〃 output is low.
-    1 : Pin ¨HSYNC〃 output is high.
+    0 : Pin 'HSYNC' output is low.
+    1 : Pin 'HSYNC' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -2237,10 +2246,10 @@ void Idle_VSYNC_Low(void)
 {
     /*
     VSYNC IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pin ¨VSYNC〃 output is low.
-    1 : Pin ¨VSYNC〃 output is high.
+    0 : Pin 'VSYNC' output is low.
+    1 : Pin 'VSYNC' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp &= cClrb0;
@@ -2250,10 +2259,10 @@ void Idle_VSYNC_High(void)
 {
     /*
     VSYNC IDLE STATE(When STANDBY or DISPLAY OFF )
-    0 : Pin ¨VSYNC〃 output is low.
-    1 : Pin ¨VSYNC〃 output is high.
+    0 : Pin 'VSYNC' output is low.
+    1 : Pin 'VSYNC' output is high.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x13);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -2276,7 +2285,7 @@ void LCD_HorizontalWidth_VerticalHeight(unsigned short WX,unsigned short HY)
     [1Bh] Vertical Display Height Bit[10:8]
     Vertical Display Height(Line) = VDHR + 1
     */
-    unsigned char temp;
+    uint8_t temp;
 
     if(WX<8)
     {
@@ -2287,7 +2296,7 @@ void LCD_HorizontalWidth_VerticalHeight(unsigned short WX,unsigned short HY)
         temp=HY-1;
         LCD_CmdWrite(0x1A);
         LCD_DataWrite(temp);
-        temp=(HY-1)>>8;
+        temp=(HY-1) >> 8;
         LCD_CmdWrite(0x1B);
         LCD_DataWrite(temp);
     }
@@ -2302,7 +2311,7 @@ void LCD_HorizontalWidth_VerticalHeight(unsigned short WX,unsigned short HY)
         temp=HY-1;
         LCD_CmdWrite(0x1A);
         LCD_DataWrite(temp);
-        temp=(HY-1)>>8;
+        temp=(HY-1) >> 8;
         LCD_CmdWrite(0x1B);
         LCD_DataWrite(temp);
     }
@@ -2322,7 +2331,7 @@ void LCD_Horizontal_Non_Display(unsigned short WX)
     this modulation is 1-pixel.
     Horizontal non-display period(pixels) = (HNDR + 1) * 8 + HNDFTR
     */
-    unsigned char temp;
+    uint8_t temp;
 
     if(WX<8)
     {
@@ -2351,7 +2360,7 @@ void LCD_HSYNC_Start_Position(unsigned short WX)
     Also called front porch.
     HSYNC Start Position(pixels) = (HSTR + 1)x8
     */
-    unsigned char temp;
+    uint8_t temp;
 
     if(WX<8)
     {
@@ -2373,7 +2382,7 @@ void LCD_HSYNC_Pulse_Width(unsigned short WX)
     The period width of HSYNC.
     HSYNC Pulse Width(pixels) = (HPW + 1)x8
     */
-    unsigned char temp;
+    uint8_t temp;
 
     if(WX<8)
     {
@@ -2397,12 +2406,12 @@ void LCD_Vertical_Non_Display(unsigned short HY)
     [1Dh] Vertical Non-Display Period Bit[9:8]
     Vertical Non-Display Period(Line) = (VNDR + 1)
     */
-    unsigned char temp;
+    uint8_t temp;
     temp=HY-1;
     LCD_CmdWrite(0x1C);
     LCD_DataWrite(temp);
     LCD_CmdWrite(0x1D);
-    LCD_DataWrite(temp>>8);
+    LCD_DataWrite(temp >> 8);
 }
 //[1Eh]=========================================================================
 void LCD_VSYNC_Start_Position(unsigned short HY)
@@ -2412,7 +2421,7 @@ void LCD_VSYNC_Start_Position(unsigned short HY)
     The starting position from the end of display area to the beginning of VSYNC.
     VSYNC Start Position(Line) = (VSTR + 1)
     */
-    unsigned char temp;
+    uint8_t temp;
     temp=HY-1;
     LCD_CmdWrite(0x1E);
     LCD_DataWrite(temp);
@@ -2425,13 +2434,13 @@ void LCD_VSYNC_Pulse_Width(unsigned short HY)
     The pulse width of VSYNC in lines.
     VSYNC Pulse Width(Line) = (VPWR + 1)
     */
-    unsigned char temp;
+    uint8_t temp;
     temp=HY-1;
     LCD_CmdWrite(0x1F);
     LCD_DataWrite(temp);
 }
 //[20h][21h][22h][23h]=========================================================================
-void Main_Image_Start_Address(unsigned long Addr)
+void Main_Image_Start_Address(uint32_t Addr)
 {
     /*
     [20h] Main Image Start Address[7:2]
@@ -2440,9 +2449,9 @@ void Main_Image_Start_Address(unsigned long Addr)
     [23h] Main Image Start Address [31:24]
     */
     LCD_RegisterWrite(0x20,Addr);
-    LCD_RegisterWrite(0x21,Addr>>8);
-    LCD_RegisterWrite(0x22,Addr>>16);
-    LCD_RegisterWrite(0x23,Addr>>24);
+    LCD_RegisterWrite(0x21,Addr >> 8);
+    LCD_RegisterWrite(0x22,Addr >> 16);
+    LCD_RegisterWrite(0x23,Addr >> 24);
 }
 //[24h][25h]=========================================================================
 void Main_Image_Width(unsigned short WX)
@@ -2451,11 +2460,11 @@ void Main_Image_Width(unsigned short WX)
     [24h] Main Image Width [7:0]
     [25h] Main Image Width [12:8]
     Unit: Pixel.
-    It must be divisible by 4. MIW Bit [1:0] tie to ¨0〃 internally.
+    It must be divisible by 4. MIW Bit [1:0] tie to '0' internally.
     The value is physical pixel number. Maximum value is 8188 pixels
     */
     LCD_RegisterWrite(0x24,WX);
-    LCD_RegisterWrite(0x25,WX>>8);
+    LCD_RegisterWrite(0x25,WX >> 8);
 }
 //[26h][27h][28h][29h]=========================================================================
 void Main_Window_Start_XY(unsigned short WX,unsigned short HY)
@@ -2465,7 +2474,7 @@ void Main_Window_Start_XY(unsigned short WX,unsigned short HY)
     [27h] Main Window Upper-Left corner X-coordination [12:8]
     Reference Main Image coordination.
     Unit: Pixel
-    It must be divisible by 4. MWULX Bit [1:0] tie to ¨0〃 internally.
+    It must be divisible by 4. MWULX Bit [1:0] tie to '0' internally.
     X-axis coordination plus Horizontal display width cannot large than 8188.
 
     [28h] Main Window Upper-Left corner Y-coordination [7:0]
@@ -2475,9 +2484,9 @@ void Main_Window_Start_XY(unsigned short WX,unsigned short HY)
     Range is between 0 and 8191.
     */
     LCD_RegisterWrite(0x26,WX);
-    LCD_RegisterWrite(0x27,WX>>8);
+    LCD_RegisterWrite(0x27,WX >> 8);
     LCD_RegisterWrite(0x28,HY);
-    LCD_RegisterWrite(0x29,HY>>8);
+    LCD_RegisterWrite(0x29,HY >> 8);
 }
 //[2Ah][2Bh][2Ch][2Dh]=========================================================================
 void PIP_Display_Start_XY(unsigned short WX,unsigned short HY)
@@ -2487,9 +2496,9 @@ void PIP_Display_Start_XY(unsigned short WX,unsigned short HY)
     [2Bh] PIP Window Display Upper-Left corner X-coordination [12:8]
     Reference Main Window coordination.
     Unit: Pixel
-    It must be divisible by 4. PWDULX Bit [1:0] tie to ¨0〃 internally.
+    It must be divisible by 4. PWDULX Bit [1:0] tie to '0' internally.
     X-axis coordination should less than horizontal display width.
-    According to bit of Select Configure PIP 1 or 2 Windowˇs parameters.
+    According to bit of Select Configure PIP 1 or 2 Window's parameters.
     Function bit will be configured for relative PIP window.
 
     [2Ch] PIP Window Display Upper-Left corner Y-coordination [7:0]
@@ -2497,16 +2506,16 @@ void PIP_Display_Start_XY(unsigned short WX,unsigned short HY)
     Reference Main Window coordination.
     Unit: Pixel
     Y-axis coordination should less than vertical display height.
-    According to bit of Select Configure PIP 1 or 2 Windowˇs parameters.
+    According to bit of Select Configure PIP 1 or 2 Window's parameters.
     Function bit will be configured for relative PIP window.
     */
     LCD_RegisterWrite(0x2A,WX);
-    LCD_RegisterWrite(0x2B,WX>>8);
+    LCD_RegisterWrite(0x2B,WX >> 8);
     LCD_RegisterWrite(0x2C,HY);
-    LCD_RegisterWrite(0x2D,HY>>8);
+    LCD_RegisterWrite(0x2D,HY >> 8);
 }
 //[2Eh][2Fh][30h][31h]=========================================================================
-void PIP_Image_Start_Address(unsigned long Addr)
+void PIP_Image_Start_Address(uint32_t Addr)
 {
     /*
     [2Eh] PIP Image Start Address[7:2]
@@ -2515,9 +2524,9 @@ void PIP_Image_Start_Address(unsigned long Addr)
     [31h] PIP Image Start Address [31:24]
     */
     LCD_RegisterWrite(0x2E,Addr);
-    LCD_RegisterWrite(0x2F,Addr>>8);
-    LCD_RegisterWrite(0x30,Addr>>16);
-    LCD_RegisterWrite(0x31,Addr>>24);
+    LCD_RegisterWrite(0x2F,Addr >> 8);
+    LCD_RegisterWrite(0x30,Addr >> 16);
+    LCD_RegisterWrite(0x31,Addr >> 24);
 }
 //[32h][33h]=========================================================================
 void PIP_Image_Width(unsigned short WX)
@@ -2526,14 +2535,14 @@ void PIP_Image_Width(unsigned short WX)
     [32h] PIP Image Width [7:0]
     [33h] PIP Image Width [12:8]
     Unit: Pixel.
-    It must be divisible by 4. PIW Bit [1:0] tie to ¨0〃 internally.
+    It must be divisible by 4. PIW Bit [1:0] tie to '0' internally.
     The value is physical pixel number.
     This width should less than horizontal display width.
-    According to bit of Select Configure PIP 1 or 2 Windowˇs parameters.
+    According to bit of Select Configure PIP 1 or 2 Window's parameters.
     Function bit will be configured for relative PIP window.
     */
     LCD_RegisterWrite(0x32,WX);
-    LCD_RegisterWrite(0x33,WX>>8);
+    LCD_RegisterWrite(0x33,WX >> 8);
 }
 //[34h][35h][36h][37h]=========================================================================
 void PIP_Window_Image_Start_XY(unsigned short WX,unsigned short HY)
@@ -2543,9 +2552,9 @@ void PIP_Window_Image_Start_XY(unsigned short WX,unsigned short HY)
     [35h] PIP Window Image Upper-Left corner X-coordination [12:8]
     Reference PIP Image coordination.
     Unit: Pixel
-    It must be divisible by 4. PWIULX Bit [1:0] tie to ¨0〃 internally.
+    It must be divisible by 4. PWIULX Bit [1:0] tie to '0' internally.
     X-axis coordination plus PIP image width cannot large than 8188.
-    According to bit of Select Configure PIP 1 or 2 Windowˇs parameters.
+    According to bit of Select Configure PIP 1 or 2 Window's parameters.
     Function bit will be configured for relative PIP window.
 
     [36h] PIP Windows Display Upper-Left corner Y-coordination [7:0]
@@ -2553,13 +2562,13 @@ void PIP_Window_Image_Start_XY(unsigned short WX,unsigned short HY)
     Reference PIP Image coordination.
     Unit: Pixel
     Y-axis coordination plus PIP window height should less than 8191.
-    According to bit of Select Configure PIP 1 or 2 Windowˇs parameters.
+    According to bit of Select Configure PIP 1 or 2 Window's parameters.
     Function bit will be configured for relative PIP window.
     */
     LCD_RegisterWrite(0x34,WX);
-    LCD_RegisterWrite(0x35,WX>>8);
+    LCD_RegisterWrite(0x35,WX >> 8);
     LCD_RegisterWrite(0x36,HY);
-    LCD_RegisterWrite(0x37,HY>>8);
+    LCD_RegisterWrite(0x37,HY >> 8);
 }
 //[38h][39h][3Ah][3Bh]=========================================================================
 void PIP_Window_Width_Height(unsigned short WX,unsigned short HY)
@@ -2570,20 +2579,20 @@ void PIP_Window_Width_Height(unsigned short WX,unsigned short HY)
     Unit: Pixel.
     It must be divisible by 4. The value is physical pixel number.
     Maximum value is 8188 pixels.
-    According to bit of Select Configure PIP 1 or 2 Windowˇs parameters.
+    According to bit of Select Configure PIP 1 or 2 Window's parameters.
     Function bit will be configured for relative PIP window.
 
     [3Ah] PIP Window Height [7:0]
     [3Bh] PIP Window Height [10:8]
     Unit: Pixel
     The value is physical pixel number. Maximum value is 8191 pixels.
-    According to bit of Select Configure PIP 1 or 2 Windowˇs parameters.
+    According to bit of Select Configure PIP 1 or 2 Window's parameters.
     Function bit will be configured for relative PIP window.
     */
     LCD_RegisterWrite(0x38,WX);
-    LCD_RegisterWrite(0x39,WX>>8);
+    LCD_RegisterWrite(0x39,WX >> 8);
     LCD_RegisterWrite(0x3A,HY);
-    LCD_RegisterWrite(0x3B,HY>>8);
+    LCD_RegisterWrite(0x3B,HY >> 8);
 }
 
 //[3Ch]=========================================================================
@@ -2594,7 +2603,7 @@ void Enable_Graphic_Cursor(void)
     0 : Graphic Cursor disable.
     1 : Graphic Cursor enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -2607,7 +2616,7 @@ void Disable_Graphic_Cursor(void)
     0 : Graphic Cursor disable.
     1 : Graphic Cursor enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -2624,7 +2633,7 @@ void Select_Graphic_Cursor_1(void)
     10b : Graphic Cursor Set 3.
     11b : Graphic Cursor Set 4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -2641,7 +2650,7 @@ void Select_Graphic_Cursor_2(void)
     10b : Graphic Cursor Set 3.
     11b : Graphic Cursor Set 4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -2658,7 +2667,7 @@ void Select_Graphic_Cursor_3(void)
     10b : Graphic Cursor Set 3.
     11b : Graphic Cursor Set 4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -2675,7 +2684,7 @@ void Select_Graphic_Cursor_4(void)
     10b : Graphic Cursor Set 3.
     11b : Graphic Cursor Set 4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -2692,7 +2701,7 @@ void Enable_Text_Cursor(void)
     Text cursor & Graphic cursor cannot enable simultaneously.
     Graphic cursor has higher priority then Text cursor if enabled simultaneously.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -2707,7 +2716,7 @@ void Disable_Text_Cursor(void)
     Text cursor & Graphic cursor cannot enable simultaneously.
     Graphic cursor has higher priority then Text cursor if enabled simultaneously.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -2721,7 +2730,7 @@ void Enable_Text_Cursor_Blinking(void)
     0 : Disable.
     1 : Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -2734,14 +2743,14 @@ void Disable_Text_Cursor_Blinking(void)
     0 : Disable.
     1 : Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x3C);
     temp = LCD_DataRead();
     temp &= cClrb0;
     LCD_DataWrite(temp);
 }
 //[3Dh]=========================================================================
-void Blinking_Time_Frames(unsigned char temp)
+void Blinking_Time_Frames(uint8_t temp)
 {
     /*
     Text Cursor Blink Time Setting (Unit: Frame)
@@ -2761,13 +2770,13 @@ void Text_Cursor_H_V(unsigned short WX,unsigned short HY)
     [3Eh]
     Text Cursor Horizontal Size Setting[4:0]
     Unit : Pixel
-    Zero-based number. Value ¨0〃 means 1 pixel.
+    Zero-based number. Value '0' means 1 pixel.
     Note : When font is enlarged, the cursor setting will multiply the
     same times as the font enlargement.
     [3Fh]
     Text Cursor Vertical Size Setting[4:0]
     Unit : Pixel
-    Zero-based number. Value ¨0〃 means 1 pixel.
+    Zero-based number. Value '0' means 1 pixel.
     Note : When font is enlarged, the cursor setting will multiply the
     same times as the font enlargement.
     */
@@ -2787,12 +2796,12 @@ void Graphic_Cursor_XY(unsigned short WX,unsigned short HY)
     Reference main Window coordination.
     */
     LCD_RegisterWrite(0x40,WX);
-    LCD_RegisterWrite(0x41,WX>>8);
+    LCD_RegisterWrite(0x41,WX >> 8);
     LCD_RegisterWrite(0x42,HY);
-    LCD_RegisterWrite(0x43,HY>>8);
+    LCD_RegisterWrite(0x43,HY >> 8);
 }
 //[44h]=========================================================================
-void Set_Graphic_Cursor_Color_1(unsigned char temp)
+void Set_Graphic_Cursor_Color_1(uint8_t temp)
 {
     /*
     [44h] Graphic Cursor Color 0 with 256 Colors
@@ -2801,7 +2810,7 @@ void Set_Graphic_Cursor_Color_1(unsigned char temp)
     LCD_RegisterWrite(0x44,temp);
 }
 //[45h]=========================================================================
-void Set_Graphic_Cursor_Color_2(unsigned char temp)
+void Set_Graphic_Cursor_Color_2(uint8_t temp)
 {
     /*
     [45h] Graphic Cursor Color 1 with 256 Colors
@@ -2810,7 +2819,7 @@ void Set_Graphic_Cursor_Color_2(unsigned char temp)
     LCD_RegisterWrite(0x45,temp);
 }
 //[50h][51h][52h][53h]=========================================================================
-void Canvas_Image_Start_address(unsigned long Addr)
+void Canvas_Image_Start_address(uint32_t Addr)
 {
     /*
     [50h] Start address of Canvas [7:0]
@@ -2819,9 +2828,9 @@ void Canvas_Image_Start_address(unsigned long Addr)
     [53h] Start address of Canvas [31:24]
     */
     LCD_RegisterWrite(0x50,Addr);
-    LCD_RegisterWrite(0x51,Addr>>8);
-    LCD_RegisterWrite(0x52,Addr>>16);
-    LCD_RegisterWrite(0x53,Addr>>24);
+    LCD_RegisterWrite(0x51,Addr >> 8);
+    LCD_RegisterWrite(0x52,Addr >> 16);
+    LCD_RegisterWrite(0x53,Addr >> 24);
 }
 //[54h][55h]=========================================================================
 void Canvas_image_width(unsigned short WX)
@@ -2831,7 +2840,7 @@ void Canvas_image_width(unsigned short WX)
     [55h] Canvas image width [12:8]
     */
     LCD_RegisterWrite(0x54,WX);
-    LCD_RegisterWrite(0x55,WX>>8);
+    LCD_RegisterWrite(0x55,WX >> 8);
 }
 //[56h][57h][58h][59h]=========================================================================
 void Active_Window_XY(unsigned short WX,unsigned short HY)
@@ -2843,9 +2852,9 @@ void Active_Window_XY(unsigned short WX,unsigned short HY)
     [59h] Active Window Upper-Left corner Y-coordination [12:8]
     */
     LCD_RegisterWrite(0x56,WX);
-    LCD_RegisterWrite(0x57,WX>>8);
+    LCD_RegisterWrite(0x57,WX >> 8);
     LCD_RegisterWrite(0x58,HY);
-    LCD_RegisterWrite(0x59,HY>>8);
+    LCD_RegisterWrite(0x59,HY >> 8);
 }
 //[5Ah][5Bh][5Ch][5Dh]=========================================================================
 void Active_Window_WH(unsigned short WX,unsigned short HY)
@@ -2857,9 +2866,9 @@ void Active_Window_WH(unsigned short WX,unsigned short HY)
     [5Dh] Height of Active Window [12:8]
     */
     LCD_RegisterWrite(0x5A,WX);
-    LCD_RegisterWrite(0x5B,WX>>8);
+    LCD_RegisterWrite(0x5B,WX >> 8);
     LCD_RegisterWrite(0x5C,HY);
-    LCD_RegisterWrite(0x5D,HY>>8);
+    LCD_RegisterWrite(0x5D,HY >> 8);
 }
 //[5Eh]=========================================================================
 void Select_Write_Data_Position(void)
@@ -2869,7 +2878,7 @@ void Select_Write_Data_Position(void)
     0: read back Graphic Write position
     1: read back Graphic Read position
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x5E);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -2882,7 +2891,7 @@ void Select_Read_Data_Position(void)
     0: read back Graphic Write position
     1: read back Graphic Read position
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x5E);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -2895,7 +2904,7 @@ void Memory_XY_Mode(void)
     0: Block mode (X-Y coordination addressing)
     1: linear mode
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x5E);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -2908,7 +2917,7 @@ void Memory_Linear_Mode(void)
     0: Block mode (X-Y coordination addressing)
     1: linear mode
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x5E);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -2917,7 +2926,7 @@ void Memory_Linear_Mode(void)
 void Memory_8bpp_Mode(void)
 {
     /*
-    Canvas imageˇs color depth & memory R/W data width
+    Canvas image's color depth & memory R/W data width
     In Block Mode:
     00: 8bpp
     01: 16bpp
@@ -2926,7 +2935,7 @@ void Memory_8bpp_Mode(void)
     X0: 8-bits memory data read/write.
     X1: 16-bits memory data read/write
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x5E);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -2936,7 +2945,7 @@ void Memory_8bpp_Mode(void)
 void Memory_16bpp_Mode(void)
 {
     /*
-    Canvas imageˇs color depth & memory R/W data width
+    Canvas image's color depth & memory R/W data width
     In Block Mode:
     00: 8bpp
     01: 16bpp
@@ -2945,7 +2954,7 @@ void Memory_16bpp_Mode(void)
     X0: 8-bits memory data read/write.
     X1: 16-bits memory data read/write
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x5E);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -2955,7 +2964,7 @@ void Memory_16bpp_Mode(void)
 void Memory_24bpp_Mode(void)
 {
     /*
-    Canvas imageˇs color depth & memory R/W data width
+    Canvas image's color depth & memory R/W data width
     In Block Mode:
     00: 8bpp
     01: 16bpp
@@ -2964,7 +2973,7 @@ void Memory_24bpp_Mode(void)
     X0: 8-bits memory data read/write.
     X1: 16-bits memory data read/write
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x5E);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -2987,16 +2996,16 @@ void Goto_Pixel_XY(unsigned short WX,unsigned short HY)
     Reference Canvas image coordination. Unit: Pixel
     */
     LCD_RegisterWrite(0x5F,WX);
-    LCD_RegisterWrite(0x60,WX>>8);
+    LCD_RegisterWrite(0x60,WX >> 8);
     LCD_RegisterWrite(0x61,HY);
-    LCD_RegisterWrite(0x62,HY>>8);
+    LCD_RegisterWrite(0x62,HY >> 8);
 }
-void Goto_Linear_Addr(unsigned long Addr)
+void Goto_Linear_Addr(uint32_t Addr)
 {
     LCD_RegisterWrite(0x5F,Addr);
-    LCD_RegisterWrite(0x60,Addr>>8);
-    LCD_RegisterWrite(0x61,Addr>>16);
-    LCD_RegisterWrite(0x62,Addr>>24);
+    LCD_RegisterWrite(0x60,Addr >> 8);
+    LCD_RegisterWrite(0x61,Addr >> 16);
+    LCD_RegisterWrite(0x62,Addr >> 24);
 }
 
 
@@ -3012,9 +3021,9 @@ void Goto_Text_XY(unsigned short WX,unsigned short HY)
     Unit: Pixel
     */
     LCD_RegisterWrite(0x63,WX);
-    LCD_RegisterWrite(0x64,WX>>8);
+    LCD_RegisterWrite(0x64,WX >> 8);
     LCD_RegisterWrite(0x65,HY);
-    LCD_RegisterWrite(0x66,HY>>8);
+    LCD_RegisterWrite(0x66,HY >> 8);
 }
 //[67h]=========================================================================
 /*
@@ -3051,7 +3060,7 @@ void Start_Triangle_Fill(void)
     Check_Busy_Draw();
 }
 //[68h][69h][6Ah][6Bh]=========================================================================
-//线起点
+//line start x, y
 void Line_Start_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3063,14 +3072,14 @@ void Line_Start_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x68);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x69);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x6A);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x6B);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
 //[6Ch][6Dh][6Eh][6Fh]=========================================================================
-//线终点
+//line end x, y
 void Line_End_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3082,14 +3091,14 @@ void Line_End_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x6C);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x6D);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x6E);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x6F);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
 //[68h]~[73h]=========================================================================
-//à-翴1
+
 void Triangle_Point1_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3101,13 +3110,13 @@ void Triangle_Point1_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x68);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x69);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x6A);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x6B);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
-//à-翴2
+
 void Triangle_Point2_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3119,13 +3128,13 @@ void Triangle_Point2_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x6C);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x6D);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x6E);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x6F);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
-//à-翴3
+
 void Triangle_Point3_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3137,13 +3146,13 @@ void Triangle_Point3_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x70);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x71);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x72);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x73);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
-//よ癬翴
+
 void Square_Start_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3155,13 +3164,13 @@ void Square_Start_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x68);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x69);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x6A);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x6B);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
-//よ沧翴
+
 void Square_End_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3173,11 +3182,11 @@ void Square_End_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x6C);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x6D);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x6E);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x6F);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
 //[76h]=========================================================================
 /*
@@ -3294,7 +3303,6 @@ void Start_Circle_Square_Fill(void)
     Check_Busy_Draw();
 }
 //[77h]~[7Eh]=========================================================================
-//蛾いみ
 void Circle_Center_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3306,13 +3314,13 @@ void Circle_Center_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x7B);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x7C);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x7D);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x7E);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
-//掘蛾いみ
+
 void Ellipse_Center_XY(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3324,13 +3332,13 @@ void Ellipse_Center_XY(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x7B);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x7C);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x7D);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x7E);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
-//蛾畖
+
 void Circle_Radius_R(unsigned short WX)
 {
     /*
@@ -3342,14 +3350,13 @@ void Circle_Radius_R(unsigned short WX)
     LCD_CmdWrite(0x77);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x78);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x79);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x7A);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
 }
 
-//掘蛾畖
 void Ellipse_Radius_RxRy(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3361,14 +3368,13 @@ void Ellipse_Radius_RxRy(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x77);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x78);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x79);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x7A);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
 
-//よ锣à畖
 void Circle_Square_Radius_RxRy(unsigned short WX,unsigned short HY)
 {
     /*
@@ -3380,11 +3386,11 @@ void Circle_Square_Radius_RxRy(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0x77);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x78);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0x79);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0x7A);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
 
 //[84h]=========================================================================
@@ -3393,7 +3399,7 @@ void Set_PWM_Prescaler_1_to_256(unsigned short WX)
     /*
     PWM Prescaler Register
     These 8 bits determine prescaler value for Timer 0 and 1.
-    Time base is ¨Core_Freq / (Prescaler + 1)〃
+    Time base is 'Core_Freq / (Prescaler + 1)'
     */
     WX=WX-1;
     LCD_CmdWrite(0x84);
@@ -3406,7 +3412,7 @@ void Select_PWM1_Clock_Divided_By_1(void)
     Select MUX input for PWM Timer 1.
     00 = 1; 01 = 1/2; 10 = 1/4 ; 11 = 1/8;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -3419,7 +3425,7 @@ void Select_PWM1_Clock_Divided_By_2(void)
     Select MUX input for PWM Timer 1.
     00 = 1; 01 = 1/2; 10 = 1/4 ; 11 = 1/8;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -3432,7 +3438,7 @@ void Select_PWM1_Clock_Divided_By_4(void)
     Select MUX input for PWM Timer 1.
     00 = 1; 01 = 1/2; 10 = 1/4 ; 11 = 1/8;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -3445,7 +3451,7 @@ void Select_PWM1_Clock_Divided_By_8(void)
     Select MUX input for PWM Timer 1.
     00 = 1; 01 = 1/2; 10 = 1/4 ; 11 = 1/8;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -3458,7 +3464,7 @@ void Select_PWM0_Clock_Divided_By_1(void)
     Select MUX input for PWM Timer 0.
     00 = 1; 01 = 1/2; 10 = 1/4 ; 11 = 1/8;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -3471,7 +3477,7 @@ void Select_PWM0_Clock_Divided_By_2(void)
     Select MUX input for PWM Timer 0.
     00 = 1; 01 = 1/2; 10 = 1/4 ; 11 = 1/8;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -3484,7 +3490,7 @@ void Select_PWM0_Clock_Divided_By_4(void)
     Select MUX input for PWM Timer 0.
     00 = 1; 01 = 1/2; 10 = 1/4 ; 11 = 1/8;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -3497,7 +3503,7 @@ void Select_PWM0_Clock_Divided_By_8(void)
     Select MUX input for PWM Timer 0.
     00 = 1; 01 = 1/2; 10 = 1/4 ; 11 = 1/8;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -3514,7 +3520,7 @@ XPWM[1] pin function control
 */
 void Select_PWM1_is_ErrorFlag(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -3522,7 +3528,7 @@ void Select_PWM1_is_ErrorFlag(void)
 }
 void Select_PWM1(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -3531,7 +3537,7 @@ void Select_PWM1(void)
 }
 void Select_PWM1_is_Osc_Clock(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -3547,7 +3553,7 @@ XPWM[0] pin function control
 */
 void Select_PWM0_is_GPIO_C7(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -3555,7 +3561,7 @@ void Select_PWM0_is_GPIO_C7(void)
 }
 void Select_PWM0(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -3564,7 +3570,7 @@ void Select_PWM0(void)
 }
 void Select_PWM0_is_Core_Clock(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x85);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -3581,7 +3587,7 @@ void Enable_PWM1_Inverter(void)
     0 = Inverter off
     1 = Inverter on for PWM1
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -3595,7 +3601,7 @@ void Disable_PWM1_Inverter(void)
     0 = Inverter off
     1 = Inverter on for PWM1
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -3609,7 +3615,7 @@ void Auto_Reload_PWM1(void)
     0 = One-shot
     1 = Interval mode(auto reload)
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -3623,7 +3629,7 @@ void One_Shot_PWM1(void)
     0 = One-shot
     1 = Interval mode(auto reload)
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -3637,7 +3643,7 @@ void Start_PWM1(void)
     0 = Stop
     1 = Start for Timer 1
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -3651,7 +3657,7 @@ void Stop_PWM1(void)
     0 = Stop
     1 = Start for Timer 1
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -3664,7 +3670,7 @@ void Enable_PWM0_Dead_Zone(void)
     PWM Timer 0 Dead zone enable
     Determine the dead zone operation. 0 = Disable. 1 = Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -3676,7 +3682,7 @@ void Disable_PWM0_Dead_Zone(void)
     PWM Timer 0 Dead zone enable
     Determine the dead zone operation. 0 = Disable. 1 = Enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -3690,7 +3696,7 @@ void Enable_PWM0_Inverter(void)
     0 = Inverter off
     1 = Inverter on for PWM0
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -3704,7 +3710,7 @@ void Disable_PWM0_Inverter(void)
     0 = Inverter off
     1 = Inverter on for PWM0
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp &= cClrb2;
@@ -3718,7 +3724,7 @@ void Auto_Reload_PWM0(void)
     0 = One-shot
     1 = Interval mode(auto reload)
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -3732,7 +3738,7 @@ void One_Shot_PWM0(void)
     0 = One-shot
     1 = Interval mode(auto reload)
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -3746,7 +3752,7 @@ void Start_PWM0(void)
     0 = Stop
     1 = Start for Timer 0
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -3760,14 +3766,14 @@ void Stop_PWM0(void)
     0 = Stop
     1 = Start for Timer 0
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x86);
     temp = LCD_DataRead();
     temp &= cClrb0;
     LCD_DataWrite(temp);
 }
 //[87h]=========================================================================
-void Set_Timer0_Dead_Zone_Length(unsigned char temp)
+void Set_Timer0_Dead_Zone_Length(uint8_t temp)
 {
     /*
     Timer 0 Dead zone length register
@@ -3789,7 +3795,7 @@ void Set_Timer0_Compare_Buffer(unsigned short WX)
     LCD_CmdWrite(0x88);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x89);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
 }
 //[8Ah][8Bh]=========================================================================
 void Set_Timer0_Count_Buffer(unsigned short WX)
@@ -3798,12 +3804,12 @@ void Set_Timer0_Count_Buffer(unsigned short WX)
     Timer 0 count buffer register
     Count buffer register total has 16 bits.
     When timer counter equal to 0 will cause PWM timer reload Count buffer register if reload_en bit set as enable.
-    It may read back timer counterˇs real time value when PWM timer start.
+    It may read back timer counter's real time value when PWM timer start.
     */
     LCD_CmdWrite(0x8A);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x8B);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
 }
 //[8Ch][8Dh]=========================================================================
 void Set_Timer1_Compare_Buffer(unsigned short WX)
@@ -3817,7 +3823,7 @@ void Set_Timer1_Compare_Buffer(unsigned short WX)
     LCD_CmdWrite(0x8C);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x8D);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
 }
 //[8Eh][8Fh]=========================================================================
 void Set_Timer1_Count_Buffer(unsigned short WX)
@@ -3826,12 +3832,12 @@ void Set_Timer1_Count_Buffer(unsigned short WX)
     Timer 0 count buffer register
     Count buffer register total has 16 bits.
     When timer counter equal to 0 will cause PWM timer reload Count buffer register if reload_en bit set as enable.
-    It may read back timer counterˇs real time value when PWM timer start.
+    It may read back timer counter's real time value when PWM timer start.
     */
     LCD_CmdWrite(0x8E);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0x8F);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
 }
 
 
@@ -3845,7 +3851,7 @@ void BTE_Enable(void)
     0 : BTE Function disable.
     1 : BTE Function enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x90);
     temp = LCD_DataRead();
     temp |= cSetb4 ;
@@ -3860,7 +3866,7 @@ void BTE_Disable(void)
     0 : BTE Function disable.
     1 : BTE Function enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x90);
     temp = LCD_DataRead();
     temp &= cClrb4 ;
@@ -3875,11 +3881,11 @@ void Check_BTE_Busy(void)
     0 : BTE Function is idle.
     1 : BTE Function is busy.
     */
-    unsigned char temp;
+    uint8_t temp;
 
     do
     {
-        temp=LCD_StatusRead();
+        temp = LCD_StatusRead();
     }
     while(temp&0x08);
 }
@@ -3891,7 +3897,7 @@ void Pattern_Format_8X8(void)
     0 : 8X8
     1 : 16X16
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x90);
     temp = LCD_DataRead();
     temp &= cClrb0 ;
@@ -3905,7 +3911,7 @@ void Pattern_Format_16X16(void)
     0 : 8X8
     1 : 16X16
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x90);
     temp = LCD_DataRead();
     temp |= cSetb0 ;
@@ -3913,7 +3919,7 @@ void Pattern_Format_16X16(void)
 }
 
 //[91h]=========================================================================
-void BTE_ROP_Code(unsigned char setx)
+void BTE_ROP_Code(uint8_t setx)
 {
     /*
     BTE ROP Code[Bit7:4]
@@ -3935,7 +3941,7 @@ void BTE_ROP_Code(unsigned char setx)
     1110 : S0+S1
     1111 : 1 ( Whiteness )
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x91);
     temp = LCD_DataRead();
     temp &= 0x0f ;
@@ -3944,7 +3950,7 @@ void BTE_ROP_Code(unsigned char setx)
 }
 
 //[91h]=========================================================================
-void BTE_Operation_Code(unsigned char setx)
+void BTE_Operation_Code(uint8_t setx)
 {
     /*
     BTE Operation Code[Bit3:0]
@@ -3966,7 +3972,7 @@ void BTE_Operation_Code(unsigned char setx)
     1110 : Reserved
     1111 : Reserved
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x91);
     temp = LCD_DataRead();
     temp &= 0xf0 ;
@@ -3982,7 +3988,7 @@ void BTE_S0_Color_8bpp(void)
     01 : 64k Color
     1x : 16M Color
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp &= cClrb6 ;
@@ -3998,7 +4004,7 @@ void BTE_S0_Color_16bpp(void)
     01 : 64k Color
     1x : 16M Color
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp &= cClrb6 ;
@@ -4014,7 +4020,7 @@ void BTE_S0_Color_24bpp(void)
     01 : 64k Color
     1x : 16M Color
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp |= cSetb6 ;
@@ -4033,7 +4039,7 @@ void BTE_S1_Color_8bpp(void)
     100 : 8 bit pixel alpha blending
     101 : 16 bit pixel alpha blending
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp &= cClrb4 ;
@@ -4053,7 +4059,7 @@ void BTE_S1_Color_16bpp(void)
     100 : 8 bit pixel alpha blending
     101 : 16 bit pixel alpha blending
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp &= cClrb4 ;
@@ -4073,7 +4079,7 @@ void BTE_S1_Color_24bpp(void)
     100 : 8 bit pixel alpha blending
     101 : 16 bit pixel alpha blending
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp &= cClrb4 ;
@@ -4094,7 +4100,7 @@ void BTE_S1_Color_Constant(void)
     100 : 8 bit pixel alpha blending
     101 : 16 bit pixel alpha blending
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp &= cClrb4 ;
@@ -4117,7 +4123,7 @@ void BTE_S1_Color_8bit_Alpha(void)
     100 : 8 bit pixel alpha blending
     101 : 16 bit pixel alpha blending
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp |= cSetb4 ;
@@ -4138,7 +4144,7 @@ void BTE_S1_Color_16bit_Alpha(void)
     100 : 8 bit pixel alpha blending
     101 : 16 bit pixel alpha blending
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp |= cSetb4 ;
@@ -4156,7 +4162,7 @@ void BTE_Destination_Color_8bpp(void)
     01 : 64k Color
     1x : 16M Color
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp &= cClrb1 ;
@@ -4172,7 +4178,7 @@ void BTE_Destination_Color_16bpp(void)
     01 : 64k Color
     1x : 16M Color
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp &= cClrb1 ;
@@ -4188,7 +4194,7 @@ void BTE_Destination_Color_24bpp(void)
     10 : 64k Color
     1x : 16M Color
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0x92);
     temp = LCD_DataRead();
     temp |= cSetb1 ;
@@ -4198,19 +4204,19 @@ void BTE_Destination_Color_24bpp(void)
 
 
 //[93h][94h][95h][96h]=========================================================================
-void BTE_S0_Memory_Start_Address(unsigned long Addr)
+void BTE_S0_Memory_Start_Address(uint32_t Addr)
 {
     /*
     [93h] BTE S0 Memory Start Address [7:0]
     [94h] BTE S0 Memory Start Address [15:8]
     [95h] BTE S0 Memory Start Address [23:16]
     [96h] BTE S0 Memory Start Address [31:24]
-    Bit [1:0] tie to ¨0〃 internally.
+    Bit [1:0] tie to '0' internally.
     */
     LCD_RegisterWrite(0x93,Addr);
-    LCD_RegisterWrite(0x94,Addr>>8);
-    LCD_RegisterWrite(0x95,Addr>>16);
-    LCD_RegisterWrite(0x96,Addr>>24);
+    LCD_RegisterWrite(0x94,Addr >> 8);
+    LCD_RegisterWrite(0x95,Addr >> 16);
+    LCD_RegisterWrite(0x96,Addr >> 24);
 }
 
 
@@ -4221,10 +4227,10 @@ void BTE_S0_Image_Width(unsigned short WX)
     [97h] BTE S0 Image Width [7:0]
     [98h] BTE S0 Image Width [12:8]
     Unit: Pixel.
-    Bit [1:0] tie to ¨0〃 internally.
+    Bit [1:0] tie to '0' internally.
     */
     LCD_RegisterWrite(0x97,WX);
-    LCD_RegisterWrite(0x98,WX>>8);
+    LCD_RegisterWrite(0x98,WX >> 8);
 }
 
 
@@ -4238,33 +4244,33 @@ void BTE_S0_Window_Start_XY(unsigned short WX,unsigned short HY)
     [9Ch] BTE S0 Window Upper-Left corner Y-coordination [12:8]
     */
     LCD_RegisterWrite(0x99,WX);
-    LCD_RegisterWrite(0x9A,WX>>8);
+    LCD_RegisterWrite(0x9A,WX >> 8);
     LCD_RegisterWrite(0x9B,HY);
-    LCD_RegisterWrite(0x9C,HY>>8);
+    LCD_RegisterWrite(0x9C,HY >> 8);
 }
 
 
 
 
 //[9Dh][9Eh][9Fh][A0h]=========================================================================
-void BTE_S1_Memory_Start_Address(unsigned long Addr)
+void BTE_S1_Memory_Start_Address(uint32_t Addr)
 {
     /*
     [9Dh] BTE S1 Memory Start Address [7:0]
     [9Eh] BTE S1 Memory Start Address [15:8]
     [9Fh] BTE S1 Memory Start Address [23:16]
     [A0h] BTE S1 Memory Start Address [31:24]
-    Bit [1:0] tie to ¨0〃 internally.
+    Bit [1:0] tie to '0' internally.
     */
     LCD_RegisterWrite(0x9D,Addr);
-    LCD_RegisterWrite(0x9E,Addr>>8);
-    LCD_RegisterWrite(0x9F,Addr>>16);
-    LCD_RegisterWrite(0xA0,Addr>>24);
+    LCD_RegisterWrite(0x9E,Addr >> 8);
+    LCD_RegisterWrite(0x9F,Addr >> 16);
+    LCD_RegisterWrite(0xA0,Addr >> 24);
 }
 
 
 //Input data format:R3G3B2
-void S1_Constant_color_256(unsigned char temp)
+void S1_Constant_color_256(uint8_t temp)
 {
     LCD_CmdWrite(0x9D);
     LCD_DataWrite(temp);
@@ -4278,20 +4284,20 @@ void S1_Constant_color_256(unsigned char temp)
 void S1_Constant_color_65k(unsigned short temp)
 {
     LCD_CmdWrite(0x9D);
-    LCD_DataWrite(temp>>8);
+    LCD_DataWrite(temp >> 8);
     LCD_CmdWrite(0x9E);
-    LCD_DataWrite(temp>>3);
+    LCD_DataWrite(temp >> 3);
     LCD_CmdWrite(0x9F);
     LCD_DataWrite(temp<<3);
 }
 
 //Input data format:R8G8B8
-void S1_Constant_color_16M(unsigned long temp)
+void S1_Constant_color_16M(uint32_t temp)
 {
     LCD_CmdWrite(0x9D);
-    LCD_DataWrite(temp>>16);
+    LCD_DataWrite(temp >> 16);
     LCD_CmdWrite(0x9E);
-    LCD_DataWrite(temp>>8);
+    LCD_DataWrite(temp >> 8);
     LCD_CmdWrite(0x9F);
     LCD_DataWrite(temp);
 }
@@ -4306,10 +4312,10 @@ void BTE_S1_Image_Width(unsigned short WX)
     [A1h] BTE S1 Image Width [7:0]
     [A2h] BTE S1 Image Width [12:8]
     Unit: Pixel.
-    Bit [1:0] tie to ¨0〃 internally.
+    Bit [1:0] tie to '0' internally.
     */
     LCD_RegisterWrite(0xA1,WX);
-    LCD_RegisterWrite(0xA2,WX>>8);
+    LCD_RegisterWrite(0xA2,WX >> 8);
 }
 
 
@@ -4323,28 +4329,28 @@ void BTE_S1_Window_Start_XY(unsigned short WX,unsigned short HY)
     [A6h] BTE S1 Window Upper-Left corner Y-coordination [12:8]
     */
     LCD_RegisterWrite(0xA3,WX);
-    LCD_RegisterWrite(0xA4,WX>>8);
+    LCD_RegisterWrite(0xA4,WX >> 8);
     LCD_RegisterWrite(0xA5,HY);
-    LCD_RegisterWrite(0xA6,HY>>8);
+    LCD_RegisterWrite(0xA6,HY >> 8);
 }
 
 
 
 
 //[A7h][A8h][A9h][AAh]=========================================================================
-void BTE_Destination_Memory_Start_Address(unsigned long Addr)
+void BTE_Destination_Memory_Start_Address(uint32_t Addr)
 {
     /*
     [A7h] BTE Destination Memory Start Address [7:0]
     [A8h] BTE Destination Memory Start Address [15:8]
     [A9h] BTE Destination Memory Start Address [23:16]
     [AAh] BTE Destination Memory Start Address [31:24]
-    Bit [1:0] tie to ¨0〃 internally.
+    Bit [1:0] tie to '0' internally.
     */
     LCD_RegisterWrite(0xA7,Addr);
-    LCD_RegisterWrite(0xA8,Addr>>8);
-    LCD_RegisterWrite(0xA9,Addr>>16);
-    LCD_RegisterWrite(0xAA,Addr>>24);
+    LCD_RegisterWrite(0xA8,Addr >> 8);
+    LCD_RegisterWrite(0xA9,Addr >> 16);
+    LCD_RegisterWrite(0xAA,Addr >> 24);
 }
 
 
@@ -4355,10 +4361,10 @@ void BTE_Destination_Image_Width(unsigned short WX)
     [ABh] BTE Destination Image Width [7:0]
     [ACh] BTE Destination Image Width [12:8]
     Unit: Pixel.
-    Bit [1:0] tie to ¨0〃 internally.
+    Bit [1:0] tie to '0' internally.
     */
     LCD_RegisterWrite(0xAB,WX);
-    LCD_RegisterWrite(0xAC,WX>>8);
+    LCD_RegisterWrite(0xAC,WX >> 8);
 }
 
 
@@ -4372,9 +4378,9 @@ void BTE_Destination_Window_Start_XY(unsigned short WX,unsigned short HY)
     [B0h] BTE Destination Window Upper-Left corner Y-coordination [12:8]
     */
     LCD_RegisterWrite(0xAD,WX);
-    LCD_RegisterWrite(0xAE,WX>>8);
+    LCD_RegisterWrite(0xAE,WX >> 8);
     LCD_RegisterWrite(0xAF,HY);
-    LCD_RegisterWrite(0xB0,HY>>8);
+    LCD_RegisterWrite(0xB0,HY >> 8);
 }
 
 
@@ -4391,13 +4397,13 @@ void BTE_Window_Size(unsigned short WX, unsigned short WY)
     [B4h] BTE Window Height [12:8]
     */
     LCD_RegisterWrite(0xB1,WX);
-    LCD_RegisterWrite(0xB2,WX>>8);
+    LCD_RegisterWrite(0xB2,WX >> 8);
     LCD_RegisterWrite(0xB3,WY);
-    LCD_RegisterWrite(0xB4,WY>>8);
+    LCD_RegisterWrite(0xB4,WY >> 8);
 }
 
 //[B5h]=========================================================================
-void BTE_Alpha_Blending_Effect(unsigned char temp)
+void BTE_Alpha_Blending_Effect(uint8_t temp)
 {
     /*
     Window Alpha Blending effect for S0 & S1
@@ -4421,7 +4427,7 @@ void BTE_Alpha_Blending_Effect(unsigned char temp)
 //[B6h]=========================================================================
 void Start_SFI_DMA(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB6);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -4447,7 +4453,7 @@ void Select_SFI_0(void)
     0: Serial Flash/ROM 0 I/F is selected.
     1: Serial Flash/ROM 1 I/F is selected.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -4460,7 +4466,7 @@ void Select_SFI_1(void)
     0: Serial Flash/ROM 0 I/F is selected.
     1: Serial Flash/ROM 1 I/F is selected.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -4470,10 +4476,10 @@ void Select_SFI_Font_Mode(void)
 {
     /*[bit6]
     Serial Flash /ROM Access Mode
-    0: Font mode  for external cgrom
-    1: DMA mode  for cgram , pattern , bootstart image or osd
+    0: Font mode ? for external cgrom
+    1: DMA mode ? for cgram , pattern , bootstart image or osd
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -4483,10 +4489,10 @@ void Select_SFI_DMA_Mode(void)
 {
     /*[bit6]
     Serial Flash /ROM Access Mode
-    0: Font mode  for external cgrom
-    1: DMA mode  for cgram , pattern , bootstart image or osd
+    0: Font mode ? for external cgrom
+    1: DMA mode ? for cgram , pattern , bootstart image or osd
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -4499,7 +4505,7 @@ void Select_SFI_24bit_Address(void)
     0: 24 bits address mode
     1: 32 bits address mode
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -4512,7 +4518,7 @@ void Select_SFI_32bit_Address(void)
     0: 24 bits address mode
     1: 32 bits address mode
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -4525,7 +4531,7 @@ void Select_SFI_Waveform_Mode_0(void)
     Mode 0.
     Mode 3.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -4538,7 +4544,7 @@ void Select_SFI_Waveform_Mode_3(void)
     Mode 0.
     Mode 3.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -4553,7 +4559,7 @@ void Select_SFI_0_DummyRead(void)
     10b: 2 dummy cycle mode
     11b: 4 dummy cycle mode
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= 0xF3;
@@ -4561,7 +4567,7 @@ void Select_SFI_0_DummyRead(void)
 }
 void Select_SFI_8_DummyRead(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= 0xF3;
@@ -4570,7 +4576,7 @@ void Select_SFI_8_DummyRead(void)
 }
 void Select_SFI_16_DummyRead(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= 0xF3;
@@ -4579,7 +4585,7 @@ void Select_SFI_16_DummyRead(void)
 }
 void Select_SFI_24_DummyRead(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp |= 0x0c;
@@ -4593,7 +4599,7 @@ void Select_SFI_Single_Mode(void)
     10b: Dual Mode 0.
     11b: Dual Mode 1.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= 0xFC;
@@ -4601,7 +4607,7 @@ void Select_SFI_Single_Mode(void)
 }
 void Select_SFI_Dual_Mode0(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp &= 0xFC;
@@ -4610,7 +4616,7 @@ void Select_SFI_Dual_Mode0(void)
 }
 void Select_SFI_Dual_Mode1(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB7);
     temp = LCD_DataRead();
     temp |= 0x03;
@@ -4618,9 +4624,9 @@ void Select_SFI_Dual_Mode1(void)
 }
 
 //REG[B8h] SPI master Tx /Rx FIFO Data Register (SPIDR)
-unsigned char SPI_Master_FIFO_Data_Put(unsigned char Data)
+uint8_t SPI_Master_FIFO_Data_Put(uint8_t Data)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB8);
     LCD_DataWrite(Data);
 
@@ -4630,14 +4636,14 @@ unsigned char SPI_Master_FIFO_Data_Put(unsigned char Data)
     return temp;
 }
 
-unsigned char SPI_Master_FIFO_Data_Get(void)
+uint8_t SPI_Master_FIFO_Data_Get(void)
 {
-    unsigned char temp;
+    uint8_t temp;
 
     while(Rx_FIFO_Empty_Flag()==1);
 
     LCD_CmdWrite(0xB8);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     //while(Rx_FIFO_full_flag());
     return temp;
 }
@@ -4645,7 +4651,7 @@ unsigned char SPI_Master_FIFO_Data_Get(void)
 //REG[B9h] SPI master Control Register (SPIMCR2)
 void Mask_SPI_Master_Interrupt_Flag(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -4654,7 +4660,7 @@ void Mask_SPI_Master_Interrupt_Flag(void)
 
 void Select_nSS_drive_on_xnsfcs0(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -4663,7 +4669,7 @@ void Select_nSS_drive_on_xnsfcs0(void)
 
 void Select_nSS_drive_on_xnsfcs1(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -4673,7 +4679,7 @@ void Select_nSS_drive_on_xnsfcs1(void)
 //0: inactive (nSS port will goes high)
 void nSS_Inactive(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -4682,7 +4688,7 @@ void nSS_Inactive(void)
 //1: active (nSS port will goes low)
 void nSS_Active(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -4692,7 +4698,7 @@ void nSS_Active(void)
 //Interrupt enable for FIFO overflow error [OVFIRQEN]
 void OVFIRQEN_Enable(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -4701,7 +4707,7 @@ void OVFIRQEN_Enable(void)
 //Interrupt enable for while Tx FIFO empty & SPI engine/FSM idle
 void EMTIRQEN_Enable(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -4723,7 +4729,7 @@ void EMTIRQEN_Enable(void)
 
 void Reset_CPOL(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -4732,7 +4738,7 @@ void Reset_CPOL(void)
 
 void Set_CPOL(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -4742,7 +4748,7 @@ void Set_CPOL(void)
 
 void Reset_CPHA(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp &= cClrb0;
@@ -4751,7 +4757,7 @@ void Reset_CPHA(void)
 
 void Set_CPHA(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xB9);
     temp = LCD_DataRead();
     temp |= cSetb0;
@@ -4760,7 +4766,7 @@ void Set_CPHA(void)
 
 
 //REG[BAh] SPI master Status Register (SPIMSR)
-unsigned char Tx_FIFO_Empty_Flag(void)
+uint8_t Tx_FIFO_Empty_Flag(void)
 {
     LCD_CmdWrite(0xBA);
 
@@ -4774,7 +4780,7 @@ unsigned char Tx_FIFO_Empty_Flag(void)
     }
 }
 
-unsigned char Tx_FIFO_Full_Flag(void)
+uint8_t Tx_FIFO_Full_Flag(void)
 {
     LCD_CmdWrite(0xBA);
 
@@ -4788,7 +4794,7 @@ unsigned char Tx_FIFO_Full_Flag(void)
     }
 }
 
-unsigned char Rx_FIFO_Empty_Flag(void)
+uint8_t Rx_FIFO_Empty_Flag(void)
 {
     LCD_CmdWrite(0xBA);
 
@@ -4802,7 +4808,7 @@ unsigned char Rx_FIFO_Empty_Flag(void)
     }
 }
 
-unsigned char Rx_FIFO_full_flag(void)
+uint8_t Rx_FIFO_full_flag(void)
 {
     LCD_CmdWrite(0xBA);
 
@@ -4816,7 +4822,7 @@ unsigned char Rx_FIFO_full_flag(void)
     }
 }
 
-unsigned char OVFI_Flag(void)
+uint8_t OVFI_Flag(void)
 {
     LCD_CmdWrite(0xBA);
 
@@ -4832,14 +4838,14 @@ unsigned char OVFI_Flag(void)
 
 void Clear_OVFI_Flag(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xBA);
     temp = LCD_DataRead();
     temp |= cSetb3;
     LCD_DataWrite(temp);
 }
 
-unsigned char EMTI_Flag(void)
+uint8_t EMTI_Flag(void)
 {
     LCD_CmdWrite(0xBA);
 
@@ -4855,7 +4861,7 @@ unsigned char EMTI_Flag(void)
 
 void Clear_EMTI_Flag(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xBA);
     temp = LCD_DataRead();
     temp |= cSetb2;
@@ -4864,14 +4870,14 @@ void Clear_EMTI_Flag(void)
 
 
 //REG[BB] SPI Clock period (SPIDIV)
-void SPI_Clock_Period(unsigned char temp)
+void SPI_Clock_Period(uint8_t temp)
 {
     LCD_CmdWrite(0xBB);
     LCD_DataWrite(temp);
 }
 
 //[BCh][BDh][BEh][BFh]=========================================================================
-void SFI_DMA_Source_Start_Address(unsigned long Addr)
+void SFI_DMA_Source_Start_Address(uint32_t Addr)
 {
     /*
     DMA Source START ADDRESS
@@ -4880,14 +4886,14 @@ void SFI_DMA_Source_Start_Address(unsigned long Addr)
     LCD_CmdWrite(0xBC);
     LCD_DataWrite(Addr);
     LCD_CmdWrite(0xBD);
-    LCD_DataWrite(Addr>>8);
+    LCD_DataWrite(Addr >> 8);
     LCD_CmdWrite(0xBE);
-    LCD_DataWrite(Addr>>16);
+    LCD_DataWrite(Addr >> 16);
     LCD_CmdWrite(0xBF);
-    LCD_DataWrite(Addr>>24);
+    LCD_DataWrite(Addr >> 24);
 }
 //[C0h][C1h][C2h][C3h]=========================================================================
-void SFI_DMA_Destination_Start_Address(unsigned long Addr)
+void SFI_DMA_Destination_Start_Address(uint32_t Addr)
 {
     /*
     DMA Destination START ADDRESS
@@ -4897,11 +4903,11 @@ void SFI_DMA_Destination_Start_Address(unsigned long Addr)
     LCD_CmdWrite(0xC0);
     LCD_DataWrite(Addr);
     LCD_CmdWrite(0xC1);
-    LCD_DataWrite(Addr>>8);
+    LCD_DataWrite(Addr >> 8);
     LCD_CmdWrite(0xC2);
-    LCD_DataWrite(Addr>>16);
+    LCD_DataWrite(Addr >> 16);
     LCD_CmdWrite(0xC3);
-    LCD_DataWrite(Addr>>24);
+    LCD_DataWrite(Addr >> 24);
 }
 //[C0h][C1h][C2h][C3h]=========================================================================
 void SFI_DMA_Destination_Upper_Left_Corner(unsigned short WX,unsigned short HY)
@@ -4934,17 +4940,17 @@ void SFI_DMA_Destination_Upper_Left_Corner(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0xC0);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0xC1);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0xC2);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0xC3);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
 
 
 
 //[C6h][C7h][C8h][C9h]=========================================================================
-void SFI_DMA_Transfer_Number(unsigned long Addr)
+void SFI_DMA_Transfer_Number(uint32_t Addr)
 {
     /*
     Unit : Pixel
@@ -4958,11 +4964,11 @@ void SFI_DMA_Transfer_Number(unsigned long Addr)
     LCD_CmdWrite(0xC6);
     LCD_DataWrite(Addr);
     LCD_CmdWrite(0xC7);
-    LCD_DataWrite(Addr>>8);
+    LCD_DataWrite(Addr >> 8);
     LCD_CmdWrite(0xC8);
-    LCD_DataWrite(Addr>>16);
+    LCD_DataWrite(Addr >> 16);
     LCD_CmdWrite(0xC9);
-    LCD_DataWrite(Addr>>24);
+    LCD_DataWrite(Addr >> 24);
 }
 void SFI_DMA_Transfer_Width_Height(unsigned short WX,unsigned short HY)
 {
@@ -4977,11 +4983,11 @@ void SFI_DMA_Transfer_Width_Height(unsigned short WX,unsigned short HY)
     LCD_CmdWrite(0xC6);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0xC7);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
     LCD_CmdWrite(0xC8);
     LCD_DataWrite(HY);
     LCD_CmdWrite(0xC9);
-    LCD_DataWrite(HY>>8);
+    LCD_DataWrite(HY >> 8);
 }
 //[CAh][CBh]=========================================================================
 void SFI_DMA_Source_Width(unsigned short WX)
@@ -4993,7 +4999,7 @@ void SFI_DMA_Source_Width(unsigned short WX)
     LCD_CmdWrite(0xCA);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0xCB);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
 }
 
 //[CCh]=========================================================================
@@ -5006,7 +5012,7 @@ void Font_Select_UserDefine_Mode(void)
     01 : Genitop serial flash
     10 : User-defined Font
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -5021,7 +5027,7 @@ void CGROM_Select_Internal_CGROM(void)
     01 : Genitop serial flash
     10 : User-defined Font
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -5036,7 +5042,7 @@ void CGROM_Select_Genitop_FontROM(void)
     01 : Genitop serial flash
     10 : User-defined Font
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -5051,10 +5057,10 @@ void Font_Select_8x16_16x16(void)
     01b : 12x24 / 24x24.
     10b : 16x32 / 32x32.
     *** User-defined Font width is decided by font code. Genitop
-    serial flashˇs font width is decided by font code or GT Font ROM
+    serial flash's font width is decided by font code or GT Font ROM
     control register.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -5069,10 +5075,10 @@ void Font_Select_12x24_24x24(void)
     01b : 12x24 / 24x24.
     10b : 16x32 / 32x32.
     *** User-defined Font width is decided by font code. Genitop
-    serial flashˇs font width is decided by font code or GT Font ROM
+    serial flash's font width is decided by font code or GT Font ROM
     control register.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp &= cClrb5;
@@ -5087,10 +5093,10 @@ void Font_Select_16x32_32x32(void)
     01b : 12x24 / 24x24.
     10b : 16x32 / 32x32.
     *** User-defined Font width is decided by font code. Genitop
-    serial flashˇs font width is decided by font code or GT Font ROM
+    serial flash's font width is decided by font code or GT Font ROM
     control register.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp |= cSetb5;
@@ -5109,7 +5115,7 @@ void Internal_CGROM_Select_ISOIEC8859_1(void)
     10b : ISO/IEC 8859-3.
     11b : ISO/IEC 8859-4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -5128,7 +5134,7 @@ void Internal_CGROM_Select_ISOIEC8859_2(void)
     10b : ISO/IEC 8859-3.
     11b : ISO/IEC 8859-4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -5147,7 +5153,7 @@ void Internal_CGROM_Select_ISOIEC8859_3(void)
     10b : ISO/IEC 8859-3.
     11b : ISO/IEC 8859-4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -5166,7 +5172,7 @@ void Internal_CGROM_Select_ISOIEC8859_4(void)
     10b : ISO/IEC 8859-3.
     11b : ISO/IEC 8859-4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCC);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -5181,7 +5187,7 @@ void Enable_Font_Alignment(void)
     0 : Full alignment disable.
     1 : Full alignment enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -5194,7 +5200,7 @@ void Disable_Font_Alignment(void)
     0 : Full alignment disable.
     1 : Full alignment enable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -5207,7 +5213,7 @@ void Font_Background_select_Transparency(void)
     0 : Font with background color.
     1 : Font with background transparency.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp |= cSetb6;
@@ -5220,7 +5226,7 @@ void Font_Background_select_Color(void)
     0 : Font with background color.
     1 : Font with background transparency.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp &= cClrb6;
@@ -5238,7 +5244,7 @@ void Font_0_degree(void)
     This attribute can be changed only when previous font write
     finished (core_busy = 0)
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp &= cClrb4;
@@ -5256,7 +5262,7 @@ void Font_90_degree(void)
     This attribute can be changed only when previous font write
     finished (core_busy = 0)
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp |= cSetb4;
@@ -5271,7 +5277,7 @@ void Font_Width_X1(void)
     10b : X3.
     11b : X4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -5287,7 +5293,7 @@ void Font_Width_X2(void)
     10b : X3.
     11b : X4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp &= cClrb3;
@@ -5303,7 +5309,7 @@ void Font_Width_X3(void)
     10b : X3.
     11b : X4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -5319,7 +5325,7 @@ void Font_Width_X4(void)
     10b : X3.
     11b : X4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp |= cSetb3;
@@ -5335,7 +5341,7 @@ void Font_Height_X1(void)
     10b : X3.
     11b : X4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -5351,7 +5357,7 @@ void Font_Height_X2(void)
     10b : X3.
     11b : X4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp &= cClrb1;
@@ -5367,7 +5373,7 @@ void Font_Height_X3(void)
     10b : X3.
     11b : X4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -5383,7 +5389,7 @@ void Font_Height_X4(void)
     10b : X3.
     11b : X4.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCD);
     temp = LCD_DataRead();
     temp |= cSetb1;
@@ -5405,7 +5411,7 @@ void GTFont_Select_GT21L16TW_GT21H16T1W(void)
     110b: GT21L24S1W
     111b: GT22L16A1Y
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCE);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -5426,7 +5432,7 @@ void GTFont_Select_GT23L16U2W(void)
     110b: GT21L24S1W
     111b: GT22L16A1Y
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCE);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -5447,7 +5453,7 @@ void GTFont_Select_GT23L24T3Y_GT23H24T3Y(void)
     110b: GT21L24S1W
     111b: GT22L16A1Y
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCE);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -5468,7 +5474,7 @@ void GTFont_Select_GT23L24M1Z(void)
     110b: GT21L24S1W
     111b: GT22L16A1Y
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCE);
     temp = LCD_DataRead();
     temp &= cClrb7;
@@ -5489,7 +5495,7 @@ void GTFont_Select_GT23L32S4W_GT23H32S4W(void)
     110b: GT21L24S1W
     111b: GT22L16A1Y
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCE);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -5510,7 +5516,7 @@ void GTFont_Select_GT20L24F6Y(void)
     110b: GT21L24S1W
     111b: GT22L16A1Y
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCE);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -5531,7 +5537,7 @@ void GTFont_Select_GT21L24S1W(void)
     110b: GT21L24S1W
     111b: GT22L16A1Y
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCE);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -5552,7 +5558,7 @@ void GTFont_Select_GT22L16A1Y(void)
     110b: GT21L24S1W
     111b: GT22L16A1Y
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xCE);
     temp = LCD_DataRead();
     temp |= cSetb7;
@@ -5562,7 +5568,7 @@ void GTFont_Select_GT22L16A1Y(void)
 }
 
 //[CFh]=========================================================================
-void Set_GTFont_Decoder(unsigned char temp)
+void Set_GTFont_Decoder(uint8_t temp)
 {
     /*
     [bit7-3]
@@ -5605,7 +5611,7 @@ void Set_GTFont_Decoder(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[D0h]=========================================================================
-void Font_Line_Distance(unsigned char temp)
+void Font_Line_Distance(uint8_t temp)
 {
     /*[bit4-0]
     Font Line Distance Setting
@@ -5616,7 +5622,7 @@ void Font_Line_Distance(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[D1h]=========================================================================
-void Set_Font_to_Font_Width(unsigned char temp)
+void Set_Font_to_Font_Width(uint8_t temp)
 {
     /*[bit5-0]
     Font to Font Width Setting (Unit: pixel)
@@ -5625,7 +5631,7 @@ void Set_Font_to_Font_Width(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[D2h]~[D4h]=========================================================================
-void Foreground_RGB(unsigned char RED,unsigned char GREEN,unsigned char BLUE)
+void Foreground_RGB(uint8_t RED, uint8_t GREEN, uint8_t BLUE)
 {
     /*
     [D2h] Foreground Color - Red, for draw, text or color expansion
@@ -5641,7 +5647,7 @@ void Foreground_RGB(unsigned char RED,unsigned char GREEN,unsigned char BLUE)
 }
 
 //Input data format:R3G3B2
-void Foreground_color_256(unsigned char temp)
+void Foreground_color_256(uint8_t temp)
 {
     LCD_CmdWrite(0xD2);
     LCD_DataWrite(temp);
@@ -5655,20 +5661,20 @@ void Foreground_color_256(unsigned char temp)
 void Foreground_color_65k(unsigned short temp)
 {
     LCD_CmdWrite(0xD2);
-    LCD_DataWrite(temp>>8);
+    LCD_DataWrite(temp >> 8);
     LCD_CmdWrite(0xD3);
-    LCD_DataWrite(temp>>3);
+    LCD_DataWrite(temp >> 3);
     LCD_CmdWrite(0xD4);
     LCD_DataWrite(temp<<3);
 }
 
 //Input data format:R8G8B8
-void Foreground_color_16M(unsigned long temp)
+void Foreground_color_16M(uint32_t temp)
 {
     LCD_CmdWrite(0xD2);
-    LCD_DataWrite(temp>>16);
+    LCD_DataWrite(temp >> 16);
     LCD_CmdWrite(0xD3);
-    LCD_DataWrite(temp>>8);
+    LCD_DataWrite(temp >> 8);
     LCD_CmdWrite(0xD4);
     LCD_DataWrite(temp);
 }
@@ -5681,7 +5687,7 @@ void Foreground_color_16M(unsigned long temp)
 [D6h] Background Color - Green, for Text or color expansion
 [D7h] Background Color - Blue, for Text or color expansion
 */
-void Background_RGB(unsigned char RED,unsigned char GREEN,unsigned char BLUE)
+void Background_RGB(uint8_t RED, uint8_t GREEN, uint8_t BLUE)
 {
     LCD_CmdWrite(0xD5);
     LCD_DataWrite(RED);
@@ -5692,7 +5698,7 @@ void Background_RGB(unsigned char RED,unsigned char GREEN,unsigned char BLUE)
 }
 
 //Input data format:R3G3B2
-void Background_color_256(unsigned char temp)
+void Background_color_256(uint8_t temp)
 {
     LCD_CmdWrite(0xD5);
     LCD_DataWrite(temp);
@@ -5706,26 +5712,26 @@ void Background_color_256(unsigned char temp)
 void Background_color_65k(unsigned short temp)
 {
     LCD_CmdWrite(0xD5);
-    LCD_DataWrite(temp>>8);
+    LCD_DataWrite(temp >> 8);
     LCD_CmdWrite(0xD6);
-    LCD_DataWrite(temp>>3);
+    LCD_DataWrite(temp >> 3);
     LCD_CmdWrite(0xD7);
     LCD_DataWrite(temp<<3);
 }
 
 //Input data format:R8G8B8
-void Background_color_16M(unsigned long temp)
+void Background_color_16M(uint32_t temp)
 {
     LCD_CmdWrite(0xD5);
-    LCD_DataWrite(temp>>16);
+    LCD_DataWrite(temp >> 16);
     LCD_CmdWrite(0xD6);
-    LCD_DataWrite(temp>>8);
+    LCD_DataWrite(temp >> 8);
     LCD_CmdWrite(0xD7);
     LCD_DataWrite(temp);
 }
 
 //[DBh]~[DEh]=========================================================================
-void CGRAM_Start_address(unsigned long Addr)
+void CGRAM_Start_address(uint32_t Addr)
 {
     /*
     CGRAM START ADDRESS [31:0]
@@ -5733,11 +5739,11 @@ void CGRAM_Start_address(unsigned long Addr)
     LCD_CmdWrite(0xDB);
     LCD_DataWrite(Addr);
     LCD_CmdWrite(0xDC);
-    LCD_DataWrite(Addr>>8);
+    LCD_DataWrite(Addr >> 8);
     LCD_CmdWrite(0xDD);
-    LCD_DataWrite(Addr>>16);
+    LCD_DataWrite(Addr >> 16);
     LCD_CmdWrite(0xDE);
-    LCD_DataWrite(Addr>>24);
+    LCD_DataWrite(Addr >> 24);
 }
 
 //[DFh]=========================================================================
@@ -5789,10 +5795,10 @@ void LT768_I2CM_Clock_Prescale(unsigned short WX)
     LCD_CmdWrite(0xE5);
     LCD_DataWrite(WX);
     LCD_CmdWrite(0xE6);
-    LCD_DataWrite(WX>>8);
+    LCD_DataWrite(WX >> 8);
 }
 //[E7h]=========================================================================
-void LT768_I2CM_Transmit_Data(unsigned char temp)
+void LT768_I2CM_Transmit_Data(uint8_t temp)
 {
     /*
     I2C Master Transmit[7:0]
@@ -5801,14 +5807,14 @@ void LT768_I2CM_Transmit_Data(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[E8h]=========================================================================
-unsigned char LT768_I2CM_Receiver_Data(void)
+uint8_t LT768_I2CM_Receiver_Data(void)
 {
     /*
     I2C Master Receiver [7:0]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xE8);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 //[E9h]=========================================================================
@@ -5820,11 +5826,11 @@ Note : This bit is always read as 0.
 Generate stop condition and be cleared by hardware automatically
 Note : This bit is always read as 0.
 [bit5]
-READ(READ and WRITE canˇt be used simultaneously)
+READ(READ and WRITE can't be used simultaneously)
 Read form slave and be cleared by hardware automatically
 Note : This bit is always read as 0.
 [bit4]
-WRITE(READ and WRITE canˇt be used simultaneously)
+WRITE(READ and WRITE can't be used simultaneously)
 Write to slave and be cleared by hardware automatically
 Note : This bit is always read as 0.
 [bit3] ACKNOWLEDGE
@@ -5900,16 +5906,16 @@ void LT768_I2CM_Write(void)
  0=Ack
  1=Nack
 */
-unsigned char LT768_I2CM_Check_Slave_ACK(void)
+uint8_t LT768_I2CM_Check_Slave_ACK(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     /*[bit7]
     Received acknowledge from slave
     0 : Acknowledge received.
     1 : No Acknowledge received.
     */
     LCD_CmdWrite(0xEA);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
 
     if((temp&0x80)==0x80)
     {
@@ -5926,16 +5932,16 @@ unsigned char LT768_I2CM_Check_Slave_ACK(void)
  0=Idle
  1=Busy
 */
-unsigned char LT768_I2CM_Bus_Busy(void)
+uint8_t LT768_I2CM_Bus_Busy(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     /*[bit6]
     I2C Bus is Busy
     0 : Idle.
     1 : Busy.
     */
     LCD_CmdWrite(0xEA);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
 
     if((temp&0x40)==0x40)
     {
@@ -5951,15 +5957,15 @@ unsigned char LT768_I2CM_Bus_Busy(void)
  0=Complete
  1=Transferring
 */
-unsigned char LT768_I2CM_transmit_Progress(void)
+uint8_t LT768_I2CM_transmit_Progress(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     /*[bit6]
      0=Complete
      1=Transferring
     */
     LCD_CmdWrite(0xEA);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
 
     if((temp&0x02)==0x02)
     {
@@ -5975,23 +5981,23 @@ unsigned char LT768_I2CM_transmit_Progress(void)
 0= Arbitration win
 1= Arbitration lost
 */
-unsigned char LT768_I2CM_Arbitration(void)
+uint8_t LT768_I2CM_Arbitration(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     /*[bit6]
     I2C Bus is Busy
     0 : Idle.
     1 : Busy.
     */
     LCD_CmdWrite(0xEA);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     temp&=0x01;
     return temp;
 }
 
 
 //[F0h]=========================================================================
-void Set_GPIO_A_In_Out(unsigned char temp)
+void Set_GPIO_A_In_Out(uint8_t temp)
 {
     /*
     GPO-A_dir[7:0] : General Purpose I/O direction control.
@@ -6002,7 +6008,7 @@ void Set_GPIO_A_In_Out(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[F1h]=========================================================================
-void Write_GPIO_A_7_0(unsigned char temp)
+void Write_GPIO_A_7_0(uint8_t temp)
 {
     /*
     GPI-A[7:0] : General Purpose Input, share with DB[15:8]
@@ -6011,19 +6017,19 @@ void Write_GPIO_A_7_0(unsigned char temp)
     LCD_CmdWrite(0xF1);
     LCD_DataWrite(temp);
 }
-unsigned char Read_GPIO_A_7_0(void)
+uint8_t Read_GPIO_A_7_0(void)
 {
     /*
     GPI-A[7:0] : General Purpose Input, share with DB[15:8]
     GPO-A[7:0] : General Purpose Output, share with DB[15:8]
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xF1);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 //[F2h]=========================================================================
-void Write_GPIO_B_7_4(unsigned char temp)
+void Write_GPIO_B_7_4(uint8_t temp)
 {
     /*
     GPI-B[7:0] : General Purpose Input ; share with {XKIN[3:0], XA0, XnWR, XnRD, XnCS}
@@ -6032,20 +6038,20 @@ void Write_GPIO_B_7_4(unsigned char temp)
     LCD_CmdWrite(0xF2);
     LCD_DataWrite(temp);
 }
-unsigned char Read_GPIO_B_7_0(void)
+uint8_t Read_GPIO_B_7_0(void)
 {
     /*
     GPI-B[7:0] : General Purpose Input ; share with {XKIN[3:0], XA0, XnWR, XnRD, XnCS}
     GPO-B[7:4] : General Purpose Output ; share with XKOUT[3:0] ;
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xF2);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 
 //[F3h]=========================================================================
-void Set_GPIO_C_In_Out(unsigned char temp)
+void Set_GPIO_C_In_Out(uint8_t temp)
 {
     /*
     GPIO-C_dir[7:0] : General Purpose I/O direction control.
@@ -6056,7 +6062,7 @@ void Set_GPIO_C_In_Out(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[F4h]=========================================================================
-void Write_GPIO_C_7_0(unsigned char temp)
+void Write_GPIO_C_7_0(uint8_t temp)
 {
     /*
     GPIO-C[7:0] : General Purpose Input / Output
@@ -6065,19 +6071,19 @@ void Write_GPIO_C_7_0(unsigned char temp)
     LCD_CmdWrite(0xF4);
     LCD_DataWrite(temp);
 }
-unsigned char Read_GPIO_C_7_0(void)
+uint8_t Read_GPIO_C_7_0(void)
 {
     /*
     GPIO-C[7:0] : General Purpose Input / Output
     share with {XPWM0, XI2CSDA, XI2CSCL, XnSFCS1, XnSFCS0,XMISO, XMOSI, XSCLK}
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xF4);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 //[F5h]=========================================================================
-void Set_GPIO_D_In_Out(unsigned char temp)
+void Set_GPIO_D_In_Out(uint8_t temp)
 {
     /*
     GPIO-D_dir[7:0] : General Purpose I/O direction control.
@@ -6088,7 +6094,7 @@ void Set_GPIO_D_In_Out(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[F6h]=========================================================================
-void Write_GPIO_D_7_0(unsigned char temp)
+void Write_GPIO_D_7_0(uint8_t temp)
 {
     /*
     GPIO-D[7:0] : General Purpose Input/Output
@@ -6096,18 +6102,18 @@ void Write_GPIO_D_7_0(unsigned char temp)
     LCD_CmdWrite(0xF6);
     LCD_DataWrite(temp);
 }
-unsigned char Read_GPIO_D_7_0(void)
+uint8_t Read_GPIO_D_7_0(void)
 {
     /*
     GPIO-D[7:0] : General Purpose Input/Output
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xF6);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 //[F7h]=========================================================================
-void Set_GPIO_E_In_Out(unsigned char temp)
+void Set_GPIO_E_In_Out(uint8_t temp)
 {
     /*
     GPIO-E_dir[7:0] : General Purpose I/O direction control.
@@ -6118,7 +6124,7 @@ void Set_GPIO_E_In_Out(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[F8h]=========================================================================
-void Write_GPIO_E_7_0(unsigned char temp)
+void Write_GPIO_E_7_0(uint8_t temp)
 {
     /*
     GPIO-E[7:0] : General Purpose Input/Output.
@@ -6127,19 +6133,19 @@ void Write_GPIO_E_7_0(unsigned char temp)
     LCD_CmdWrite(0xF8);
     LCD_DataWrite(temp);
 }
-unsigned char Read_GPIO_E_7_0(void)
+uint8_t Read_GPIO_E_7_0(void)
 {
     /*
     GPIO-E[7:0] : General Purpose Input/Output.
     share with {PDAT[23:19], PDAT[15:13]}
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xF8);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 //[F9h]=========================================================================
-void Set_GPIO_F_In_Out(unsigned char temp)
+void Set_GPIO_F_In_Out(uint8_t temp)
 {
     /*
     GPIO-F_dir[7:0] : General Purpose I/O direction control.
@@ -6150,7 +6156,7 @@ void Set_GPIO_F_In_Out(unsigned char temp)
     LCD_DataWrite(temp);
 }
 //[FAh]=========================================================================
-void Write_GPIO_F_7_0(unsigned char temp)
+void Write_GPIO_F_7_0(uint8_t temp)
 {
     /*
     GPIO-F[7:0] : General Purpose Input/Output.
@@ -6159,15 +6165,15 @@ void Write_GPIO_F_7_0(unsigned char temp)
     LCD_CmdWrite(0xFA);
     LCD_DataWrite(temp);
 }
-unsigned char Read_GPIO_F_7_0(void)
+uint8_t Read_GPIO_F_7_0(void)
 {
     /*
     GPIO-F[7:0] : General Purpose Input/Output.
     share with {XPDAT[12:10], XPDAT[7:3]}
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xFA);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 
@@ -6182,18 +6188,18 @@ void Long_Key_enable(void)
     1 : Enable. Long key period is set by KSCR2 bit4-2.
     0 : Disable.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xFB);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     temp |= cSetb6;
     LCD_DataWrite(temp);
 }
 
 
-void Key_Scan_Freg(unsigned char setx)
+void Key_Scan_Freg(uint8_t setx)
 {
     /*KF2-0: Key-Scan Frequency */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xFB);
     temp = LCD_DataRead();
     temp &= 0xf0;
@@ -6213,18 +6219,18 @@ void Key_Scan_Wakeup_Function_Enable(void)
     0: Key-Scan Wakeup function is disabled.
     1: Key-Scan Wakeup function is enabled.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xFC);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     temp |= cSetb7;
     LCD_DataWrite(temp);
 }
 
 
-void Long_Key_Timing_Adjustment(unsigned char setx)
+void Long_Key_Timing_Adjustment(uint8_t setx)
 {
     /*Long Key Timing Adjustment*/
-    unsigned char temp,temp1;
+    uint8_t temp,temp1;
     temp = setx & 0x1c;
     LCD_CmdWrite(0xFC);
     temp1 = LCD_DataRead();
@@ -6232,53 +6238,53 @@ void Long_Key_Timing_Adjustment(unsigned char setx)
     LCD_DataWrite(temp1);
 }
 
-unsigned char Numbers_of_Key_Hit(void)
+uint8_t Numbers_of_Key_Hit(void)
 {
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xFC);
     temp = LCD_DataRead();   //read key touch number
-    temp = temp & 0x03;     //
+    temp = temp & 0x03;
     return temp;
 }
 
 //[FDh][FEh][FFh]=========================================================================
-unsigned char Read_Key_Strobe_Data_0(void)
+uint8_t Read_Key_Strobe_Data_0(void)
 {
     /*
     Key Strobe Data 0
     The corresponding key code 0 that is pressed.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xFD);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
-unsigned char Read_Key_Strobe_Data_1(void)
+uint8_t Read_Key_Strobe_Data_1(void)
 {
     /*
     Key Strobe Data 1
     The corresponding key code 1 that is pressed.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xFE);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
-unsigned char Read_Key_Strobe_Data_2(void)
+uint8_t Read_Key_Strobe_Data_2(void)
 {
     /*
     Key Strobe Data 2
     The corresponding key code 2 that is pressed.
     */
-    unsigned char temp;
+    uint8_t temp;
     LCD_CmdWrite(0xFF);
-    temp=LCD_DataRead();
+    temp = LCD_DataRead();
     return temp;
 }
 
-void Show_String(char *str)
+void Show_String(uint8_t *str)
 {
-    Text_Mode();       //文本模式
+    Text_Mode(); //text mode
     LCD_CmdWrite(0x04);
 
     while(*str != '\0')
@@ -6289,13 +6295,13 @@ void Show_String(char *str)
     }
 
     Check_2D_Busy();
-    Graphic_Mode(); //back to graphic mode;图形模式
+    Graphic_Mode(); //back to graphic mode;
 }
 
 
-void Show_picture(unsigned long numbers,const unsigned short *datap)
+void Show_picture(uint32_t numbers,const unsigned short *datap)
 {
-    unsigned long i;
+    uint32_t i;
     LCD_CmdWrite(0x04);
 
     for(i=0; i<numbers; i++)
@@ -6323,10 +6329,10 @@ void PWM0_ON(void)
     //Disable_PWM0_Dead_Zone();
     //Enable_PWM0_Inverter();
     //Disable_PWM0_Inverter();
-    //Auto_Reload_PWM0(); //一般PWM输出设定,后续改为default 20120504
-    //One_Shot_PWM0();  //Buzzerノ砞﹚
-    Set_Timer0_Count_Buffer(256);  //设定阶数
-    Set_Timer0_Compare_Buffer(230);    //DUTY
+    //Auto_Reload_PWM0(); //PWM output set, next use default
+    //One_Shot_PWM0();  //Buzzer
+    Set_Timer0_Count_Buffer(256);  //set step
+    Set_Timer0_Compare_Buffer(230); //DUTY
     Start_PWM0();
     //delay_seconds(3);
     //Stop_PWM0();
@@ -6343,7 +6349,7 @@ void PWM0_ON(void)
     } */
 }
 
-void Enable_SPI_Flash_DMA(unsigned char val)
+void Enable_SPI_Flash_DMA(uint8_t val)
 {
     if(val == 0)
     {
@@ -6354,9 +6360,10 @@ void Enable_SPI_Flash_DMA(unsigned char val)
         Select_SFI_1();
     }
 
-    Select_SFI_DMA_Mode();      // 选择DMA模式
-    Select_SFI_24bit_Address(); // 选择24位地址
-    // 根据外挂不同的FLASH选用不通的通讯方式
+    Select_SFI_DMA_Mode(); //DMA mode
+    Select_SFI_24bit_Address();
+
+    //select communication type with flash type
     //Select_SFI_Waveform_Mode_0();
     Select_SFI_Waveform_Mode_3();
     //Select_SFI_0_DummyRead();    //normal read mode
@@ -6366,6 +6373,6 @@ void Enable_SPI_Flash_DMA(unsigned char val)
     Select_SFI_Single_Mode();
     //Select_SFI_Dual_Mode0();
     //Select_SFI_Dual_Mode1();
-    Enable_SFlash_SPI();    // 使能
+    Enable_SFlash_SPI();
 }
 

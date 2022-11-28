@@ -43,6 +43,9 @@
 #ifndef __STM32F4x7_ETH_BSP_H
 #define __STM32F4x7_ETH_BSP_H
 
+#include "hardware_eth.h"
+#include "hardware_conf.h"
+
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -98,6 +101,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void  ETH_BSP_Config(void);
+void *ethernetif_config_enet_set(uint8_t enet_port);
 uint32_t Eth_Link_PHYITConfig(uint16_t PHYAddress);
 void Eth_Link_EXTIConfig(void);
 void Eth_Link_ITHandler(unsigned short PHYAddress);

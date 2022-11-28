@@ -37,11 +37,11 @@ menu "xidatong-riscv64 feature"
 
         menu "config board peripheral"
             config MOUNT_SDCARD
-                bool "mount cd card"
+                bool "mount sd card"
                 default n
-                select BSP_USING_SPI
-                select BSP_USING_SPI1
-                select RESOURCES_SPI_SD
+            config MOUNT_USB
+                bool "mount usb"
+                default n
         endmenu
 
     endmenu

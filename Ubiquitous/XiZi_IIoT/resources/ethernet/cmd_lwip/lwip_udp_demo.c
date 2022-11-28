@@ -75,6 +75,7 @@ static void LwipUDPSendTask(void *arg)
 
 void *LwipUdpSendTest(int argc, char *argv[])
 {
+    uint8_t enet_port = 0; ///< test enet port 0
     memset(udp_demo_msg, 0, sizeof(udp_demo_msg));
 
     if(argc == 1)
@@ -94,7 +95,7 @@ void *LwipUdpSendTest(int argc, char *argv[])
 
     lw_print("lw: [%s] gw %d.%d.%d.%d\n", __func__, udp_demo_ip[0], udp_demo_ip[1], udp_demo_ip[2], udp_demo_ip[3]);
 
-    lwip_config_net(lwip_ipaddr, lwip_netmask, udp_demo_ip);
+    lwip_config_net(enet_port, lwip_ipaddr, lwip_netmask, udp_demo_ip);
     sys_thread_new("udp send", LwipUDPSendTask, NULL, LWIP_TASK_STACK_SIZE, LWIP_DEMO_TASK_PRIO);
 }
 
@@ -140,8 +141,9 @@ static void LwipUdpRecvTask(void *arg, struct udp_pcb *upcb, struct pbuf *p,
 void LwipUdpRecvTest(void)
 {
     err_t err;
+    uint8_t enet_port = 0; ///< test enet port 0
 
-    lwip_config_net(lwip_ipaddr, lwip_netmask, lwip_gwaddr);
+    lwip_config_net(enet_port, lwip_ipaddr, lwip_netmask, lwip_gwaddr);
 
     udpecho_raw_pcb = udp_new_ip_type(IPADDR_TYPE_ANY);
     if (udpecho_raw_pcb == NULL)

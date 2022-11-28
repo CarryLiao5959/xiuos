@@ -39,6 +39,45 @@
 extern int FrameworkInit(void);
 
 /****************************************************************************
+ * Name: cmd_Ch376
+ ****************************************************************************/
+#if defined(CONFIG_BSP_USING_CH376) && !defined(CONFIG_NSH_DISABLE_CH376)
+extern void CH376Demo(void);
+int cmd_Ch376(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, world!\n");
+    CH376Demo();
+    return OK;
+}
+#endif
+
+/****************************************************************************
+ * Name: cmd_w5500
+ ****************************************************************************/
+#if defined(CONFIG_BSP_USING_ENET) && !defined(CONFIG_NSH_DISABLE_W5500)
+extern void w5500_test(void);
+int cmd_w5500(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, world!\n");
+    w5500_test();
+    return OK;
+}
+#endif
+
+/****************************************************************************
+ * Name: cmd_Touch
+ ****************************************************************************/
+#if defined(CONFIG_BSP_USING_TOUCH) && !defined(CONFIG_NSH_DISABLE_TOUCH)
+extern void TestTouch(void);
+int cmd_Touch(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, world!\n");
+    TestTouch();
+    return OK;
+}
+#endif
+
+/****************************************************************************
  * Name: cmd_Ch438
  ****************************************************************************/
 #if defined(CONFIG_BSP_USING_CH438) && !defined(CONFIG_NSH_DISABLE_CH438)
@@ -54,7 +93,7 @@ int cmd_Ch438(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 /****************************************************************************
  * Name: cmd_lcd
  ****************************************************************************/
-#if defined(CONFIG_K210_LCD) && !defined(CONFIG_NSH_DISABLE_LCD)
+#if defined(CONFIG_USER_TEST_LCD) && !defined(CONFIG_NSH_DISABLE_USER_TEST_LCD)
 extern void LcdDemo(void);
 int cmd_Lcd(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
@@ -68,11 +107,48 @@ int cmd_Lcd(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
  * Name: cmd_Extsram
  ****************************************************************************/
 #if defined(CONFIG_USER_TEST_SEMC) && !defined(CONFIG_NSH_DISABLE_USER_TEST_SEMC)
-extern int extsram_test(void);
+extern int ExtsramTest(void);
 int cmd_Extsram(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
     nsh_output(vtbl, "Hello, extra sdram!\n");
-    extsram_test();
+    ExtsramTest();
+    return OK;
+}
+#endif
+
+/****************************************************************************
+ * Name: socket test
+ ****************************************************************************/
+#if defined(CONFIG_SOCKET_DEMO) && !defined(CONFIG_NSH_DISABLE_SOCKET_DEMO)
+void UdpSocketRecvTest(int argc, char *argv[]);
+int cmd_Udprecv(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, UDP receive!\n");
+    UdpSocketRecvTest(argc, argv);
+    return OK;
+}
+
+void UdpSocketSendTest(int argc, char *argv[]);
+int cmd_Udpsend(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, UDP send!\n");
+    UdpSocketSendTest(argc, argv);
+    return OK;
+}
+
+void TcpSocketRecvTest(int argc, char *argv[]);
+int cmd_Tcprecv(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, TCP receive!\n");
+    TcpSocketRecvTest(argc, argv);
+    return OK;
+}
+
+void TcpSocketSendTest(int argc, char *argv[]);
+int cmd_Tcpsend(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, TCP send!\n");
+    TcpSocketSendTest(argc, argv);
     return OK;
 }
 #endif
@@ -293,46 +369,46 @@ int cmd_WindSpeedQsFs(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
  ****************************************************************************/
 
 #if defined(CONFIG_CONNECTION_ADAPTER_ZIGBEE) && !defined(CONFIG_NSH_DISABLE_OPENZIGBEE)
-extern int openzigbee(void);
+extern int OpenZigbee(void);
 int cmd_openzigbee(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
     nsh_output(vtbl, "Hello, world!\n");
     FrameworkInit();
-    openzigbee();
+    OpenZigbee();
     return OK;
 }
 #endif
 
 
 #if defined(CONFIG_CONNECTION_ADAPTER_ZIGBEE) && !defined(CONFIG_NSH_DISABLE_SENDZIGBEE)
-extern int sendzigbee(int argc, char *argv[]);
+extern int SendZigbee(int argc, char *argv[]);
 int cmd_sendzigbee(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
     nsh_output(vtbl, "Hello, world!\n");
     FrameworkInit();
-    sendzigbee(argc,argv);
+    SendZigbee(argc,argv);
     return OK;
 }
 #endif
 
 #if defined(CONFIG_CONNECTION_ADAPTER_ZIGBEE) && !defined(CONFIG_NSH_DISABLE_RECVZIGBEE)
-extern int recvzigbee(void);
+extern int RecvZigbee(void);
 int cmd_recvzigbee(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
     nsh_output(vtbl, "Hello, world!\n");
     FrameworkInit();
-    recvzigbee();
+    RecvZigbee();
     return OK;
 }
 #endif
 
-#if defined(CONFIG_ADAPTER_ESP07S_WIFI) && !defined(CONFIG_NSH_DISABLE_ADAPTER_WIFI_TEST)
-extern int AdapterWifiTest(int argc, char *argv[]);
+#if (defined(CONFIG_ADAPTER_ESP07S_WIFI) || defined(CONFIG_ADAPTER_ESP8285_WIFI)) && !defined(CONFIG_NSH_DISABLE_ADAPTER_WIFI_TEST)
+extern int AdapterWifiTestWithParam(int argc, char *argv[]);
 int cmd_AdapterWifiTest(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
     nsh_output(vtbl, "Hello, world!\n");
     FrameworkInit();
-    AdapterWifiTest(argc, argv);
+    AdapterWifiTestWithParam(argc, argv);
     return OK;
 }
 #endif
@@ -421,6 +497,26 @@ int cmd_fft(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 {
     nsh_output(vtbl, "Hello, fft!\n");
     nuttx_k210_fft_test();
+    return OK;
+}
+#endif
+
+#if defined(CONFIG_MUSL_LIBC) && !defined(CONFIG_NSH_DISABLE_MUSL_TEST)
+extern void Testmusl(void);
+int cmd_musl(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, test musl!\n");
+    Testmusl();
+    return OK;
+}
+#endif
+
+#if defined(CONFIG_BSP_USING_CAN) && !defined(CONFIG_NSH_DISABLE_CAN_TEST)
+extern void can_test(void);
+int cmd_cantest(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, world!\n");
+    can_test();
     return OK;
 }
 #endif

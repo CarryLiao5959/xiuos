@@ -10,21 +10,21 @@
 
 /**
 * @file drv_io_config.c
-* @brief support aiit-riscv64-board io configure
+* @brief support edu-riscv64 board io configure
 * @version 1.0 
 * @author AIIT XUOS Lab
-* @date 2021-04-25
+* @date 2022-10-25
 */
 
 /*************************************************
 File name: drv_io_config.c
-Description: support aiit-riscv64-board io configure
+Description: support edu-riscv64 board io configure
 Others: take RT-Thread v4.0.2/bsp/k210/driver/drv_io_config.c for references
                 https://github.com/RT-Thread/rt-thread/tree/v4.0.2
 History: 
-1. Date: 2021-04-25
+1. Date: 2022-10-25
 Author: AIIT XUOS Lab
-Modification: support aiit-riscv64-board io configure
+Modification: support edu-riscv64 board io configure
 *************************************************/
 
 #include <xizi.h>

@@ -15,21 +15,21 @@
 
 /**
 * @file connect_lcd.h
-* @brief define aiit-riscv64-board lcd function
+* @brief define edu-riscv64 board lcd function
 * @version 1.0 
 * @author AIIT XUOS Lab
-* @date 2021-04-25
+* @date 2022-10-25
 */
 
 /*************************************************
 File name: connect_lcd.h
-Description: define aiit-riscv64-board lcd function
+Description: define edu-riscv64 board lcd function
 Others:  https://canaan-creative.com/developer
 History: 
-1. Date: 2021-04-25
+1. Date: 2022-10-25
 Author: AIIT XUOS Lab
 Modification: 
-1. add aiit-riscv64-board lcd function
+1. add edu-riscv64 board lcd function
 *************************************************/
 
 #ifndef CONNECT_LCD_H

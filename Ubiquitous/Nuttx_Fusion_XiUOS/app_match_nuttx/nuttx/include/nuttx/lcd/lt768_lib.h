@@ -1,26 +1,38 @@
-/********************* COPYRIGHT  **********************
-* File Name        : lt768_lib.h
-* Author           : Levetop Electronics
-* Version          : V1.3
-* Date             : 2019-5-14
-* Description      : LT768x所有功能函数
-********************************************************/
+/*
+* Copyright (c) 2022 AIIT XUOS Lab
+* XiUOS is licensed under Mulan PSL v2.
+* You can use this software according to the terms and conditions of the Mulan PSL v2.
+* You may obtain a copy of Mulan PSL v2 at:
+*        http://license.coscl.org.cn/MulanPSL2
+* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+* See the Mulan PSL v2 for more details.
+*/
 
-#ifndef _LT768_Lib_H
-#define _LT768_Lib_H
+/**
+ * @file lt768_lib.h
+ * @brief lt768 register relative driver, inherit from Levetop Electronics
+ * @version 1.0
+ * @author AIIT XUOS Lab
+ * @date 2022.9.19
+ */
+
+#ifndef __LT768_LIB_H_
+#define __LT768_LIB_H_
 #include "lt768.h"
 
-//外部晶振
+//external OSC
 #define XI_4M            0
 #define XI_8M            1
 #define XI_10M           0
 #define XI_12M           0
 
-//分辨率
+//resolution
 #define LCD_XSIZE_TFT  480
 #define LCD_YSIZE_TFT  272
 
-//参数
+//parameter
 #define LCD_VBPD    20
 #define LCD_VFPD    12
 #define LCD_VSPW    3
@@ -87,16 +99,31 @@
 #define color16M_purple  color16M_red|color16M_blue
 
 /* LCD color */
-#define White          0xFFFF
-#define Black          0x0000
-#define Grey           0xF7DE
-#define Blue           0x001F
-#define Blue2          0x051F
-#define Red            0xF800
-#define Magenta        0xF81F
-#define Green          0x07E0
-#define Cyan           0x7FFF
-#define Yellow         0xFFE0
+#define WHITE         	 0xFFFF
+#define BLACK         	 0x0000  
+#define BLUE         	 0x001F
+#define GREY             0xF7DE  
+#define BRED             0xF81F
+#define GRED 			 0xFFE0
+#define GBLUE			 0x07FF
+#define BLUE2            0x051F 
+#define RED           	 0xF800
+#define MAGENTA          0xF81F
+#define GREEN            0x07E0
+#define CYAN             0x7FFF
+#define YELLOW           0xFFE0
+#define BROWN 		     0xBC40    
+#define BRRED 	   		 0xFC07      
+#define GRAY             0x8430      
+
+#define DARKBLUE      	 0x01CF
+#define LIGHTBLUE      	 0x7D7C
+#define GRAYBLUE         0x5458
+#define LIGHTGREEN       0x841F 
+#define LGRAY 	         0xC618
+#define LGRAYBLUE        0xA651
+#define LBBLUE           0x2B12
+
 
 #define Line0          0
 #define Line1          24
@@ -127,138 +154,641 @@
 
 void lt768_init(void);
 
-/* 写数据到内存 */
-void MPuint8_t_8bpp_Memory_Write(unsigned short x,unsigned short y,unsigned short w,unsigned short h,const unsigned char *data);
-void MPuint8_t_16bpp_Memory_Write(unsigned short x,unsigned short y,unsigned short w,unsigned short h,const unsigned char *data);
-void MPuint8_t_24bpp_Memory_Write(unsigned short x,unsigned short y,unsigned short w,unsigned short h,const unsigned char *data);
-void MPuint16_t_16bpp_Memory_Write(unsigned short x,unsigned short y,unsigned short w,unsigned short h,const unsigned short *data);
-void MPuint16_t_24bpp_Mode1_Memory_Write(unsigned short x,unsigned short y,unsigned short w,unsigned short h,const unsigned short *data);
-void MPuint16_t_24bpp_Mode2_Memory_Write(unsigned short x,unsigned short y,unsigned short w,unsigned short h,const unsigned short *data);
+/* write to memory */
+void MPU8_8bpp_Memory_Write(uint16_t x,
+    uint16_t y,
+    uint16_t w,
+    uint16_t h,
+    const uint8_t *data);
+void MPU8_16bpp_Memory_Write(uint16_t x,
+    uint16_t y,
+    uint16_t w,
+    uint16_t h,
+    const uint8_t *data);
+void MPU8_24bpp_Memory_Write(uint16_t x,
+    uint16_t y,
+    uint16_t w,
+    uint16_t h,
+    const uint8_t *data);
+void MPU16_16bpp_Memory_Write(uint16_t x,
+    uint16_t y,
+    uint16_t w,
+    uint16_t h,
+    const uint16_t *data);
+void MPU16_24bpp_Mode1_Memory_Write(uint16_t x,
+    uint16_t y,
+    uint16_t w,
+    uint16_t h,
+    const uint16_t *data);
+void MPU16_24bpp_Mode2_Memory_Write(uint16_t x,
+    uint16_t y,
+    uint16_t w,
+    uint16_t h,
+    const uint16_t *data);
 
-/* 硬件画线段 */
-void LT768_DrawLine(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned long LineColor);
-void LT768_DrawLine_Width(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned long LineColor,unsigned short Width);
+/* draw line */
+void LT768_DrawLine(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint32_t LineColor);
+void LT768_DrawLine_Width(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint32_t LineColor,
+    uint16_t Width);
 
-/* 硬件画圆 */
-void LT768_DrawCircle(unsigned short XCenter,unsigned short YCenter,unsigned short R,unsigned long CircleColor);
-void LT768_DrawCircle_Fill(unsigned short XCenter,unsigned short YCenter,unsigned short R,unsigned long ForegroundColor);
-void LT768_DrawCircle_Width(unsigned short XCenter,unsigned short YCenter,unsigned short R,unsigned long CircleColor,unsigned long ForegroundColor,unsigned short Width);
+/* draw circle */
+void LT768_DrawCircle(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t R,
+    uint32_t CircleColor);
+void LT768_DrawCircle_Fill(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t R,
+    uint32_t ForegroundColor);
+void LT768_DrawCircle_Width(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t R,
+    uint32_t CircleColor,
+    uint32_t ForegroundColor,
+    uint16_t Width);
 
-/* 硬件画椭圆 */
-void LT768_DrawEllipse(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long EllipseColor);
-void LT768_DrawEllipse_Fill(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long ForegroundColor);
-void LT768_DrawEllipse_Width(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long EllipseColor,unsigned long ForegroundColor,unsigned short Width);
+/* draw elipse */
+void LT768_DrawEllipse(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t EllipseColor);
+void LT768_DrawEllipse_Fill(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t ForegroundColor);
+void LT768_DrawEllipse_Width(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t EllipseColor,
+    uint32_t ForegroundColor,
+    uint16_t Width);
 
-/* 硬件画矩形 */
-void LT768_DrawSquare(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned long SquareColor);
-void LT768_DrawSquare_Fill(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned long ForegroundColor);
-void LT768_DrawSquare_Width(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned long SquareColor,unsigned long ForegroundColor,unsigned short Width);
+/* draw square */
+void LT768_DrawSquare(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint32_t SquareColor);
+void LT768_DrawSquare_Fill(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint32_t ForegroundColor);
+void LT768_DrawSquare_Width(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint32_t SquareColor,
+    uint32_t ForegroundColor,
+    uint16_t Width);
 
-/* 硬件画圆角矩形 */
-void LT768_DrawCircleSquare(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X_R,unsigned short Y_R,unsigned long CircleSquareColor);
-void LT768_DrawCircleSquare_Fill(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X_R,unsigned short Y_R,unsigned long ForegroundColor);
-void LT768_DrawCircleSquare_Width(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X_R,unsigned short Y_R,unsigned long CircleSquareColor,unsigned long ForegroundColor,unsigned short Width);
+/* draw circle square  */
+void LT768_DrawCircleSquare(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t CircleSquareColor);
+void LT768_DrawCircleSquare_Fill(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t ForegroundColor);
+void LT768_DrawCircleSquare_Width(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t CircleSquareColor,
+    uint32_t ForegroundColor,
+    uint16_t Width);
 
-/* 硬件画三角形 */
-void LT768_DrawTriangle(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned long TriangleColor);
-void LT768_DrawTriangle_Fill(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned long ForegroundColor);
-void LT768_DrawTriangle_Frame(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned long TriangleColor,unsigned long ForegroundColor);
+/* draw triangle */
+void LT768_DrawTriangle(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint32_t TriangleColor);
+void LT768_DrawTriangle_Fill(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint32_t ForegroundColor);
+void LT768_DrawTriangle_Frame(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint32_t TriangleColor,
+    uint32_t ForegroundColor);
 
-/* 硬件画四边形 */
-void LT768_DrawQuadrilateral(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned short X4,unsigned short Y4,unsigned long ForegroundColor);
-void LT768_DrawQuadrilateral_Fill(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned short X4,unsigned short Y4,unsigned long ForegroundColor);
-void LT768_DrawTriangle_Frame(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned long TriangleColor ,unsigned long ForegroundColor);
+/* draw quadrilateral */
+void LT768_DrawQuadrilateral(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint16_t X4,
+    uint16_t Y4,
+    uint32_t ForegroundColor);
+void LT768_DrawQuadrilateral_Fill(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint16_t X4,
+    uint16_t Y4,
+    uint32_t ForegroundColor);
+void LT768_DrawTriangle_Frame(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint32_t TriangleColor,
+    uint32_t ForegroundColor);
 
-/* 硬件画五边形 */
-void LT768_DrawPentagon(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned short X4,unsigned short Y4,unsigned short X5,unsigned short Y5,unsigned long ForegroundColor);
-void LT768_DrawPentagon_Fill(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned short X4,unsigned short Y4,unsigned short X5,unsigned short Y5,unsigned long ForegroundColor);
+/* draw pentagon */
+void LT768_DrawPentagon(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint16_t X4,
+    uint16_t Y4,
+    uint16_t X5,
+    uint16_t Y5,
+    uint32_t ForegroundColor);
+void LT768_DrawPentagon_Fill(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint16_t X4,
+    uint16_t Y4,
+    uint16_t X5,
+    uint16_t Y5,
+    uint32_t ForegroundColor);
 
-/* 硬件画曲线 */
-void LT768_DrawLeftUpCurve(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long CurveColor);
-void LT768_DrawLeftDownCurve(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long CurveColor);
-void LT768_DrawRightUpCurve(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long CurveColor);
-void LT768_DrawRightDownCurve(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long CurveColor);
-void LT768_SelectDrawCurve(unsigned short XCenter ,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long CurveColor,unsigned short  Dir);
+/* draw curve */
+void LT768_DrawLeftUpCurve(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t CurveColor);
+void LT768_DrawLeftDownCurve(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t CurveColor);
+void LT768_DrawRightUpCurve(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t CurveColor);
+void LT768_DrawRightDownCurve(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t CurveColor);
+void LT768_SelectDrawCurve(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t CurveColor,
+    uint16_t  Dir);
 
-/* 硬件画1/4椭圆 */
-void LT768_DrawLeftUpCurve_Fill(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long ForegroundColor);
-void LT768_DrawLeftDownCurve_Fill(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long ForegroundColor);
-void LT768_DrawRightUpCurve_Fill(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long ForegroundColor);
-void LT768_DrawRightDownCurve_Fill(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long ForegroundColor);
-void LT768_SelectDrawCurve_Fill(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned long CurveColor,unsigned short  Dir);
+/* draw 1/4 filled curve */
+void LT768_DrawLeftUpCurve_Fill(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t ForegroundColor);
+void LT768_DrawLeftDownCurve_Fill(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t ForegroundColor);
+void LT768_DrawRightUpCurve_Fill(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t ForegroundColor);
+void LT768_DrawRightDownCurve_Fill(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t ForegroundColor);
+void LT768_SelectDrawCurve_Fill(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint32_t CurveColor,
+    uint16_t  Dir);
 
-/* 硬件画圆柱 */
-unsigned char LT768_DrawCylinder(unsigned short XCenter,unsigned short YCenter,unsigned short X_R,unsigned short Y_R,unsigned short H,unsigned long CylinderColor,unsigned long ForegroundColor);
+/* draw cylinders */
+uint8_t LT768_DrawCylinder(uint16_t XCenter,
+    uint16_t YCenter,
+    uint16_t X_R,
+    uint16_t Y_R,
+    uint16_t H,
+    uint32_t CylinderColor,
+    uint32_t ForegroundColor);
 
-/* 硬件画四棱柱 */
-void LT768_DrawQuadrangular(unsigned short X1,unsigned short Y1,unsigned short X2,unsigned short Y2,unsigned short X3,unsigned short Y3,unsigned short X4,unsigned short Y4,unsigned short X5,unsigned short Y5,unsigned short X6,unsigned short Y6,unsigned long QuadrangularColor,unsigned long ForegroundColor);
+/* draw quadrangular */
+void LT768_DrawQuadrangular(uint16_t X1,
+    uint16_t Y1,
+    uint16_t X2,
+    uint16_t Y2,
+    uint16_t X3,
+    uint16_t Y3,
+    uint16_t X4,
+    uint16_t Y4,
+    uint16_t X5,
+    uint16_t Y5,
+    uint16_t X6,
+    uint16_t Y6,
+    uint32_t QuadrangularColor,
+    uint32_t ForegroundColor);
 
-/* 表格 */
-void LT768_MakeTable(unsigned short X1,unsigned short Y1,unsigned short W,unsigned short H,unsigned short Line,unsigned short Row,unsigned long  TableColor,unsigned long  ItemColor,unsigned long  ForegroundColor,unsigned short width1,unsigned short width2,unsigned char  mode);
+/* table */
+void LT768_MakeTable(uint16_t X1,
+    uint16_t Y1,
+    uint16_t W,
+    uint16_t H,
+    uint16_t Line,
+    uint16_t Row,
+    uint32_t  TableColor,
+    uint32_t  ItemColor,
+    uint32_t  ForegroundColor,
+    uint16_t width1,
+    uint16_t width2,
+    uint8_t  mode);
 
-/* 线性模式下DMA传输数据到SDRAM中 */
-void LT768_DMA_24bit_Linear(unsigned char SCS,unsigned char Clk,unsigned long flash_addr,unsigned long memory_ad,unsigned long data_num);
-void LT768_DMA_32bit_Linear(unsigned char SCS,unsigned char Clk,unsigned long flash_addr,unsigned long memory_ad,unsigned long data_num);
+/* linear DMA transport to SDRAM */
+void LT768_DMA_24bit_Linear(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t flash_addr,
+    uint32_t memory_ad,
+    uint32_t data_num);
+void LT768_DMA_32bit_Linear(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t flash_addr,
+    uint32_t memory_ad,
+    uint32_t data_num);
 
-/* 区块模式下DMA传输数据到SDRAM中 */
-void LT768_DMA_24bit_Block(unsigned char SCS,unsigned char Clk,unsigned short X1,unsigned short Y1 ,unsigned short X_W,unsigned short Y_H,unsigned short P_W,unsigned long Addr);
-void LT768_DMA_32bit_Block(unsigned char SCS,unsigned char Clk,unsigned short X1,unsigned short Y1 ,unsigned short X_W,unsigned short Y_H,unsigned short P_W,unsigned long Addr);
+/* DMA transport to SDRAM */
+void LT768_DMA_24bit_Block(uint8_t SCS,
+    uint8_t Clk,
+    uint16_t X1,
+    uint16_t Y1,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint16_t P_W,
+    uint32_t Addr);
+void LT768_DMA_32bit_Block(uint8_t SCS,
+    uint8_t Clk,
+    uint16_t X1,
+    uint16_t Y1,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint16_t P_W,
+    uint32_t Addr);
 
-/* 使用内建字库 */
-void LT768_Select_Internal_Font_Init(unsigned char Size,unsigned char XxN,unsigned char YxN,unsigned char ChromaKey,unsigned char Alignment);
-void LT768_Print_Internal_Font_String(unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor ,char *c);
+/* use internal font */
+void LT768_Select_Internal_Font_Init(uint8_t Size,
+    uint8_t XxN,
+    uint8_t YxN,
+    uint8_t ChromaKey,
+    uint8_t Alignment);
+void LT768_Print_Internal_Font_String(uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint8_t *c);
 
-/* nor flash使用外建字库 */
+/* nor flash use outside font */
 /* 16*16 24*24 32*32 */
-void LT768_Select_Outside_Font_Init(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr,unsigned long Num,unsigned char Size,unsigned char XxN,unsigned char YxN,unsigned char ChromaKey,unsigned char Alignment);
-void LT768_Print_Outside_Font_String(unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned char *c);
-void LT768_Print_Outside_Font_GBK_String(unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned char *c);
-/* 48*48 72*72全角 */
-void LT768_BTE_Memory_Copy_ColorExpansion_8(unsigned long S0_Addr,unsigned short YS0,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned short X_W,unsigned short Y_H,unsigned long Foreground_color,unsigned long Background_color);
-void LT768_BTE_Memory_Copy_ColorExpansion_Chroma_key_8(unsigned long S0_Addr,unsigned short YS0,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned short X_W,unsigned short Y_H,unsigned long Foreground_color);
-void LT768_Print_Outside_Font_GB2312_48_72(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr,unsigned long ShowAddr,unsigned short width,unsigned char Size,unsigned char ChromaKey,unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned short w,unsigned short s,unsigned char *c);
-void LT768_Print_Outside_Font_BIG5_48_72(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr,unsigned long ShowAddr,unsigned short width,unsigned char Size,unsigned char ChromaKey,unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned short w,unsigned short s,unsigned char *c);
-void LT768_Print_Outside_Font_GBK_48_72(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr,unsigned long ShowAddr,unsigned short width,unsigned char Size,unsigned char ChromaKey,unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned short w,unsigned short s,unsigned char *c);
+void LT768_Select_Outside_Font_Init(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr,
+    uint32_t Num,
+    uint8_t Size,
+    uint8_t XxN,
+    uint8_t YxN,
+    uint8_t ChromaKey,
+    uint8_t Alignment);
+void LT768_Print_Outside_Font_String(uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint8_t *c);
+void LT768_Print_Outside_Font_GBK_String(uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint8_t *c);
+/* 48*48 72*72 SBC case */
+void LT768_BTE_Memory_Copy_ColorExpansion_8(uint32_t S0_Addr,
+    uint16_t YS0,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint32_t Foreground_color,
+    uint32_t Background_color);
+void LT768_BTE_Memory_Copy_ColorExpansion_Chroma_key_8(uint32_t S0_Addr,
+    uint16_t YS0,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint32_t Foreground_color);
+void LT768_Print_Outside_Font_GB2312_48_72(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr,
+    uint32_t ShowAddr,
+    uint16_t width,
+    uint8_t Size,
+    uint8_t ChromaKey,
+    uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint16_t w,
+    uint16_t s,
+    uint8_t *c);
+void LT768_Print_Outside_Font_BIG5_48_72(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr,
+    uint32_t ShowAddr,
+    uint16_t width,
+    uint8_t Size,
+    uint8_t ChromaKey,
+    uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint16_t w,
+    uint16_t s,
+    uint8_t *c);
+void LT768_Print_Outside_Font_GBK_48_72(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr,
+    uint32_t ShowAddr,
+    uint16_t width,
+    uint8_t Size,
+    uint8_t ChromaKey,
+    uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint16_t w,
+    uint16_t s,
+    uint8_t *c);
 
-/* nor flash使用自定义字库 */
-/* 16*16 24*24 32*32 48*48 72*72全角 */
-int Get_User_Font_P(char chH,char chL);
-void LT768_Print_Outside_UserDefineFont_GB2312(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr,unsigned long ShowAddr,unsigned short width,unsigned char Size,unsigned char ChromaKey,unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned short w,unsigned short s,unsigned char *c);
+/* nor flash used define font */
+/* 16*16 24*24 32*32 48*48 72*72 SBC case */
+int Get_User_Font_P(char chH,
+    char chL);
+void LT768_Print_Outside_UserDefineFont_GB2312(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr,
+    uint32_t ShowAddr,
+    uint16_t width,
+    uint8_t Size,
+    uint8_t ChromaKey,
+    uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint16_t w,
+    uint16_t s,
+    uint8_t *c);
 
-/* 文字光标 */
-void LT768_Text_cursor_Init(unsigned char On_Off_Blinking,unsigned short Blinking_Time,unsigned short X_W,unsigned short Y_W);
+/* text cursor */
+void LT768_Text_cursor_Init(uint8_t On_Off_Blinking,
+    uint16_t Blinking_Time,
+    uint16_t X_W,
+    uint16_t Y_W);
 void LT768_Enable_Text_Cursor(void);
 void LT768_Disable_Text_Cursor(void);
 
-/*  图像光标 */
-void LT768_Graphic_cursor_Init(unsigned char Cursor_N,unsigned char Color1,unsigned char Color2,unsigned short X_Pos,unsigned short Y_Pos,unsigned char *Cursor_Buf);
-void LT768_Set_Graphic_cursor_Pos(unsigned char Cursor_N,unsigned short X_Pos,unsigned short Y_Pos);
+/* graphic cursor */
+void LT768_Graphic_cursor_Init(uint8_t Cursor_N,
+    uint8_t Color1,
+    uint8_t Color2,
+    uint16_t X_Pos,
+    uint16_t Y_Pos,
+    uint8_t *Cursor_Buf);
+void LT768_Set_Graphic_cursor_Pos(uint8_t Cursor_N,
+    uint16_t X_Pos,
+    uint16_t Y_Pos);
 void LT768_Enable_Graphic_Cursor(void);
 void LT768_Disable_Graphic_Cursor(void);
 
-/* 区块传输引擎（BitBLT） */
-void BTE_Solid_Fill(unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned short color,unsigned short X_W,unsigned short Y_H);
-void LT768_BTE_Memory_Copy(unsigned long S0_Addr,unsigned short S0_W,unsigned short XS0,unsigned short YS0,unsigned long S1_Addr,unsigned short S1_W,unsigned short XS1,unsigned short YS1,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned int ROP_Code,unsigned short X_W,unsigned short Y_H);
-void LT768_BTE_Memory_Copy_Chroma_key(unsigned long S0_Addr,unsigned short S0_W,unsigned short XS0,unsigned short YS0,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned long Background_color,unsigned short X_W,unsigned short Y_H);
-void LT768_BTE_Pattern_Fill(unsigned char P_8x8_or_16x16,unsigned long S0_Addr,unsigned short S0_W,unsigned short XS0,unsigned short YS0,unsigned long Des_Addr,unsigned short Des_W, unsigned short XDes,unsigned short YDes,unsigned int ROP_Code ,unsigned short X_W,unsigned short Y_H);
-void LT768_BTE_Pattern_Fill_With_Chroma_key(unsigned char P_8x8_or_16x16,unsigned long S0_Addr,unsigned short S0_W,unsigned short XS0,unsigned short YS0,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned int ROP_Code,unsigned long Background_color,unsigned short X_W,unsigned short Y_H);
-void LT768_BTE_MCU_Write_MCU_16bit(unsigned long S1_Addr,unsigned short S1_W,unsigned short XS,unsigned short YS1,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned int ROP_Code,unsigned short X_W,unsigned short Y_H ,const unsigned short *data);
-void LT768_BTE_MCU_Write_Chroma_key_MCU_16bit(unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned long Background_color,unsigned short X_W,unsigned short Y_H,const unsigned short *data);
-void LT768_BTE_MCU_Write_ColorExpansion_MCU_16bit(unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned short X_W,unsigned short Y_H,unsigned long Foreground_color ,unsigned long Background_color ,const unsigned short *data);
-void LT768_BTE_MCU_Write_ColorExpansion_Chroma_key_MCU_16bit(unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned short X_W,unsigned short Y_H,unsigned long Foreground_color,const unsigned short *data);
-void BTE_Alpha_Blending(unsigned long S0_Addr,unsigned short S0_W,unsigned short XS0,unsigned short YS0,unsigned long S1_Addr,unsigned short S1_W,unsigned short XS1,unsigned short YS1,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned short X_W,unsigned short Y_H,unsigned char alpha);
-void BTE_Pixel_8bpp_Alpha_Blending(unsigned long S0_Addr,unsigned short S0_W,unsigned short XS0,unsigned short YS0,unsigned long S1_Addr,unsigned short S1_W,unsigned short XS1,unsigned short YS1,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned short X_W,unsigned short Y_H);
-void BTE_Pixel_16bpp_Alpha_Blending(unsigned long S0_Addr,unsigned short S0_W,unsigned short XS0,unsigned short YS0,unsigned long S1_Addr,unsigned short S1_W,unsigned short XS1,unsigned short YS1,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned short X_W,unsigned short Y_H);
+/* block transport enginer (BitBLT) */
+void BTE_Solid_Fill(uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint16_t color,
+    uint16_t X_W,
+    uint16_t Y_H);
+void LT768_BTE_Memory_Copy(uint32_t S0_Addr,
+    uint16_t S0_W,
+    uint16_t XS0,
+    uint16_t YS0,
+    uint32_t S1_Addr,
+    uint16_t S1_W,
+    uint16_t XS1,
+    uint16_t YS1,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    unsigned int ROP_Code,
+    uint16_t X_W,
+    uint16_t Y_H);
+void LT768_BTE_Memory_Copy_Chroma_key(uint32_t S0_Addr,
+    uint16_t S0_W,
+    uint16_t XS0,
+    uint16_t YS0,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint32_t Background_color,
+    uint16_t X_W,
+    uint16_t Y_H);
+void LT768_BTE_Pattern_Fill(uint8_t P_8x8_or_16x16,
+    uint32_t S0_Addr,
+    uint16_t S0_W,
+    uint16_t XS0,
+    uint16_t YS0,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+     uint16_t XDes,
+    uint16_t YDes,
+    unsigned int ROP_Code,
+    uint16_t X_W,
+    uint16_t Y_H);
+void LT768_BTE_Pattern_Fill_With_Chroma_key(uint8_t P_8x8_or_16x16,
+    uint32_t S0_Addr,
+    uint16_t S0_W,
+    uint16_t XS0,
+    uint16_t YS0,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    unsigned int ROP_Code,
+    uint32_t Background_color,
+    uint16_t X_W,
+    uint16_t Y_H);
+void LT768_BTE_MCU_Write_MCU_16bit(uint32_t S1_Addr,
+    uint16_t S1_W,
+    uint16_t XS,
+    uint16_t YS1,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    unsigned int ROP_Code,
+    uint16_t X_W,
+    uint16_t Y_H,
+    const uint16_t *data);
+void LT768_BTE_MCU_Write_Chroma_key_MCU_16bit(uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint32_t Background_color,
+    uint16_t X_W,
+    uint16_t Y_H,
+    const uint16_t *data);
+void LT768_BTE_MCU_Write_ColorExpansion_MCU_16bit(uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint32_t Foreground_color,
+    uint32_t Background_color,
+    const uint16_t *data);
+void LT768_BTE_MCU_Write_ColorExpansion_Chroma_key_MCU_16bit(uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint32_t Foreground_color,
+    const uint16_t *data);
+void BTE_Alpha_Blending(uint32_t S0_Addr,
+    uint16_t S0_W,
+    uint16_t XS0,
+    uint16_t YS0,
+    uint32_t S1_Addr,
+    uint16_t S1_W,
+    uint16_t XS1,
+    uint16_t YS1,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint8_t alpha);
+void BTE_Pixel_8bpp_Alpha_Blending(uint32_t S0_Addr,
+    uint16_t S0_W,
+    uint16_t XS0,
+    uint16_t YS0,
+    uint32_t S1_Addr,
+    uint16_t S1_W,
+    uint16_t XS1,
+    uint16_t YS1,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint16_t X_W,
+    uint16_t Y_H);
+void BTE_Pixel_16bpp_Alpha_Blending(uint32_t S0_Addr,
+    uint16_t S0_W,
+    uint16_t XS0,
+    uint16_t YS0,
+    uint32_t S1_Addr,
+    uint16_t S1_W,
+    uint16_t XS1,
+    uint16_t YS1,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    uint16_t X_W,
+    uint16_t Y_H);
 
 /*  PIP */
-void LT768_PIP_Init(unsigned char On_Off,unsigned char Select_PIP,unsigned long PAddr,unsigned short XP,unsigned short YP,unsigned long ImageWidth,unsigned short X_Dis,unsigned short Y_Dis,unsigned short X_W,unsigned short Y_H);
-void LT768_Set_DisWindowPos(unsigned char On_Off,unsigned char Select_PIP,unsigned short X_Dis,unsigned short Y_Dis);
+void LT768_PIP_Init(uint8_t On_Off,
+    uint8_t Select_PIP,
+    uint32_t PAddr,
+    uint16_t XP,
+    uint16_t YP,
+    uint32_t ImageWidth,
+    uint16_t X_Dis,
+    uint16_t Y_Dis,
+    uint16_t X_W,
+    uint16_t Y_H);
+void LT768_Set_DisWindowPos(uint8_t On_Off,
+    uint8_t Select_PIP,
+    uint16_t X_Dis,
+    uint16_t Y_Dis);
 
 /*  PWM */
-void LT768_PWM0_Init(unsigned char on_off,unsigned char Clock_Divided,unsigned char Prescalar,unsigned short Count_Buffer,unsigned short Compare_Buffer);
-void LT768_PWM1_Init(unsigned char on_off,unsigned char Clock_Divided,unsigned char Prescalar,unsigned short Count_Buffer,unsigned short Compare_Buffer);
-void LT768_PWM0_Duty(unsigned short Compare_Buffer);
-void LT768_PWM1_Duty(unsigned short Compare_Buffer);
+void LT768_PWM0_Init(uint8_t on_off,
+    uint8_t Clock_Divided,
+    uint8_t Prescalar,
+    uint16_t Count_Buffer,
+    uint16_t Compare_Buffer);
+void LT768_PWM1_Init(uint8_t on_off,
+    uint8_t Clock_Divided,
+    uint8_t Prescalar,
+    uint16_t Count_Buffer,
+    uint16_t Compare_Buffer);
+void LT768_PWM0_Duty(uint16_t Compare_Buffer);
+void LT768_PWM1_Duty(uint16_t Compare_Buffer);
 
 /*  Standby Mode */
 void LT768_Standby(void);
@@ -273,34 +803,126 @@ void LT768_SleepMode(void);
 void LT768_Wkup_Sleep(void);
 
 /* W25QXX */
-void LT768_SPI_Init(uint8_t cs,uint8_t div);
+void LT768_SPI_Init(uint8_t cs,
+    uint8_t div);
 void W25QXX_Enter_4Byte_AddressMode(void);
-void LT_W25QXX_Read(uint8_t* pBuffer,uint32_t ReadAddr,uint16_t NumByteToRead);
+void LT_W25QXX_Read(uint8_t *pBuffer,
+    uint32_t ReadAddr,
+    uint16_t NumByteToRead);
 
 /* nand flash W25N01GV */
 uint8_t W25N01GV_ReadSR(uint8_t reg);
-void W25N01GV_Write_SR(uint8_t reg,uint8_t val);
+void W25N01GV_Write_SR(uint8_t reg,
+    uint8_t val);
 void W25N01GV_Wait_Busy(void);
 void W25N01GV_ContinuousRead_Mode(void);
 void W25N01GV_Write_Page(uint16_t page);
-void W25N01GV_ReadPageAddr_Data(uint8_t* pBuffer,uint32_t PageNum,uint32_t PageAddr,uint16_t NumByteToRead);
-void LT_W25N01GV_Read(uint8_t* pBuffer,uint32_t ReadAddr,uint16_t NumByteToRead);
+void W25N01GV_ReadPageAddr_Data(uint8_t *pBuffer,
+    uint32_t PageNum,
+    uint32_t PageAddr,
+    uint16_t NumByteToRead);
+void LT_W25N01GV_Read(uint8_t *pBuffer,
+    uint32_t ReadAddr,
+    uint16_t NumByteToRead);
 
-/* nand flash显示图片 */
-void LT768_Nand_Pic(unsigned char SCS,unsigned short X1,unsigned short Y1,unsigned short X_W,unsigned short Y_H,unsigned long Addr,unsigned long lay0,unsigned long lay1);
+/* nand flash draw picture */
+void LT768_Nand_Pic(uint8_t SCS,
+    uint16_t X1,
+    uint16_t Y1,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint32_t Addr,
+    uint32_t lay0,
+    uint32_t lay1);
 
-/* nand flash使用外建字库初始化 */
+/* nand flash use outside font */
 /* 16*16 24*24 32*32 */
-void NandFlash_Select_Outside_Font_Init(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr,unsigned long Num,unsigned char Size,unsigned char XxN,unsigned char YxN,unsigned char ChromaKey,unsigned char Alignment);
+void NandFlash_Select_Outside_Font_Init(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr,
+    uint32_t Num,
+    uint8_t Size,
+    uint8_t XxN,
+    uint8_t YxN,
+    uint8_t ChromaKey,
+    uint8_t Alignment);
 
-/* nand flash使用外建字库 */
-/* 48*48 72*72全角 */
-void LT768_BTE_Memory_Copy_8(unsigned long S0_Addr,unsigned short S0_W,unsigned short XS0,unsigned short YS0,unsigned long S1_Addr,unsigned short S1_W,unsigned short XS1,unsigned short YS1,unsigned long Des_Addr,unsigned short Des_W,unsigned short XDes,unsigned short YDes,unsigned int ROP_Code,unsigned short X_W,unsigned short Y_H);
-void LT768_Nand_8bpp_font(unsigned char SCS,unsigned char Clk,unsigned short X1,unsigned short Y1,unsigned short X_W,unsigned short Y_H,unsigned long Addr,unsigned long lay1,unsigned long lay2);
-void LT768_Print_Outside_Font_GB2312_48_72_Nand(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr1,unsigned long MemoryAddr2,unsigned long ShowAddr,unsigned short width,unsigned char Size,unsigned char ChromaKey,unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned short w,unsigned short s,unsigned char *c);
-void LT768_Print_Outside_Font_GBK_48_72_Nand(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr1,unsigned long MemoryAddr2,unsigned long ShowAddr,unsigned short width,unsigned char Size,unsigned char ChromaKey,unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned short w,unsigned short s,unsigned char *c);
+/* nand flash use outside font */
+/* 48*48 72*72 SBC case */
+void LT768_BTE_Memory_Copy_8(uint32_t S0_Addr,
+    uint16_t S0_W,
+    uint16_t XS0,
+    uint16_t YS0,
+    uint32_t S1_Addr,
+    uint16_t S1_W,
+    uint16_t XS1,
+    uint16_t YS1,
+    uint32_t Des_Addr,
+    uint16_t Des_W,
+    uint16_t XDes,
+    uint16_t YDes,
+    unsigned int ROP_Code,
+    uint16_t X_W,
+    uint16_t Y_H);
+void LT768_Nand_8bpp_font(uint8_t SCS,
+    uint8_t Clk,
+    uint16_t X1,
+    uint16_t Y1,
+    uint16_t X_W,
+    uint16_t Y_H,
+    uint32_t Addr,
+    uint32_t lay1,
+    uint32_t lay2);
+void LT768_Print_Outside_Font_GB2312_48_72_Nand(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr1,
+    uint32_t MemoryAddr2,
+    uint32_t ShowAddr,
+    uint16_t width,
+    uint8_t Size,
+    uint8_t ChromaKey,
+    uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint16_t w,
+    uint16_t s,
+    uint8_t *c);
+void LT768_Print_Outside_Font_GBK_48_72_Nand(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr1,
+    uint32_t MemoryAddr2,
+    uint32_t ShowAddr,
+    uint16_t width,
+    uint8_t Size,
+    uint8_t ChromaKey,
+    uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint16_t w,
+    uint16_t s,
+    uint8_t *c);
 
-/* nand flash使用自定义字库 */
-/* 16*16 24*24 32*32 48*48 72*72全角 */
-void LT768_Print_Outside_UserDefineFont_GB2312_Nand(unsigned char SCS,unsigned char Clk,unsigned long FlashAddr,unsigned long MemoryAddr1,unsigned long MemoryAddr2,unsigned long ShowAddr,unsigned short width,unsigned char Size,unsigned char ChromaKey,unsigned short x,unsigned short y,unsigned long FontColor,unsigned long BackGroundColor,unsigned short w,unsigned short s,unsigned char *c);
+/* nand flash user defined font */
+/* 16*16 24*24 32*32 48*48 72*72 SBC case */
+void LT768_Print_Outside_UserDefineFont_GB2312_Nand(uint8_t SCS,
+    uint8_t Clk,
+    uint32_t FlashAddr,
+    uint32_t MemoryAddr1,
+    uint32_t MemoryAddr2,
+    uint32_t ShowAddr,
+    uint16_t width,
+    uint8_t Size,
+    uint8_t ChromaKey,
+    uint16_t x,
+    uint16_t y,
+    uint32_t FontColor,
+    uint32_t BackGroundColor,
+    uint16_t w,
+    uint16_t s,
+    uint8_t *c);
 #endif
