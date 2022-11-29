@@ -55,7 +55,7 @@ MSH_CMD_EXPORT(CH438_TEST,ch438 test sample);
  *   Test hc08 
  *   use port 2 
  ****************************************************************************/
-void HC08Test(void){
+int HC08Test(void){
 	rt_uint8_t buff2[128]={0};
 	rt_uint8_t time=10;
 	
@@ -85,5 +85,6 @@ void HC08Test(void){
 		rt_thread_mdelay(2000);
 		rt_memset(buff2, 0, 128);
 	 } 
+	 return res;
 }
 MSH_CMD_EXPORT(HC08Test,hc08 test sample);

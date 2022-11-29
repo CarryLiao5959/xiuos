@@ -15,6 +15,7 @@
 #include "netdb.h"
 #include <rtdef.h>
 #include <errno.h>
+#include <string.h>
 
 #define BUFSZ       (2048)
 static int port = 5000;
@@ -139,7 +140,7 @@ static void tcp_server(void *argr)
 
             /* 有接收到数据，把末端清零 */
             recv_data[bytes_received] = '\0';
-            if (strncmp(recv_data, "q", 1) == 0 || strncmp(recv_data, "Q", 1) == 0)
+            if (rt_strncmp(recv_data, "q", 1) == 0 || rt_strncmp(recv_data, "Q", 1) == 0)
             {
                 /* 如果是首字母是q或Q，关闭这个连接 */
                 rt_kprintf("\nGot a 'q' or 'Q', close the connect.\r\n");
@@ -148,7 +149,7 @@ static void tcp_server(void *argr)
                 rt_free(recv_data);
                 break;
             }
-            else if (strcmp(recv_data, "exit") == 0)
+            else if (rt_strcmp(recv_data, "exit") == 0)
             {
                 /* 如果接收的是exit，则关闭整个服务端 */
                 closesocket(connected);

@@ -14,7 +14,7 @@
 #include <wiz_socket.h>    /* 使用BSD socket，需要包含socket.h头文件 */
 #include <netdb.h>
 #include <stdlib.h>
-
+#include <string.h>
 #define BUFSZ   1024
 
 static const char send_data[] = "This is TCP Client from RT-Thread."; /* 发送用到的数据 */

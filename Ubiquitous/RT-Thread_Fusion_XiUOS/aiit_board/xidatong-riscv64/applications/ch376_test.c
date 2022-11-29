@@ -21,6 +21,7 @@
 #include <rtthread.h>
 #include <ch376.h>
 #include <ch376_fs.h>
+#include <string.h>
 
 rt_uint8_t buf[64];
 
