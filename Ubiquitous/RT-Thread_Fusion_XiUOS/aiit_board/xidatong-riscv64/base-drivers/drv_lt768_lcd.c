@@ -16,7 +16,7 @@
 #include "drv_io_config.h"
 #include "drv_lt768_lcd.h"
 #include "sleep.h"
-
+#include <sysctl.h>
 
 #define LCD_XSIZE_TFT   480
 #define LCD_YSIZE_TFT   272
@@ -54,17 +54,33 @@ void LCD_init(void)
 //  LT768_DMA_24bit_Block(1,0,0,0,LCD_XSIZE_TFT,LCD_YSIZE_TFT,LCD_XSIZE_TFT,0x0014C000);
 }
 
+void LCD_udelay(rt_uint64_t usec)
+{
+    if(usec <= 0)
+    {
+        return;
+    }
+    rt_uint64_t cycle = read_cycle();
+    rt_uint64_t nop_all = usec * sysctl_clock_get_freq(SYSCTL_CLOCK_CPU) / 1000000UL;
+    while (1)
+    {
+        if(read_cycle() - cycle >= nop_all)
+            break;
+    }
+    return;
+}
+
 rt_uint8_t LCD_Read_Byte(void)
 {
     rt_uint8_t i,rByte=0;
 
-    gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
     for(i=0;i<8;i++)
     {
-        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_LOW);   usleep(10);//usleep(1);
+        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_LOW);   LCD_udelay(10);//LCD_udelay(1);
         rByte<<=1;
-        rByte|=gpiohs_get_pin(FPIOA_LCD_MISO);          usleep(10);//usleep(1);
-        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+        rByte|=gpiohs_get_pin(FPIOA_LCD_MISO);          LCD_udelay(10);//LCD_udelay(1);
+        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
     }
 
     return rByte;
@@ -76,15 +92,15 @@ void LCD_Send_Byte(rt_uint8_t dt)
 
     for(i=0;i<8;i++)
     {
-        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
         if((dt<<i)&0x80)
             gpiohs_set_pin(FPIOA_LCD_MOSI, GPIO_PV_HIGH);
         else
             gpiohs_set_pin(FPIOA_LCD_MOSI, GPIO_PV_LOW);
-        usleep(10);//usleep(1);
-        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_LOW);   usleep(10);//usleep(1);
+        LCD_udelay(10);//LCD_udelay(1);
+        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_LOW);   LCD_udelay(10);//LCD_udelay(1);
     }
-    gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
 
 }
 
@@ -97,58 +113,58 @@ rt_uint8_t LCD_ReadWriteByte(rt_uint8_t TxData)
 
     for(i=0;i<8;i++)
     {
-        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
         if((TxData<<i)&0x80)
             gpiohs_set_pin(FPIOA_LCD_MOSI, GPIO_PV_HIGH);
         else
             gpiohs_set_pin(FPIOA_LCD_MOSI, GPIO_PV_LOW);
-        usleep(10);//usleep(1);
-        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_LOW);   usleep(10);//usleep(1);
+        LCD_udelay(10);//LCD_udelay(1);
+        gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_LOW);   LCD_udelay(10);//LCD_udelay(1);
 
         rByte<<=1;
         rByte|=gpiohs_get_pin(FPIOA_LCD_MISO);
     }
-    gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_SCLK, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
 
     return rByte;
 }
 
 void LCD_CmdWrite(rt_uint8_t cmd)
 {
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    LCD_udelay(10);//LCD_udelay(1);
     LCD_ReadWriteByte(0x00);
     LCD_ReadWriteByte(cmd);
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
 }
 
 void LCD_DataWrite(rt_uint8_t data)
 {
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    LCD_udelay(10);//LCD_udelay(1);
     LCD_ReadWriteByte(0x80);
     LCD_ReadWriteByte(data);
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
 }
 
 void LCD_DataWrite_Pixel(rt_uint8_t data)
 {
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    LCD_udelay(10);//LCD_udelay(1);
     LCD_ReadWriteByte(0x80);
     LCD_ReadWriteByte(data);
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
 
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    LCD_udelay(10);//LCD_udelay(1);
     LCD_ReadWriteByte(0x80);
     LCD_ReadWriteByte(data>>8);
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
 }
 
 rt_uint8_t LCD_StatusRead(void)
 {
     rt_uint8_t temp = 0;
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    LCD_udelay(10);//LCD_udelay(1);
     LCD_ReadWriteByte(0x40);
     temp = LCD_ReadWriteByte(0xff);
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
     rt_kprintf("%s temp = 0x%x\n",__func__,temp);
     return temp;
 }
@@ -156,10 +172,10 @@ rt_uint8_t LCD_StatusRead(void)
 rt_uint8_t LCD_DataRead(void)
 {
     rt_uint8_t temp = 0;
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_LOW);    LCD_udelay(10);//LCD_udelay(1);
     LCD_ReadWriteByte(0xc0);
     temp = LCD_ReadWriteByte(0xff);
-    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    usleep(10);//usleep(1);
+    gpiohs_set_pin(FPIOA_LCD_NCS, GPIO_PV_HIGH);    LCD_udelay(10);//LCD_udelay(1);
     rt_kprintf("%s temp = 0x%x\n",__func__,temp);
     return temp;
 }

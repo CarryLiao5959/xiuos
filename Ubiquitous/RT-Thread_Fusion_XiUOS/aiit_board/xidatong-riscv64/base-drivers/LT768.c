@@ -189,7 +189,7 @@ void Enable_PLL(void)
 	temp |= cSetb7;
 	LCD_DataWrite(temp);
 
-    usleep(1);//PLL
+    LCD_udelay(1);//PLL
 }
 void LT768_Sleep(void)
 {

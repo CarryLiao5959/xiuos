@@ -52,14 +52,12 @@ int main(void)
     static rt_device_t lcd_dev;
     // Accessing the lcd Device （the first step）
     lcd_dev = rt_device_find("lcd");
-    if (!lcd_dev)
-    {
+    if (!lcd_dev) {
         rt_kprintf("find %s failed!\n", "lcd");
         return RT_ERROR;
     }
 
-    if (rt_device_open(lcd_dev,0) != RT_EOK)
-    {
+    if (rt_device_open(lcd_dev,0) != RT_EOK) {
         lcd_dev = 0;
         rt_kprintf("open %s failed!\n", "lcd");
         return -RT_ERROR;

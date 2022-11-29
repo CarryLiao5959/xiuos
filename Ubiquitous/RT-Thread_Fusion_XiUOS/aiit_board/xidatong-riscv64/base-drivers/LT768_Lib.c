@@ -163,7 +163,7 @@ void LT768_PLL_Initial(void)
 	LCD_DataWrite(lpllN_cclk);
       
 	LCD_CmdWrite(0x00);
-	usleep(1);
+	LCD_udelay(1);
 	LCD_DataWrite(0x80);
 
 	rt_thread_mdelay(1);	

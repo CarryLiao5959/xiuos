@@ -35,7 +35,6 @@ if GetDepend('RT_USING_WDT'):
 
 if GetDepend('BSP_USING_LCD'):
     src += ['drv_lcd.c']
-    src += ['drv_mpylcd.c']
     src += ['drv_lt768_lcd.c']
     src += ['LT768_Lib.c']
     src += ['LT768.c']

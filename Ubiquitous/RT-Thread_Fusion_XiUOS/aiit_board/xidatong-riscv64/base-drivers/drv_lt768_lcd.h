@@ -33,5 +33,6 @@ void LCD_DataWrite(rt_uint8_t data);
 void LCD_DataWrite_Pixel(rt_uint8_t data);
 rt_uint8_t LCD_StatusRead(void);
 rt_uint8_t LCD_DataRead(void);
+void LCD_udelay(rt_uint64_t usec);
 
 #endif

@@ -7,7 +7,6 @@ src     = [
 CPPPATH = [cwd]
 
 if GetDepend('BSP_USING_LCD'):
-    src += ['lcd_test.c']
     src += ['lcd_lt768_test.c']
     
 if GetDepend('PKG_USING_WIZNET'):
