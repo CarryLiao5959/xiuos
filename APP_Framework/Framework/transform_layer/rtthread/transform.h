@@ -73,6 +73,8 @@ typedef signed   int                    int32;
 typedef unsigned char                   uint8;    
 typedef unsigned short                  uint16;    
 typedef unsigned int                    uint32;    
+#define EOK 0
+#define x_err_t int
 
 #ifdef ARCH_CPU_64BIT
 typedef signed long                     int64;    

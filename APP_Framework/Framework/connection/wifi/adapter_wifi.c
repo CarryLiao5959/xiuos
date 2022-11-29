@@ -424,3 +424,130 @@ int AdapterWifiTestWithParam(int argc, char *argv[])
 
 #endif
 
+#ifdef ADD_RTTHREAD_FETURES
+
+enum
+{
+    APT_WIFI_PARAM_IP,
+    APT_WIFI_PARAM_PORT,
+    APT_WIFI_PARAM_SSID,
+    APT_WIFI_PARAM_PWD,
+    APT_WIFI_PARAM_GW,
+    APT_WIFI_PARAM_SERVER,
+    APT_WIFI_PARAM_MASK,
+    APT_WIFI_PARAM_PING,
+    APT_WIFI_PARAM_NUM
+};
+
+#define APT_WIFI_PARAM_LEN 128
+
+char wifi_param[APT_WIFI_PARAM_NUM][APT_WIFI_PARAM_LEN] = {0};
+
+#define CHECK_RET(__func) \
+ret = __func; \
+if(ret != 0){ \
+    printf("%s %d failed\n", __func__, __LINE__); \
+    AdapterDeviceClose(adapter); \
+    free(adapter->adapter_param); \
+    return ret; \
+};
+
+void AdapterWifiGetParam(int argc, char *argv[])
+{
+    int i, j;
+    char *param_str[] = {"ip", "port", "ssid", "pwd", "gw", "server", "mask", "ping"};
+    char *default_str[] =
+    {
+        "192.168.141.34",
+        "12345",
+        "test",
+        "tttttttt",
+        "192.168.141.119",
+        "192.168.141.119",
+        "255.255.255.0",
+        "220.181.38.251"
+    };
+
+    for(i = 0; i < APT_WIFI_PARAM_NUM; i ++)
+    {
+        memset(wifi_param[i], 0, APT_WIFI_PARAM_LEN);
+        strcpy(wifi_param[i], default_str[i]);
+    }
+
+    for(i = 0; i < argc; i ++)
+    {
+        for(j = 0; j < APT_WIFI_PARAM_NUM; j ++)
+        {
+            if(strncmp(argv[i], param_str[j], strlen(param_str[j])) == 0)
+            {
+                printf("wifi %d: %s\n", j, argv[i] + strlen(param_str[j]) + 1);
+                strcpy(wifi_param[j], argv[i] + strlen(param_str[j]) + 1);
+            }
+        }
+    }
+
+    printf("--- wifi parameter ---\n");
+    for(i = 0; i < APT_WIFI_PARAM_NUM; i ++)
+    {
+        printf("%7.7s = %s\n", param_str[i], wifi_param[i]);
+    }
+    printf("----------------------\n");
+}
+
+
+int AdapterWifiTestWithParam(int argc, char *argv[])
+{
+    int i, ret;
+
+    struct Adapter* adapter = AdapterDeviceFindByName(ADAPTER_WIFI_NAME);
+    AdapterWifiGetParam(argc, argv);
+
+    enum NetRoleType net_role = CLIENT;
+    enum IpType ip_type = IPV4;
+
+    adapter->adapter_param = malloc(sizeof(struct WifiParam));
+    memset(adapter->adapter_param, 0, sizeof(struct WifiParam));
+    struct WifiParam *apt_param = (struct WifiParam *)adapter->adapter_param;
+    strcpy(apt_param->wifi_ssid, wifi_param[APT_WIFI_PARAM_SSID]);
+    strcpy(apt_param->wifi_pwd, wifi_param[APT_WIFI_PARAM_PWD]);
+
+	printf("apt %p ssid %p %s\n", apt_param, apt_param->wifi_ssid);
+
+    CHECK_RET(AdapterDeviceOpen(adapter));
+    CHECK_RET(AdapterDeviceSetUp(adapter));
+
+    CHECK_RET(AdapterDeviceSetAddr(adapter, wifi_param[APT_WIFI_PARAM_IP], wifi_param[APT_WIFI_PARAM_GW],
+        wifi_param[APT_WIFI_PARAM_MASK]));
+
+    CHECK_RET(AdapterDeviceNetstat(adapter));
+
+    adapter->socket.protocal = SOCKET_PROTOCOL_TCP;
+    CHECK_RET(AdapterDeviceConnect(adapter, net_role, wifi_param[APT_WIFI_PARAM_SERVER],
+        wifi_param[APT_WIFI_PARAM_PORT], ip_type));
+
+    const char *wifi_msg = "Wifi Test";
+    for(i = 0; i < 10; i++)
+    {
+        AdapterDeviceSend(adapter, wifi_msg, strlen(wifi_msg));
+        PrivTaskDelay(4000);
+    }
+
+    char wifi_recv_msg[APT_WIFI_PARAM_LEN];
+    memset(wifi_recv_msg, 0, APT_WIFI_PARAM_LEN);
+    for(i = 0; i < APT_WIFI_PARAM_NUM; i ++)
+    {
+        AdapterDeviceRecv(adapter, wifi_recv_msg, 128);
+        PrivTaskDelay(1000);
+    }
+
+//    printf("ping %s\n", wifi_param[APT_WIFI_PARAM_PING]);
+//
+//    CHECK_RET(AdapterDevicePing(adapter, wifi_param[APT_WIFI_PARAM_PING]));
+//    AdapterDeviceDisconnect(adapter, NULL);
+    ret = AdapterDeviceClose(adapter);
+	free(adapter->adapter_param);
+    return ret;
+}
+PRIV_SHELL_CMD_FUNCTION(AdapterWifiTestWithParam, a WiFi test sample, PRIV_SHELL_CMD_MAIN_ATTR);
+#endif
+
