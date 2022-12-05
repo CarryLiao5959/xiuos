@@ -39,6 +39,7 @@ extern int Tb600bTvoc10TvocInit(void);
 extern int Tb600bWqHcho1osInit(void);
 extern int QsFxWindDirectionInit(void);
 extern int QsFsWindSpeedInit(void);
+extern int Bmp180AltitudeInit(void);
 
 extern int lv_port_init(void);
 
@@ -135,6 +136,9 @@ static struct InitDesc sensor_desc[] =
 	{ "tvoc_tb600b_wq_hcho1os", Tb600bWqHcho1osInit },
 #endif
 
+#ifdef SENSOR_DEVICE_BMP180 
+	{ "bmp180_altitude_1", Bmp180AltitudeInit },
+#endif
 	{ "NULL", NULL },
 };
 

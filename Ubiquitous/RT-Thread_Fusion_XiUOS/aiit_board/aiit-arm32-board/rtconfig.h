@@ -147,6 +147,13 @@
 
 /* Network interface device */
 
+#define RT_USING_NETDEV
+#define NETDEV_USING_IFCONFIG
+#define NETDEV_USING_PING
+#define NETDEV_USING_NETSTAT
+#define NETDEV_USING_AUTO_DEFAULT
+#define NETDEV_IPV4 1
+#define NETDEV_IPV6 0
 
 /* light weight TCP/IP stack */
 
@@ -173,6 +180,9 @@
 #define BSP_USING_UART1
 #define BSP_USING_UART2
 #define BSP_USING_UART3
+#define BSP_USING_I2C1
+#define BSP_I2C1_SCL_PIN 136
+#define BSP_I2C1_SDA_PIN 137
 #define BSP_USING_USB
 #define BSP_USING_STM32_USBH
 #define USB_BUS_NAME "usb"
@@ -191,12 +201,13 @@
 
 #define TRANSFORM_LAYER_ATTRIUBUTE
 #define ADD_RTTHREAD_FETURES
-#define SUPPORT_CONNECTION_FRAMEWORK
-#define CONNECTION_FRAMEWORK_DEBUG
-#define ADAPTER_HFA21_DRIVER "/dev/uart3"
-#define CONNECTION_ADAPTER_ETHERNET
-#define ADAPTER_HFA21_ETHERNET
-#define ADAPTER_ETHERNET_HFA21 "hfa21_ethernet"
+#define SUPPORT_SENSOR_FRAMEWORK
+#define SENSOR_ALTITUDE
+#define SENSOR_BMP180
+#define SENSOR_DEVICE_BMP180 "bmp180"
+#define SENSOR_QUANTITY_BMP180_ALTITUDE "altitude_1"
+#define SENSOR_DEVICE_BMP180_DEV "/dev/i2c1"
+#define SENSOR_DEVICE_BMP180_I2C_ADDR 0x77
 
 /* Security */
 
@@ -223,9 +234,15 @@
 
 /* sensor app */
 
+#define APPLICATION_SENSOR
+#define APPLICATION_SENSOR_ALTITUDE
+#define APPLICATION_SENSOR_ALTITUDE_BMP180
 
 /* lib */
 
 #define APP_SELECT_NEWLIB
+
+/* LVGL configuration */
+
 
 #endif

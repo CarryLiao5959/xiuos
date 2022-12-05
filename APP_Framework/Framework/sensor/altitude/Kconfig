@@ -27,6 +27,12 @@ config SENSOR_BMP180
                 endif
 
                 if ADD_RTTHREAD_FETURES
-
+                        config SENSOR_DEVICE_BMP180_DEV
+                                string "BMP180 device name"
+                                default "/dev/i2c1_dev0"
+                                
+                        config SENSOR_DEVICE_BMP180_I2C_ADDR
+                                hex "BMP180 device i2c address"
+                                default 0x77
                 endif
         endif
