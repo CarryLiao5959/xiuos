@@ -1434,8 +1434,6 @@ void rt_hw_board_init()
     imxrt_can2_pins_init();
 #endif
 
-<<<<<<< HEAD
-=======
 #ifdef BSP_USING_LCD_XIDATONG
     imxrt_lcd_pins_init();
 #endif
@@ -1444,7 +1442,6 @@ void rt_hw_board_init()
     imxrt_lcd_iic1_init();
 #endif
 
->>>>>>> originFork/dev
 #if defined(RT_USING_CONSOLE) && defined(RT_USING_DEVICE)
     rt_console_set_device(RT_CONSOLE_DEVICE_NAME);
 #endif
