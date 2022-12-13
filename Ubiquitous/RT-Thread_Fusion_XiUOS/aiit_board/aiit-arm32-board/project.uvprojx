@@ -10,7 +10,7 @@
       <TargetName>rt-thread</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -404,9 +404,9 @@
           <GroupName>CPU</GroupName>
           <Files>
             <File>
-              <FileName>backtrace.c</FileName>
+              <FileName>showmem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\libcpu\arm\common\backtrace.c</FilePath>
+              <FilePath>..\..\rt-thread\libcpu\arm\common\showmem.c</FilePath>
             </File>
             <File>
               <FileName>div0.c</FileName>
@@ -414,9 +414,9 @@
               <FilePath>..\..\rt-thread\libcpu\arm\common\div0.c</FilePath>
             </File>
             <File>
-              <FileName>showmem.c</FileName>
+              <FileName>backtrace.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\libcpu\arm\common\showmem.c</FilePath>
+              <FilePath>..\..\rt-thread\libcpu\arm\common\backtrace.c</FilePath>
             </File>
             <File>
               <FileName>context_rvds.S</FileName>
@@ -478,7 +478,7 @@
                   <MiscControls> --c99</MiscControls>
                   <Define> </Define>
                   <Undefine> </Undefine>
-                  <IncludePath></IncludePath>
+                  <IncludePath> </IncludePath>
                 </VariousControls>
               </Cads>
               <Aads>
@@ -563,14 +563,9 @@
               <FilePath>..\..\rt-thread\components\drivers\spi\spi_flash_sfud.c</FilePath>
             </File>
             <File>
-              <FileName>ringblk_buf.c</FileName>
+              <FileName>pipe.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\src\ringblk_buf.c</FilePath>
-            </File>
-            <File>
-              <FileName>waitqueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\src\waitqueue.c</FilePath>
+              <FilePath>..\..\rt-thread\components\drivers\src\pipe.c</FilePath>
             </File>
             <File>
               <FileName>completion.c</FileName>
@@ -578,9 +573,14 @@
               <FilePath>..\..\rt-thread\components\drivers\src\completion.c</FilePath>
             </File>
             <File>
-              <FileName>pipe.c</FileName>
+              <FileName>ringbuffer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\src\pipe.c</FilePath>
+              <FilePath>..\..\rt-thread\components\drivers\src\ringbuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>waitqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\drivers\src\waitqueue.c</FilePath>
             </File>
             <File>
               <FileName>dataqueue.c</FileName>
@@ -593,9 +593,9 @@
               <FilePath>..\..\rt-thread\components\drivers\src\workqueue.c</FilePath>
             </File>
             <File>
-              <FileName>ringbuffer.c</FileName>
+              <FileName>ringblk_buf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\src\ringbuffer.c</FilePath>
+              <FilePath>..\..\rt-thread\components\drivers\src\ringblk_buf.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -708,14 +708,14 @@
               <FilePath>..\..\rt-thread\components\dfs\filesystems\elmfat\dfs_elm.c</FilePath>
             </File>
             <File>
-              <FileName>dfs_romfs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\dfs\filesystems\romfs\dfs_romfs.c</FilePath>
-            </File>
-            <File>
               <FileName>romfs.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\dfs\filesystems\romfs\romfs.c</FilePath>
+            </File>
+            <File>
+              <FileName>dfs_romfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\dfs\filesystems\romfs\dfs_romfs.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -748,14 +748,9 @@
           <GroupName>Kernel</GroupName>
           <Files>
             <File>
-              <FileName>mempool.c</FileName>
+              <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\mempool.c</FilePath>
-            </File>
-            <File>
-              <FileName>device.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\device.c</FilePath>
+              <FilePath>..\..\rt-thread\src\clock.c</FilePath>
             </File>
             <File>
               <FileName>object.c</FileName>
@@ -763,44 +758,9 @@
               <FilePath>..\..\rt-thread\src\object.c</FilePath>
             </File>
             <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>kservice.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\kservice.c</FilePath>
-            </File>
-            <File>
-              <FileName>thread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\thread.c</FilePath>
-            </File>
-            <File>
-              <FileName>idle.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\idle.c</FilePath>
-            </File>
-            <File>
               <FileName>ipc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\src\ipc.c</FilePath>
-            </File>
-            <File>
-              <FileName>memheap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\memheap.c</FilePath>
-            </File>
-            <File>
-              <FileName>scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\clock.c</FilePath>
             </File>
             <File>
               <FileName>components.c</FileName>
@@ -808,9 +768,49 @@
               <FilePath>..\..\rt-thread\src\components.c</FilePath>
             </File>
             <File>
+              <FileName>thread.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\thread.c</FilePath>
+            </File>
+            <File>
+              <FileName>scheduler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\scheduler.c</FilePath>
+            </File>
+            <File>
               <FileName>irq.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\src\irq.c</FilePath>
+            </File>
+            <File>
+              <FileName>kservice.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\kservice.c</FilePath>
+            </File>
+            <File>
+              <FileName>device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\device.c</FilePath>
+            </File>
+            <File>
+              <FileName>memheap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\memheap.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>mempool.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\mempool.c</FilePath>
+            </File>
+            <File>
+              <FileName>idle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\idle.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -818,9 +818,9 @@
           <GroupName>libc</GroupName>
           <Files>
             <File>
-              <FileName>syscalls.c</FileName>
+              <FileName>libc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\compilers\armlibc\syscalls.c</FilePath>
+              <FilePath>..\..\rt-thread\components\libc\compilers\armlibc\libc.c</FilePath>
             </File>
             <File>
               <FileName>mem_std.c</FileName>
@@ -828,9 +828,9 @@
               <FilePath>..\..\rt-thread\components\libc\compilers\armlibc\mem_std.c</FilePath>
             </File>
             <File>
-              <FileName>libc.c</FileName>
+              <FileName>syscalls.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\compilers\armlibc\libc.c</FilePath>
+              <FilePath>..\..\rt-thread\components\libc\compilers\armlibc\syscalls.c</FilePath>
             </File>
             <File>
               <FileName>stdio.c</FileName>
@@ -843,11 +843,6 @@
               <FilePath>..\..\rt-thread\components\libc\compilers\common\stdlib.c</FilePath>
             </File>
             <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\compilers\common\delay.c</FilePath>
-            </File>
-            <File>
               <FileName>time.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\libc\compilers\common\time.c</FilePath>
@@ -858,44 +853,9 @@
               <FilePath>..\..\rt-thread\components\libc\compilers\common\unistd.c</FilePath>
             </File>
             <File>
-              <FileName>semaphore.c</FileName>
+              <FileName>delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\semaphore.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread_spin.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_spin.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread_rwlock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_rwlock.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread_barrier.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_barrier.c</FilePath>
-            </File>
-            <File>
-              <FileName>mqueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\mqueue.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread_attr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_attr.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread_mutex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_mutex.c</FilePath>
+              <FilePath>..\..\rt-thread\components\libc\compilers\common\delay.c</FilePath>
             </File>
             <File>
               <FileName>pthread_tls.c</FileName>
@@ -903,14 +863,54 @@
               <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_tls.c</FilePath>
             </File>
             <File>
-              <FileName>pthread_cond.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_cond.c</FilePath>
-            </File>
-            <File>
               <FileName>sched.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\libc\posix\pthreads\sched.c</FilePath>
+            </File>
+            <File>
+              <FileName>mqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\mqueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread_attr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_attr.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread_spin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_spin.c</FilePath>
+            </File>
+            <File>
+              <FileName>semaphore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\semaphore.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread_rwlock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_rwlock.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread_barrier.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_barrier.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread_mutex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_mutex.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread_cond.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_cond.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1075,12 +1075,12 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>sensor altitude bmp180</GroupName>
+          <GroupName>sensor ch4 as830</GroupName>
           <Files>
             <File>
-              <FileName>bmp180.c</FileName>
+              <FileName>as830.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\APP_Framework\Framework\sensor\altitude\bmp180\bmp180.c</FilePath>
+              <FilePath>..\..\..\..\APP_Framework\Framework\sensor\ch4\as830\as830.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1088,9 +1088,9 @@
           <GroupName>sensor_app</GroupName>
           <Files>
             <File>
-              <FileName>altitude_bmp180.c</FileName>
+              <FileName>ch4_as830.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\APP_Framework\Applications\sensor_app\altitude_bmp180.c</FilePath>
+              <FilePath>..\..\..\..\APP_Framework\Applications\sensor_app\ch4_as830.c</FilePath>
             </File>
           </Files>
         </Group>

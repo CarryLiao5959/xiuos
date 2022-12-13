@@ -34,7 +34,6 @@
 
 #define LED0_PIN    GET_PIN(G, 15)
 extern int FrameworkInit();
-extern int AltitudeBmp180();
 int main(void)
 {
      int count = 1;
@@ -44,7 +43,13 @@ int main(void)
      printf("XIUOS stm32f4 build %s %s\n",__DATE__,__TIME__);        
 
     #ifdef APPLICATION_SENSOR_ALTITUDE_BMP180   
+    extern int AltitudeBmp180();
     AltitudeBmp180();
+    #endif
+
+    #ifdef APPLICATION_SENSOR_CH4_AS830
+    extern void Ch4As830();
+    Ch4As830();
     #endif
 
      while (count++)
