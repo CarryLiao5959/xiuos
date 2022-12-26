@@ -261,8 +261,8 @@ rt_uint8_t  CH438UARTRcv( rt_uint8_t	ext_uart_no, rt_uint8_t* buf );
 
 static void CH438_set_output(void);
 static void CH438_set_input(void);
-static void WriteCH438Data( rt_uint8_t addr, rt_uint8_t dat);
-static void WriteCH438Block( rt_uint8_t mAddr, rt_uint8_t mLen, rt_uint8_t *mBuf );
+static void WriteCH438Data( rt_uint8_t addr, char dat);
+static void WriteCH438Block( rt_uint8_t mAddr, rt_uint8_t mLen, char *mBuf );
 
 int rt_hw_ch438_init(void);
 void CH438_RegTEST(rt_uint8_t num);

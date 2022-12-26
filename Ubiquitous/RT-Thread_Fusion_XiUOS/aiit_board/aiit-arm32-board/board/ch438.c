@@ -185,7 +185,7 @@ rt_uint8_t ReadCH438Data( rt_uint8_t addr )
     return dat;
 }
 
-static void WriteCH438Data( rt_uint8_t addr, rt_uint8_t dat )
+static void WriteCH438Data( rt_uint8_t addr, char dat )
 {
     rt_pin_write(CH438_ALE_PIN, PIN_HIGH);
     rt_pin_write(CH438_NWR_PIN, PIN_HIGH);
@@ -235,7 +235,7 @@ static void WriteCH438Data( rt_uint8_t addr, rt_uint8_t dat )
     return;
 }
 
-static void WriteCH438Block( rt_uint8_t mAddr, rt_uint8_t mLen, rt_uint8_t *mBuf )   
+static void WriteCH438Block( rt_uint8_t mAddr, rt_uint8_t mLen, char *mBuf )   
 {
     while ( mLen -- ) {
         WriteCH438Data( mAddr, *mBuf++ );
@@ -246,7 +246,6 @@ static void CH438Irq(void *parameter)
 {
     rt_uint8_t gInterruptStatus;
     rt_uint8_t port = 0;
-    struct rt_serial_device *serial = (struct rt_serial_device *)parameter;
     /* multi irq may happen*/
     gInterruptStatus = ReadCH438Data(REG_SSR_ADDR);
     port = log(gInterruptStatus & 0xFF)/log(2);
@@ -265,7 +264,6 @@ static rt_err_t rt_extuart_configure(struct rt_serial_device *serial, struct ser
 
 static rt_err_t extuart_control(struct rt_serial_device *serial, int cmd, void *arg)
 {
-    rt_uint16_t ext_uart_no = serial->config.reserved;
     static rt_uint16_t register_flag = 0;
 
     switch (cmd)
@@ -278,7 +276,7 @@ static rt_err_t extuart_control(struct rt_serial_device *serial, int cmd, void *
         }
         break;
     case RT_DEVICE_CTRL_SET_INT:
-		    if(0 == register_flag)
+        if(0 == register_flag)
         { 
             rt_pin_mode(CH438_INT_PIN, PIN_MODE_INPUT_PULLUP);
             rt_pin_attach_irq(CH438_INT_PIN, PIN_IRQ_MODE_FALLING, CH438Irq, (void *)serial);
@@ -290,7 +288,7 @@ static rt_err_t extuart_control(struct rt_serial_device *serial, int cmd, void *
     return (RT_EOK);
 }
 
-static void drv_extuart_putc(struct rt_serial_device *serial, char c)
+static int drv_extuart_putc(struct rt_serial_device *serial, char c)
 {
     rt_uint16_t ext_uart_no = serial->config.reserved;
     rt_uint8_t	REG_LSR_ADDR,REG_THR_ADDR;
@@ -309,22 +307,34 @@ static void drv_extuart_putc(struct rt_serial_device *serial, char c)
 		rt_thread_mdelay(20);
 	} 
 
-    rt_thread_mdelay(1);	
+    rt_thread_mdelay(5);	
     if((ReadCH438Data( REG_LSR_ADDR ) & BIT_LSR_TEMT) != 0)
     {
-      WriteCH438Block( REG_THR_ADDR, 1, &c );
-    } 
-
-    if (2 == ext_uart_no) {
-		rt_thread_mdelay(20);
-		set_485_input(2);
-	} else if (3 == ext_uart_no) {
-		rt_thread_mdelay(20);
-		set_485_input(1);
-	} else if (7 == ext_uart_no) {
-		rt_thread_mdelay(20);
-		set_485_input(3);
-	} 
+        WriteCH438Block( REG_THR_ADDR, 1, &c );
+        if (2 == ext_uart_no) {
+            rt_thread_mdelay(20);
+            set_485_input(2);
+        } else if (3 == ext_uart_no) {
+            rt_thread_mdelay(20);
+            set_485_input(1);
+        } else if (7 == ext_uart_no) {
+            rt_thread_mdelay(20);
+            set_485_input(3);
+        }
+        return 1;
+    } else {
+        if (2 == ext_uart_no) {
+            rt_thread_mdelay(20);
+            set_485_input(2);
+        } else if (3 == ext_uart_no) {
+            rt_thread_mdelay(20);
+            set_485_input(1);
+        } else if (7 == ext_uart_no) {
+            rt_thread_mdelay(20);
+            set_485_input(3);
+        } 
+        return 0;
+    }
 }
 
 static int drv_extuart_getc(struct rt_serial_device *serial)
@@ -336,12 +346,12 @@ static int drv_extuart_getc(struct rt_serial_device *serial)
     REG_LSR_ADDR = offsetadd[ext_uart_no] | REG_LSR0_ADDR;
     REG_RBR_ADDR = offsetadd[ext_uart_no] | REG_RBR0_ADDR;
 
-    rt_thread_mdelay(1);
+    rt_thread_mdelay(5);
     if((ReadCH438Data(REG_LSR_ADDR) & BIT_LSR_DATARDY) == 0x01)
     {
       dat = ReadCH438Data( REG_RBR_ADDR );
-      if(dat >= 0)
-        return dat;
+      if(dat >= 0) return dat;
+      else return -1;
     } else {
       return -1;
     }
@@ -512,6 +522,7 @@ int rt_hw_ch438_init(void)
 }
 INIT_DEVICE_EXPORT(rt_hw_ch438_init);
 
+
 /* Test CH438 register */
 void CH438_RegTEST(rt_uint8_t num)
 {
@@ -549,10 +560,10 @@ void CH438_RegsTEST(rt_uint8_t num)
 }
 MSH_CMD_EXPORT(CH438_RegsTEST, CH438_RegsTEST all);
 
+
+/* Test CH438 extended uart */
 #define CH438_DEVICE_NAME    "ch438"
-static struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;  
 static rt_device_t serial6;
-static rt_device_t serial7;
 
 int CH438_TEST_UART6(void) {
     rt_uint8_t buff[64]={0};
@@ -577,8 +588,7 @@ int CH438_TEST_UART6(void) {
 		rt_device_write(serial6, 0 , str, sizeof(str));
 		size=rt_device_read(serial6, 0, buff, (sizeof(buff)));
 		rt_kprintf("receving size = %d\n",size);
-		for(i=0; i<size; ++i)
-		{
+		for(i=0; i<size; ++i) {
 			rt_kprintf("ch=%c\n",buff[i]);
 		}
 		rt_thread_mdelay(1000);
