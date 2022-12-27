@@ -57,6 +57,13 @@ int main(void)
     TvocTb600bTvoc10();
     #endif
 
+    #ifdef APPLICATION_SENSOR_CO2_G8S
+    extern void Co2G8s();
+    printf("Waiting for Co2G8s to start...\n");
+    rt_thread_mdelay(9000);
+    Co2G8s();
+    #endif
+
      while (count++)
     {
         rt_pin_write(LED0_PIN, PIN_HIGH);
