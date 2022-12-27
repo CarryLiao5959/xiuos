@@ -184,7 +184,7 @@ static int32_t QuantityRead(struct SensorQuantity *quant)
                 RhH = ((unsigned int)((quant->sdev->buffer[10] << 8)|quant->sdev->buffer[11]))/100;
                 RhL = ((unsigned int)((quant->sdev->buffer[10] << 8)|quant->sdev->buffer[11]))%100;
 
-                printf("tvoc concentration is : %dug/m³(%dppb)\nThe temperature is : %d.%d℃\nThe humidity is : %d.%drh%%\n", ugm3, ppb, TH, TL, RhH, RhL);
+                printf("tvoc concentration is : %dug/m³(%dppb)\nThe temperature is : %d.%d℃ \nThe humidity is : %d.%drh%% \n", ugm3, ppb, TH, TL, RhH, RhL);
                 return ppb;
             }
             else

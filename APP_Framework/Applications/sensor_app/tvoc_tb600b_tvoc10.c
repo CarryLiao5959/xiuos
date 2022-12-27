@@ -29,9 +29,11 @@ void TvocTb600bTvoc10(void)
     struct SensorQuantity *tvoc = SensorQuantityFind(SENSOR_QUANTITY_TB600B_TVOC, SENSOR_QUANTITY_TVOC);
     SensorQuantityOpen(tvoc);
     int32_t result = 0;
-
-    result = SensorQuantityReadValue(tvoc);
-
-    printf("tvoc concentration is : %dppb\n", result);
+    PrivTaskDelay(1000);
+    for (int i = 0; i < 3; i ++) {
+        PrivTaskDelay(1000);
+        result = SensorQuantityReadValue(tvoc);
+        printf("tvoc concentration is : %dppb\n", result);  
+    }
     SensorQuantityClose(tvoc);
 }

@@ -33,7 +33,7 @@
 #endif
 
 #define LED0_PIN    GET_PIN(G, 15)
-extern int FrameworkInit();
+extern int FrameworkInit(void);
 int main(void)
 {
      int count = 1;
@@ -50,6 +50,11 @@ int main(void)
     #ifdef APPLICATION_SENSOR_CH4_AS830
     extern void Ch4As830();
     Ch4As830();
+    #endif
+
+    #ifdef APPLICATION_SENSOR_TVOC_TB600B_TVOC10
+    extern void TvocTb600bTvoc10();
+    TvocTb600bTvoc10();
     #endif
 
      while (count++)

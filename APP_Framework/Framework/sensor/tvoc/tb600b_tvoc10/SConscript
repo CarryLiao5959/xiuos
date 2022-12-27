@@ -1,0 +1,10 @@
+from building import *
+import os
+
+cwd = GetCurrentDir()
+src = []
+if GetDepend(['SENSOR_TB600B_TVOC10']):
+    src += ['tb600b_tvoc10.c']
+group = DefineGroup('sensor TVOC10 TB600B', src, depend = [], CPPPATH = [cwd])
+
+Return('group')

@@ -21,6 +21,8 @@ if GetDepend(['APPLICATION_SENSOR_HCHO']):
     SOURCES = ['hcho_tb600b_wq_hcho1os.c'] + SOURCES
 if GetDepend(['APPLICATION_SENSOR_ALTITUDE_BMP180']):
     SOURCES = ['altitude_bmp180.c'] + SOURCES
+if GetDepend(['APPLICATION_SENSOR_TVOC_TB600B_TVOC10']):
+    SOURCES = ['tvoc_tb600b_tvoc10.c'] + SOURCES
 path =  [cwd]
 objs = DefineGroup('sensor_app', src = SOURCES, depend = DEPENDS,CPPPATH = path) 
 Return("objs") 
