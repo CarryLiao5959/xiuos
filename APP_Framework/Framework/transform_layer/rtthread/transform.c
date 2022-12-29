@@ -187,6 +187,16 @@ static int PrivPinIoctl(int fd, int cmd, void *args)
     return ioctl(fd, cmd, pin_cfg);
 }
 
+static int PrivI2cIoctl(int fd, int cmd, void *args)
+{
+    struct dfs_fd *rt_fd;
+    int ret = 0;
+    rt_fd = fd_get(fd);
+    rt_fd->pos = *(off_t *)args;
+    // ret =  rt_fd->fops->ioctl(rt_fd, RT_I2C_DEV_CTRL_ADDR, args);
+    return ret; 
+}
+
 int PrivIoctl(int fd, int cmd, void *args)
 {
     int ret;
@@ -199,6 +209,9 @@ int PrivIoctl(int fd, int cmd, void *args)
         break;
     case PIN_TYPE:
         ret = PrivPinIoctl(fd, cmd, ioctl_cfg->args);
+        break;
+    case I2C_TYPE:
+        ret = PrivI2cIoctl(fd, cmd, ioctl_cfg->args);
         break;
     default:
         break;

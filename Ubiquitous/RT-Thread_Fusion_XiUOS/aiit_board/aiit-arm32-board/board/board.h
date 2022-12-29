@@ -40,6 +40,9 @@ extern int __bss_end;
 
 #define HEAP_END        STM32_SRAM_END
 
+#define BSP_I2C1_SCL_PIN    GET_PIN(B,6)
+#define BSP_I2C1_SDA_PIN    GET_PIN(B,7)
+
 void SystemClock_Config(void);
 
 #ifdef __cplusplus
