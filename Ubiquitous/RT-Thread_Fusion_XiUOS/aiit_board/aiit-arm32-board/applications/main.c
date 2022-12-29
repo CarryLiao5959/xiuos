@@ -64,6 +64,16 @@ int main(void)
     Co2G8s();
     #endif
 
+    #ifdef APPLICATION_SENSOR_TEMPERATURE_HS300X
+    extern void TempHs300x();
+    TempHs300x();
+    #endif
+
+    #ifdef APPLICATION_SENSOR_HUMIDITY_HS300X
+    extern void HumiHs300x();
+    HumiHs300x();
+    #endif
+    
      while (count++)
     {
         rt_pin_write(LED0_PIN, PIN_HIGH);

@@ -181,8 +181,6 @@
 #define BSP_USING_UART2
 #define BSP_USING_UART3
 #define BSP_USING_I2C1
-#define BSP_I2C1_SCL_PIN 136
-#define BSP_I2C1_SDA_PIN 137
 #define BSP_USING_USB
 #define BSP_USING_STM32_USBH
 #define USB_BUS_NAME "usb"

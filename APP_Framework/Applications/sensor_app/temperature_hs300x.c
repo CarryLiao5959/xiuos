@@ -30,14 +30,14 @@ void TempHs300x(void)
     int32_t temperature;
     struct SensorQuantity *temp = SensorQuantityFind(SENSOR_QUANTITY_HS300X_TEMPERATURE, SENSOR_QUANTITY_TEMP);
     SensorQuantityOpen(temp);
-    for (i = 0; i < 100; i ++) {
+    for (i = 0; i < 5; i ++) {
         temperature = SensorQuantityReadValue(temp);
         if (temperature > 0)
-            printf("Temperature : %d.%d ℃\n", temperature/10, temperature%10);
+            printf("Temperature : %d.%d ℃ \n", temperature/10, temperature%10);
         else
-            printf("Temperature : %d.%d ℃\n", temperature/10, -temperature%10);
+            printf("Temperature : %d.%d ℃ \n", temperature/10, -temperature%10);
 
-        PrivTaskDelay(5000);
+        PrivTaskDelay(500);
     }
 
     SensorQuantityClose(temp);
