@@ -24,16 +24,20 @@
 static struct SensorDevice bmp180;
 
 typedef struct {
-    int8_t ac_data[3];
-    uint8_t unsigned_ac_data[3];
-    int8_t b_data[2];
-    int8_t m_data[3];
+    int16 ac_data[3];
+    uint16 unsigned_ac_data[3];
+    int16 b_data[2];
+    int16 m_data[3];
 }Bmp180RegData;
 
 static Bmp180RegData bmp180_reg_data;
 
 const static unsigned char OSS = 0;  // Oversampling Setting
 static long CalTemp_data = 0;
+
+// I2c configuration
+uint16_t i2c_dev_addr = SENSOR_DEVICE_BMP180_I2C_ADDR;
+struct PrivIoctlCfg ioctl_cfg;
 
 static struct SensorProductInfo info =
 {
@@ -50,7 +54,6 @@ static struct SensorProductInfo info =
 static int SensorDeviceOpen(struct SensorDevice *sdev)
 {
     int result;
-    uint16_t i2c_dev_addr = SENSOR_DEVICE_BMP180_I2C_ADDR;
     
     sdev->fd = PrivOpen(SENSOR_DEVICE_BMP180_DEV, O_RDWR);
     if (sdev->fd < 0) {
@@ -58,7 +61,6 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
         return -1;
     }
 
-    struct PrivIoctlCfg ioctl_cfg;
     ioctl_cfg.ioctl_driver_type = I2C_TYPE;
     ioctl_cfg.args = &i2c_dev_addr;
     result = PrivIoctl(sdev->fd, OPE_INT, &ioctl_cfg);
@@ -74,6 +76,11 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
  */
 static int SensorDeviceWrite(struct SensorDevice *sdev, const void *buf, size_t len)
 {
+#ifdef ADD_RTTHREAD_FETURES
+    ioctl_cfg.ioctl_driver_type = I2C_TYPE;
+    ioctl_cfg.args = &i2c_dev_addr;
+    PrivIoctl(sdev->fd, OPE_INT, &ioctl_cfg);
+#endif
     if (PrivWrite(sdev->fd, buf, len) < 0)
         return -1;
 
@@ -88,6 +95,11 @@ static int SensorDeviceWrite(struct SensorDevice *sdev, const void *buf, size_t 
  */
 static int SensorDeviceRead(struct SensorDevice *sdev, size_t len)
 {
+#ifdef ADD_RTTHREAD_FETURES
+    ioctl_cfg.ioctl_driver_type = I2C_TYPE;
+    ioctl_cfg.args = &i2c_dev_addr;
+    PrivIoctl(sdev->fd, OPE_INT, &ioctl_cfg);
+#endif
     //Read i2c device data from i2c device address
     if (PrivRead(sdev->fd, sdev->buffer, len) < 0)
         return -1;
@@ -158,7 +170,7 @@ static uint16_t SensorDeviceBmp180ReadUT(struct SensorDevice *sdev)
         printf("SensorDeviceBmp180ReadUT write reg 0xF4 error. return 0x0\n");
         return 0;
     }
-
+    PrivTaskDelay(5);
     return SensorDeviceBmp180ReadRegs(sdev, 0xF6);
 }
 
@@ -176,7 +188,7 @@ static uint16_t SensorDeviceBmp180ReadUP(struct SensorDevice *sdev)
         printf("SensorDeviceBmp180ReadUP write reg 0xF4 error. return 0x0\n");
         return 0;
     }
-
+    PrivTaskDelay(5);
     return SensorDeviceBmp180ReadRegs(sdev, 0xF6);
 }
 
@@ -281,6 +293,9 @@ static int32_t ReadAltitude(struct SensorQuantity *quant)
             bmp180_temperature = SensorDeviceBmp180CalTemp(quant->sdev, ut, &bmp180_reg_data);
             bmp180_pressure = SensorDeviceBmp180CalPressure(quant->sdev, up, &bmp180_reg_data);
             bmp180_aititude = SensorDeviceBmp180CalAltitude(bmp180_pressure);
+            printf("Bmp180 temperature is : %.2f ℃ \n",bmp180_temperature);
+            printf("Bmp180 pressure = %.2f Pa\n",bmp180_pressure);
+            printf("Bmp180 aititude = %.2f m\n",bmp180_aititude);
 
             return (int32_t)bmp180_pressure;
         }
@@ -317,6 +332,3 @@ int Bmp180AltitudeInit(void)
 
     return 0;
 }
-
-
-
