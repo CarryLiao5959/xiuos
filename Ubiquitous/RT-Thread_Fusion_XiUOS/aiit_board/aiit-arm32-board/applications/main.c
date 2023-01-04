@@ -73,7 +73,14 @@ int main(void)
     extern void HumiHs300x();
     HumiHs300x();
     #endif
-    
+
+    #ifdef APPLICATION_SENSOR_HCHO_TB600B_WQ_HCHO1OS
+    extern void HchoTb600bHcho1os();
+    printf("Waiting for HchoTb600bHcho1os to start...\n");
+    rt_thread_mdelay(10000);
+    HchoTb600bHcho1os();
+    #endif
+
      while (count++)
     {
         rt_pin_write(LED0_PIN, PIN_HIGH);

@@ -29,9 +29,10 @@ void HchoTb600bHcho1os(void)
     struct SensorQuantity *hcho = SensorQuantityFind(SENSOR_QUANTITY_TB600B_HCHO, SENSOR_QUANTITY_HCHO);
     SensorQuantityOpen(hcho);
     int32_t result = 0;
-
-    result = SensorQuantityReadValue(hcho);
-
-    printf("tvoc concentration is : %dppb\n", result);
+    for (int i = 0; i < 5; i ++) {
+        PrivTaskDelay(1000);
+        result = SensorQuantityReadValue(hcho);
+        printf("tvoc concentration is : %dppb\n", result); 
+    }    
     SensorQuantityClose(hcho);
 }

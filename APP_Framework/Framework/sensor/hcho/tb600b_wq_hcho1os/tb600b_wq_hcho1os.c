@@ -142,7 +142,7 @@ static uint8_t getCheckSum(uint8_t *packet)
 {
     uint8_t i;
     uint8_t checksum = 0;
-    for( i = 1; i < 12; i++)
+    for( i = 1; i < 8; i++)
     {
         checksum += packet[i];
     }
