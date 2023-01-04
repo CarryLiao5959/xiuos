@@ -29,9 +29,10 @@ void IaqTb600bIaq10(void)
     struct SensorQuantity *iaq = SensorQuantityFind(SENSOR_QUANTITY_TB600B_IAQ, SENSOR_QUANTITY_IAQ);
     SensorQuantityOpen(iaq);
     int32_t result = 0;
-
-    result = SensorQuantityReadValue(iaq);
-
-    printf("Gas concentration is : %dppb\n", result);
+    for (int i = 0; i < 5; i ++) {
+        PrivTaskDelay(1000);
+        result = SensorQuantityReadValue(iaq);
+        printf("Gas concentration is : %dppb\n", result);
+    }
     SensorQuantityClose(iaq);
 }

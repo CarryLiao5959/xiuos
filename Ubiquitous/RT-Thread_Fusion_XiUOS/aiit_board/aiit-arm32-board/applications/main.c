@@ -81,6 +81,13 @@ int main(void)
     HchoTb600bHcho1os();
     #endif
 
+    #ifdef APPLICATION_SENSOR_IAQ_TB600B_IAQ10
+    extern void IaqTb600bIaq10();
+    printf("Waiting for IaqTb600bIaq10 to start...\n");
+    rt_thread_mdelay(9000);
+    IaqTb600bIaq10();
+    #endif
+
      while (count++)
     {
         rt_pin_write(LED0_PIN, PIN_HIGH);

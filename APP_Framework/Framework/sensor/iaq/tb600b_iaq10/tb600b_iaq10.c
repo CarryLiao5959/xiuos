@@ -192,7 +192,7 @@ static int32_t QuantityRead(struct SensorQuantity *quant)
                 result.TL = ((int)((quant->sdev->buffer[8] << 8)|quant->sdev->buffer[9]))%100;
                 result.RhH = ((unsigned int)((quant->sdev->buffer[10] << 8)|quant->sdev->buffer[11]))/100;
                 result.RhL = ((unsigned int)((quant->sdev->buffer[10] << 8)|quant->sdev->buffer[11]))%100;
-                printf("Gas concentration is : %dppb\nThe temperature is : %d.%d℃\nThe humidity is : %d.%drh%%\n", result.gas, result.TH, result.TL, result.RhH, result.RhL);
+                printf("Gas concentration is : %dppb\nThe temperature is : %d.%d℃ \nThe humidity is : %d.%drh%%\n", result.gas, result.TH, result.TL, result.RhH, result.RhL);
                 return result.gas;
             }
             else
