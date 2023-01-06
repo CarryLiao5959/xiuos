@@ -78,12 +78,18 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     cfg.port_configure = PORT_CFG_INIT;
 #endif
 
-    result = PrivIoctl(sdev->fd, OPE_INT, &cfg);
+    struct PrivIoctlCfg ioctl_cfg;
+    ioctl_cfg.ioctl_driver_type = SERIAL_TYPE;
+    ioctl_cfg.args = &cfg;
+    result = PrivIoctl(sdev->fd, OPE_INT, &ioctl_cfg);
 
+#ifdef ADD_RTTHREAD_FETURES
+    return result;
+#else
     PrivTaskCreate(&active_task_id, NULL, &ReadTask, sdev);
     PrivTaskStartup(&active_task_id);
-
     return result;
+#endif
 }
 
 /**
@@ -93,8 +99,12 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
  */
 static int SensorDeviceClose(struct SensorDevice *sdev)
 {
+#ifdef ADD_RTTHREAD_FETURES
+    PrivMutexDelete(&buff_lock);
+#else
     PrivTaskDelete(active_task_id, 0);
     PrivMutexDelete(&buff_lock);
+#endif
     return 0;
 }
 
@@ -172,6 +182,16 @@ static int32_t ReadPm1_0(struct SensorQuantity *quant)
 
     uint32_t result;
     if (quant->sdev->done->read != NULL) {
+    #ifdef ADD_RTTHREAD_FETURES
+        uint32_t len = 0;
+        PrivMutexObtain(&buff_lock);
+        len = quant->sdev->done->read(quant->sdev, 32);
+        if (len == 0) {
+            printf("error read data length = 0.\n");
+            return -1;
+        }
+        PrivMutexAbandon(&buff_lock);
+    #endif
         uint16_t checksum = 0;
         PrivMutexObtain(&buff_lock);
 
@@ -239,10 +259,20 @@ static int32_t ReadPm2_5(struct SensorQuantity *quant)
 
     uint32_t result;
     if (quant->sdev->done->read != NULL) {
+    #ifdef ADD_RTTHREAD_FETURES
+        uint32_t len = 0;
+        PrivMutexObtain(&buff_lock);
+        len = quant->sdev->done->read(quant->sdev, 32);
+        if (len == 0) {
+            printf("error read data length = 0.\n");
+            return -1;
+        }
+        PrivMutexAbandon(&buff_lock);
+    #endif
         uint16_t checksum = 0;
         PrivMutexObtain(&buff_lock);
 
-        for (uint i = 0; i < 30; i++)
+        for (uint8_t i = 0; i < 30; i++)
             checksum += quant->sdev->buffer[i];
         
         if (checksum == (((uint16_t)quant->sdev->buffer[30] << 8) + ((uint16_t)quant->sdev->buffer[31]))) {
@@ -306,10 +336,20 @@ static int32_t ReadPm10(struct SensorQuantity *quant)
 
     uint32_t result;
     if (quant->sdev->done->read != NULL) {
+    #ifdef ADD_RTTHREAD_FETURES
+        uint32_t len = 0;
+        PrivMutexObtain(&buff_lock);
+        len = quant->sdev->done->read(quant->sdev, 32);
+        if (len == 0) {
+            printf("error read data length = 0.\n");
+            return -1;
+        }
+        PrivMutexAbandon(&buff_lock);
+    #endif
         uint16_t checksum = 0;
         PrivMutexObtain(&buff_lock);
 
-        for (uint i = 0; i < 30; i++)
+        for (uint8_t i = 0; i < 30; i++)
             checksum += quant->sdev->buffer[i];
         
         if (checksum == (((uint16_t)quant->sdev->buffer[30] << 8) + ((uint16_t)quant->sdev->buffer[31]))) {

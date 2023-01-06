@@ -1,0 +1,10 @@
+from building import *
+import os
+
+cwd = GetCurrentDir()
+src = []
+if GetDepend(['SENSOR_DEVICE_PS5308']):
+    src += ['ps5308.c']
+group = DefineGroup('sensor PS5308 DEVICE', src, depend = [], CPPPATH = [cwd])
+
+Return('group')
