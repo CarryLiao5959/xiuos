@@ -64,6 +64,21 @@ int main(void)
     Co2G8s();
     #endif
 
+    #ifdef APPLICATION_SENSOR_PM1_0_PS5308
+    extern void Pm10Ps5308();
+    Pm10Ps5308();
+    #endif
+
+    #ifdef APPLICATION_SENSOR_PM2_5_PS5308
+    extern void Pm25Ps5308();
+    Pm25Ps5308();
+    #endif
+
+    #ifdef APPLICATION_SENSOR_PM10_PS5308
+    extern void Pm100Ps5308();
+    Pm100Ps5308();
+    #endif
+    
     #ifdef APPLICATION_SENSOR_TEMPERATURE_HS300X
     extern void TempHs300x();
     TempHs300x();
