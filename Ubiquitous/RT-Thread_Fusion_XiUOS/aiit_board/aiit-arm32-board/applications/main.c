@@ -103,6 +103,11 @@ int main(void)
     IaqTb600bIaq10();
     #endif
 
+    #ifdef APPLICATION_SENSOR_VOICE_D124
+    extern void VoiceD124();
+    VoiceD124();
+    #endif
+    
      while (count++)
     {
         rt_pin_write(LED0_PIN, PIN_HIGH);
