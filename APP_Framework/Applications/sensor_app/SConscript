@@ -31,6 +31,10 @@ if GetDepend(['APPLICATION_SENSOR_TVOC_TB600B_TVOC10']):
     SOURCES = ['tvoc_tb600b_tvoc10.c'] + SOURCES
 if GetDepend(['APPLICATION_SENSOR_IAQ_TB600B_IAQ10']):
     SOURCES = ['iaq_tb600b_iaq10.c'] + SOURCES
+if GetDepend(['APPLICATION_SENSOR_WINDDIRECTION_QS_FX']):
+    SOURCES = ['winddirection_qs_fx.c'] + SOURCES
+if GetDepend(['APPLICATION_SENSOR_WINDSPEED_QS_FS']):
+    SOURCES = ['windspeed_qs_fs.c'] + SOURCES
 path =  [cwd]
 objs = DefineGroup('sensor_app', src = SOURCES, depend = DEPENDS,CPPPATH = path) 
 Return("objs") 

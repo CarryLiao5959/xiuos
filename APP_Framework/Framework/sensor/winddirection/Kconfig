@@ -43,6 +43,23 @@ config SENSOR_QS_FX
                 endif
 
                 if ADD_RTTHREAD_FETURES
+                        config SENSOR_QS_FX_DRIVER_EXTUART
+                                bool "Using extra uart to support qs-fx"
+                                default y
 
+                        config SENSOR_DEVICE_QS_FX_DEV
+                                string "qs-fx device name"
+                                default "/dev/uart2_dev2"
+                                depends on !SENSOR_QS_FX_DRIVER_EXTUART
+
+                        if SENSOR_QS_FX_DRIVER_EXTUART
+                                config SENSOR_DEVICE_QS_FX_DEV
+                                        string "qs-fx device extra uart path"
+                                        default "/dev/extuart_dev2"
+                                
+                                config SENSOR_DEVICE_QS_FX_DEV_EXT_PORT
+                                        int "if qs-fx device using extuart, choose port"
+                                        default "2"
+                        endif
                 endif
         endif
