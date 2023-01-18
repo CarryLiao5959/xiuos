@@ -15,22 +15,17 @@ static void CH438_udelay(rt_uint64_t us)
 
     ticks = us * reload / (1000000 / RT_TICK_PER_SECOND);
     told = SysTick->VAL;
-    while (1)
-    {
+    while (1) {
         tnow = SysTick->VAL;
-        if (tnow != told)
-        {
-            if (tnow < told)
-            {
+        if (tnow != told) {
+            if (tnow < told) {
                 tcnt += told - tnow;
             }
-            else
-            {
+            else {
                 tcnt += reload - tnow + told;
             }
             told = tnow;
-            if (tcnt >= ticks)
-            {
+            if (tcnt >= ticks) {
                 break;
             }
         }
@@ -327,13 +322,13 @@ static int drv_extuart_putc(struct rt_serial_device *serial, char c)
     
     if (2 == ext_uart_no) {
 		set_485_output(2);
-		rt_thread_mdelay(20);
+		CH438_udelay(1000);
 	} else if (3 == ext_uart_no) {
 		set_485_output(1);
-		rt_thread_mdelay(20);
+		CH438_udelay(1000);
 	} else if (7 == ext_uart_no) {
 		set_485_output(3);
-		rt_thread_mdelay(20);
+		CH438_udelay(1000);
 	} 
 
     rt_thread_mdelay(2);	
@@ -341,27 +336,17 @@ static int drv_extuart_putc(struct rt_serial_device *serial, char c)
     {
         WriteCH438Block( REG_THR_ADDR, 1, &c );
         if (2 == ext_uart_no) {
-            rt_thread_mdelay(20);
+            CH438_udelay(1000);
             set_485_input(2);
         } else if (3 == ext_uart_no) {
-            rt_thread_mdelay(20);
+            CH438_udelay(1000);
             set_485_input(1);
         } else if (7 == ext_uart_no) {
-            rt_thread_mdelay(20);
+            CH438_udelay(1000);
             set_485_input(3);
         }
         return 1;
     } else {
-        if (2 == ext_uart_no) {
-            rt_thread_mdelay(20);
-            set_485_input(2);
-        } else if (3 == ext_uart_no) {
-            rt_thread_mdelay(20);
-            set_485_input(1);
-        } else if (7 == ext_uart_no) {
-            rt_thread_mdelay(20);
-            set_485_input(3);
-        } 
         return 0;
     }
 }

@@ -29,7 +29,10 @@ void WindSpeedQsFs(void)
     struct SensorQuantity *wind_speed = SensorQuantityFind(SENSOR_QUANTITY_QS_FS_WINDSPEED, SENSOR_QUANTITY_WINDSPEED);
     SensorQuantityOpen(wind_speed);
     PrivTaskDelay(2000);
-    uint16_t result = SensorQuantityReadValue(wind_speed);
-    printf("wind speed : %d.%d m/s\n", result/10, result%10);
+    for (int i = 0; i < 10; i ++) {
+        uint16_t result = SensorQuantityReadValue(wind_speed);
+        printf("wind speed : %d.%d m/s\n", result/10, result%10);
+        PrivTaskDelay(2000);
+    }
     SensorQuantityClose(wind_speed);
 }
