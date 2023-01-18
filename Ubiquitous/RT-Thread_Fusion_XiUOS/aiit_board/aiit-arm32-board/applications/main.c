@@ -114,6 +114,16 @@ int main(void)
     extern void VoiceD124();
     VoiceD124();
     #endif
+
+    #ifdef APPLICATION_SENSOR_WINDDIRECTION_QS_FX
+    extern void WindDirectionQsFx();
+    WindDirectionQsFx();
+    #endif
+
+    #ifdef APPLICATION_SENSOR_WINDSPEED_QS_FS
+    extern void WindSpeedQsFs();
+    WindSpeedQsFs();
+    #endif
     
      while (count++)
     {
