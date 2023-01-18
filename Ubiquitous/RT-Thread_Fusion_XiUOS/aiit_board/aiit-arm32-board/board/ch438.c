@@ -2,11 +2,40 @@
 #include <rtdevice.h>
 #include "ch438.h"
 #include <math.h>
-#include <delay.h>
 
 /* Offset address of serial port number */
 static rt_uint8_t	offsetadd[] = {0x00,0x10,0x20,0x30,0x08,0x18,0x28,0x38,};		
 struct rt_serial_device *extuart_serial_parm[8];
+
+static void CH438_udelay(rt_uint64_t us)
+{ 
+    rt_uint64_t ticks;
+    rt_uint64_t told, tnow, tcnt = 0;
+    rt_uint64_t reload = SysTick->LOAD;
+
+    ticks = us * reload / (1000000 / RT_TICK_PER_SECOND);
+    told = SysTick->VAL;
+    while (1)
+    {
+        tnow = SysTick->VAL;
+        if (tnow != told)
+        {
+            if (tnow < told)
+            {
+                tcnt += told - tnow;
+            }
+            else
+            {
+                tcnt += reload - tnow + told;
+            }
+            told = tnow;
+            if (tcnt >= ticks)
+            {
+                break;
+            }
+        }
+    }
+}
 
 void CH438_INIT(void)
 {	
@@ -144,7 +173,7 @@ rt_uint8_t ReadCH438Data( rt_uint8_t addr )
     rt_pin_write(CH438_NCS_PIN, PIN_HIGH);
 
     CH438_set_output();
-    udelay(1);
+    CH438_udelay(1);
 
     if(addr &0x80)	rt_pin_write(CH438_D7_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D7_PIN,PIN_LOW);	
     if(addr &0x40)	rt_pin_write(CH438_D6_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D6_PIN,PIN_LOW);	
@@ -155,18 +184,18 @@ rt_uint8_t ReadCH438Data( rt_uint8_t addr )
     if(addr &0x02)	rt_pin_write(CH438_D1_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D1_PIN,PIN_LOW);	
     if(addr &0x01)	rt_pin_write(CH438_D0_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D0_PIN,PIN_LOW);	
       
-    udelay(1);
+    CH438_udelay(1);
 
     rt_pin_write(CH438_ALE_PIN,PIN_LOW);	
-    udelay(1);		
+    CH438_udelay(1);		
     rt_pin_write(CH438_NCS_PIN, PIN_LOW);
-    udelay(1);	
+    CH438_udelay(1);	
 
     CH438_set_input();
-    udelay(1);
+    CH438_udelay(1);
 
     rt_pin_write(CH438_NRD_PIN,PIN_LOW);	
-    udelay(1);	
+    CH438_udelay(1);	
 
     if (rt_pin_read(CH438_D7_PIN))	dat |= 0x80;
     if (rt_pin_read(CH438_D6_PIN))	dat |= 0x40;
@@ -180,7 +209,7 @@ rt_uint8_t ReadCH438Data( rt_uint8_t addr )
     rt_pin_write(CH438_NRD_PIN,PIN_HIGH);	
     rt_pin_write(CH438_ALE_PIN,PIN_HIGH);	
     rt_pin_write(CH438_NCS_PIN,PIN_HIGH);
-    udelay(1);
+    CH438_udelay(1);
 
     return dat;
 }
@@ -193,7 +222,7 @@ static void WriteCH438Data( rt_uint8_t addr, char dat )
     rt_pin_write(CH438_NCS_PIN, PIN_HIGH);
 
     CH438_set_output();
-    udelay(1);	
+    CH438_udelay(1);	
 
     if(addr &0x80)	rt_pin_write(CH438_D7_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D7_PIN,PIN_LOW);	
     if(addr &0x40)	rt_pin_write(CH438_D6_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D6_PIN,PIN_LOW);	
@@ -204,12 +233,12 @@ static void WriteCH438Data( rt_uint8_t addr, char dat )
     if(addr &0x02)	rt_pin_write(CH438_D1_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D1_PIN,PIN_LOW);	
     if(addr &0x01)	rt_pin_write(CH438_D0_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D0_PIN,PIN_LOW);	
 
-    udelay(1);	
+    CH438_udelay(1);	
 
     rt_pin_write(CH438_ALE_PIN,PIN_LOW);	
-    udelay(1);
+    CH438_udelay(1);
     rt_pin_write(CH438_NCS_PIN, PIN_LOW);
-    udelay(1);
+    CH438_udelay(1);
 
     if(dat &0x80)	rt_pin_write(CH438_D7_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D7_PIN,PIN_LOW);	
     if(dat &0x40)	rt_pin_write(CH438_D6_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D6_PIN,PIN_LOW);	
@@ -220,15 +249,15 @@ static void WriteCH438Data( rt_uint8_t addr, char dat )
     if(dat &0x02)	rt_pin_write(CH438_D1_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D1_PIN,PIN_LOW);	
     if(dat &0x01)	rt_pin_write(CH438_D0_PIN,PIN_HIGH);	else	rt_pin_write(CH438_D0_PIN,PIN_LOW);	
 
-    udelay(1);	
+    CH438_udelay(1);	
 
     rt_pin_write(CH438_NWR_PIN,PIN_LOW);	
-    udelay(1);	
+    CH438_udelay(1);	
 
     rt_pin_write(CH438_NWR_PIN,PIN_HIGH);	
     rt_pin_write(CH438_ALE_PIN,PIN_HIGH);	
     rt_pin_write(CH438_NCS_PIN,PIN_HIGH);
-    udelay(1);	
+    CH438_udelay(1);	
 
     CH438_set_input();
 
@@ -307,7 +336,7 @@ static int drv_extuart_putc(struct rt_serial_device *serial, char c)
 		rt_thread_mdelay(20);
 	} 
 
-    rt_thread_mdelay(5);	
+    rt_thread_mdelay(2);	
     if((ReadCH438Data( REG_LSR_ADDR ) & BIT_LSR_TEMT) != 0)
     {
         WriteCH438Block( REG_THR_ADDR, 1, &c );
@@ -346,7 +375,7 @@ static int drv_extuart_getc(struct rt_serial_device *serial)
     REG_LSR_ADDR = offsetadd[ext_uart_no] | REG_LSR0_ADDR;
     REG_RBR_ADDR = offsetadd[ext_uart_no] | REG_RBR0_ADDR;
 
-    rt_thread_mdelay(5);
+    rt_thread_mdelay(2);
     if((ReadCH438Data(REG_LSR_ADDR) & BIT_LSR_DATARDY) == 0x01)
     {
       dat = ReadCH438Data( REG_RBR_ADDR );

@@ -28,6 +28,9 @@ void Co2Zg09(void)
 {
     struct SensorQuantity *co2 = SensorQuantityFind(SENSOR_QUANTITY_ZG09_CO2, SENSOR_QUANTITY_CO2);
     SensorQuantityOpen(co2);
-    printf("CO2 : %d ppm\n", SensorQuantityReadValue(co2));
+    for (int i = 0; i < 5; i ++) {
+        PrivTaskDelay(2000);
+        printf("CO2 : %d ppm\n", SensorQuantityReadValue(co2));
+    }
     SensorQuantityClose(co2);
 }

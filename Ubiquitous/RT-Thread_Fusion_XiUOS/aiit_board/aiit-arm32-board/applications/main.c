@@ -64,6 +64,13 @@ int main(void)
     Co2G8s();
     #endif
 
+    #ifdef APPLICATION_SENSOR_CO2_ZG09     
+    extern void Co2Zg09();
+    printf("Waiting for Co2ZG09 to start...\n");
+    rt_thread_mdelay(8000);
+    Co2Zg09();
+    #endif
+
     #ifdef APPLICATION_SENSOR_PM1_0_PS5308
     extern void Pm10Ps5308();
     Pm10Ps5308();
