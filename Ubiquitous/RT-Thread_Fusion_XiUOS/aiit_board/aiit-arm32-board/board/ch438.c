@@ -322,27 +322,29 @@ static int drv_extuart_putc(struct rt_serial_device *serial, char c)
     
     if (2 == ext_uart_no) {
 		set_485_output(2);
-		CH438_udelay(1000);
+		CH438_udelay(950);
 	} else if (3 == ext_uart_no) {
 		set_485_output(1);
-		CH438_udelay(1000);
+		CH438_udelay(950);
 	} else if (7 == ext_uart_no) {
 		set_485_output(3);
-		CH438_udelay(1000);
+		CH438_udelay(950);
 	} 
-
-    rt_thread_mdelay(2);	
+    #if defined APPLICATION_SENSOR_WINDSPEED_QS_FS || defined APPLICATION_SENSOR_WINDDIRECTION_QS_FX
+    #else
+    rt_thread_mdelay(2);
+    #endif	
     if((ReadCH438Data( REG_LSR_ADDR ) & BIT_LSR_TEMT) != 0)
     {
         WriteCH438Block( REG_THR_ADDR, 1, &c );
         if (2 == ext_uart_no) {
-            CH438_udelay(1000);
+            CH438_udelay(950);
             set_485_input(2);
         } else if (3 == ext_uart_no) {
-            CH438_udelay(1000);
+            CH438_udelay(950);
             set_485_input(1);
         } else if (7 == ext_uart_no) {
-            CH438_udelay(1000);
+            CH438_udelay(950);
             set_485_input(3);
         }
         return 1;

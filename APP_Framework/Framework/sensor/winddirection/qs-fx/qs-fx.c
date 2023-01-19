@@ -124,7 +124,10 @@ static int32_t ReadWindDirection(struct SensorQuantity *quant)
     short result;
     if (quant->sdev->done->read != NULL) {
         if (quant->sdev->status == SENSOR_DEVICE_PASSIVE) {
-            quant->sdev->done->read(quant->sdev, 6);
+            quant->sdev->done->read(quant->sdev, 7);
+            if(Crc16(quant->sdev->buffer,7)!=0x00) {
+                return -1;
+            }
             result = (quant->sdev->buffer[3] << 8) | quant->sdev->buffer[4];
 
             return (int32_t)result;
