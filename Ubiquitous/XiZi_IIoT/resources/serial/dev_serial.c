@@ -154,6 +154,8 @@ static inline int SerialDevIntRead(struct SerialHardwareDevice *serial_dev, stru
 
         CriticalAreaUnLock(lock);
 
+        MdelayKTask(20);
+
         *read_data = get_char;
         read_data++; 
         read_length--;

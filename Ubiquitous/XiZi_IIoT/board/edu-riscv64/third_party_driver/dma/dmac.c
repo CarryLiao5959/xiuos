@@ -31,6 +31,7 @@
 #include "utils.h"
 #include "plic.h"
 #include "stdlib.h"
+#include <device.h>
 
 volatile dmac_t *const dmac = (dmac_t *)DMAC_BASE_ADDR;
 
@@ -172,6 +173,7 @@ void dmac_channel_disable(dmac_channel_number_t channel_num)
     }
 
     writeq(chen.data, &dmac->chen);
+
 }
 
 int32_t dmac_check_channel_busy(dmac_channel_number_t channel_num)
@@ -766,16 +768,18 @@ void dmac_set_src_dest_length(dmac_channel_number_t channel_num, const void *src
     dmac_channel_enable(channel_num);
 }
 
-static int dmac_irq_callback(void *ctx)
+static int dmac_irq_callback(int vector,void *ctx)
 {
     dmac_context_t *v_dmac_context = (dmac_context_t *)(ctx);
     dmac_channel_number_t v_dmac_channel = v_dmac_context->dmac_channel;
     dmac_chanel_interrupt_clear(v_dmac_channel);
-    if(v_dmac_context->callback != NULL)
+    if(v_dmac_context->callback != NULL){
         v_dmac_context->callback(v_dmac_context->ctx);
-
+    }
     return 0;
 }
+
+
 
 void dmac_irq_register(dmac_channel_number_t channel_num , plic_irq_callback_t dmac_callback, void *ctx, uint32_t priority)
 {
@@ -783,9 +787,11 @@ void dmac_irq_register(dmac_channel_number_t channel_num , plic_irq_callback_t d
     dmac_context[channel_num].callback = dmac_callback;
     dmac_context[channel_num].ctx = ctx;
     dmac_enable_channel_interrupt(channel_num);
-    plic_set_priority(IRQN_DMA0_INTERRUPT + channel_num, priority);
-    plic_irq_enable(IRQN_DMA0_INTERRUPT + channel_num);
-    plic_irq_register(IRQN_DMA0_INTERRUPT + channel_num, dmac_irq_callback, &dmac_context[channel_num]);
+    // plic_set_priority(IRQN_DMA0_INTERRUPT + channel_num, priority);
+    // plic_irq_enable(IRQN_DMA0_INTERRUPT + channel_num);
+    // plic_irq_register(IRQN_DMA0_INTERRUPT + channel_num, dmac_irq_callback, &dmac_context[channel_num]);
+    isrManager.done->enableIrq(IRQN_DMA0_INTERRUPT + channel_num);
+    isrManager.done->registerIrq(IRQN_DMA0_INTERRUPT + channel_num, (IsrHandlerType)dmac_irq_callback, &dmac_context[channel_num]);
 }
 
 void __attribute__((weak, alias("dmac_irq_register"))) dmac_set_irq(dmac_channel_number_t channel_num , plic_irq_callback_t dmac_callback, void *ctx, uint32_t priority);

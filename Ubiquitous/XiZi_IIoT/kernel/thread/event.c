@@ -153,7 +153,7 @@ static int32 _EventProcess(struct Event *event, uint32 events, uint32 options, i
     task = GetKTaskDescriptor();
     task->exstatus = EOK;
 
-    timeout = CalculteTickFromTimeMs(msec);
+    timeout = CalculateTickFromTimeMs(msec);
 
     lock = CriticalAreaLock();
 

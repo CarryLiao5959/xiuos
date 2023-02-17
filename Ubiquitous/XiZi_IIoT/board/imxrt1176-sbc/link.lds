@@ -79,7 +79,7 @@ MEMORY
   sram_oc_ecc2 (rwx) :  ORIGIN = 0x20350000, LENGTH = 0x10000 /* 64K bytes (alias RAM7) */
 
   /* define extern sdram 32MB*/
-  board_sdram (rwx) :   ORIGIN = 0x80000000, LENGTH = 0x2000000 /* 64M bytes (alias RAM8) */ 
+  board_sdram (rwx) :   ORIGIN = 0x80000000, LENGTH = 0x2000000 /* 32M bytes (alias RAM8) */ 
 
 }
 

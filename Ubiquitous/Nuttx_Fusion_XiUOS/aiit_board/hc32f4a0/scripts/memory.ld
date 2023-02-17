@@ -32,7 +32,7 @@
  * For MPU support, the kernel-mode NuttX section is assumed to be 128Kb of
  * FLASH and 4Kb of SRAM.  That is an excessive amount for the kernel which
  * should fit into 64KB and, of course, can be optimized as needed (See
- * also boards/arm/stm32/aiit-arm32-board/scripts/kernel-space.ld).  Allowing the
+ * also boards/arm/hc32/hc32f4a0/scripts/kernel-space.ld).  Allowing the
  * additional does permit addition debug instrumentation to be added to the
  * kernel space without overflowing the partition.
  *
@@ -73,13 +73,13 @@ MEMORY
 {
     /* 2Mb FLASH */
 
-  kflash (rx)      : ORIGIN = 0x00000000, LENGTH = 2M
-  uflash (rx)      : ORIGIN = 0x00200000, LENGTH = 128K
-  xflash (rx)      : ORIGIN = 0x00220000, LENGTH = 768K
+  kflash (rx)      : ORIGIN = 0x00000000, LENGTH = 64K
+  uflash (rx)      : ORIGIN = 0x00010000, LENGTH = 1M
+  xflash (rx)      : ORIGIN = 0x00110000, LENGTH = 128K
 
     /* 512Kb of contiguous SRAM */
 
-  ksram (rwx)      : ORIGIN = 0x1FFE0000, LENGTH = 512K
-  usram (rwx)      : ORIGIN = 0x20060000, LENGTH = 4K
-  xsram (rwx)      : ORIGIN = 0x20062000, LENGTH = 4K
+  ksram (rwx)      : ORIGIN = 0x1FFE0000, LENGTH = 64K
+  usram (rwx)      : ORIGIN = 0x1FFF0000, LENGTH = 448K
+  xsram (rwx)      : ORIGIN = 0x20070000, LENGTH = 4K
 }

@@ -25,7 +25,7 @@
  * you cannot use double-clicking the tab to complete the command help, 
  * and you cannot use the shell timeout lock
  */
-#define     SHELL_GET_TICK()            CalculteTimeMsFromTick(CurrentTicksGain())
+#define     SHELL_GET_TICK()            CalculateTimeMsFromTick(CurrentTicksGain())
 
 
 /**

@@ -52,7 +52,7 @@
 #include "k210_config.h"
 #include "chip.h"
 #include "k210.h"
-#include "k210_uart_16550.h"
+#include "k210_uart.h"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -649,9 +649,9 @@ void riscv_serialinit(void)
   /* Register all UARTs */
   uart_register("/dev/ttyS0", &TTYS0_DEV);
   
-#ifdef CONFIG_K210_16550_UART
+#ifdef CONFIG_K210_UART
   /* Register UART1-UART3 */
-    k210_uart_16550_register();
+    k210_uart_register();
 #endif
 }
 

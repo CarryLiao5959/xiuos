@@ -7,7 +7,7 @@ config ADAPTER_E220
         default n
 
 config ADAPTER_E22
-        bool "Using lora adapter device E22-400T33D"
+        bool "Using lora adapter device E22-400T30S"
         default n
 
 choice 

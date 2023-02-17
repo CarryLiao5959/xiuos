@@ -34,12 +34,20 @@ Modification:
 #include <hc32_ll.h>
 #include <connect_usart.h>
 
+#ifdef BSP_USING_GPIO
+#include <connect_gpio.h>
+#endif
+
 #ifdef BSP_USING_SDIO
 #include <connect_sdio.h>
 #endif
 
 #ifdef BSP_USING_SPI
 #include <connect_spi.h>
+#endif
+
+#ifdef BSP_USING_I2C
+#include <connect_i2c.h>
 #endif
 
 #ifdef BSP_USING_USB
@@ -145,11 +153,17 @@ void SysTick_Handler(void)
 
 struct InitSequenceDesc _board_init[] = 
 {	
+#ifdef BSP_USING_GPIO
+    { "hw_pin", HwGpioInit },
+#endif
 #ifdef BSP_USING_SDIO
 	{ "sdio", HwSdioInit },
 #endif
 #ifdef BSP_USING_SPI
 	{ "spi", HwSpiInit },
+#endif
+#ifdef BSP_USING_I2C
+	{ "i2c", HwI2cInit },
 #endif
 #ifdef BSP_USING_USB
 	{ "usb", HwUsbHostInit },

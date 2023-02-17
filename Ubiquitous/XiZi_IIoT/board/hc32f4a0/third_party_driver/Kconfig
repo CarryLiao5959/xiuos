@@ -6,12 +6,36 @@ menuconfig BSP_USING_UART
         source "$BSP_DIR/third_party_driver/usart/Kconfig"
     endif
 
+menuconfig BSP_USING_GPIO
+    bool "Using GPIO device "
+    default y
+    select RESOURCES_PIN
+    if BSP_USING_GPIO
+        source "$BSP_DIR/third_party_driver/gpio/Kconfig"
+    endif
+
+menuconfig BSP_USING_LWIP
+    bool "Using LwIP by ethernet device"
+    default n
+    select RESOURCES_LWIP
+    if BSP_USING_LWIP
+        source "$BSP_DIR/third_party_driver/ethernet/Kconfig"
+    endif
+
 menuconfig BSP_USING_SPI
     bool "Using SPI device"
     default n
     select RESOURCES_SPI
     if BSP_USING_SPI
         source "$BSP_DIR/third_party_driver/spi/Kconfig"
+    endif
+
+menuconfig BSP_USING_I2C
+    bool "Using I2C device"
+    default n
+    select RESOURCES_I2C
+    if BSP_USING_I2C
+        source "$BSP_DIR/third_party_driver/i2c/Kconfig"
     endif
 
 menuconfig BSP_USING_SDIO

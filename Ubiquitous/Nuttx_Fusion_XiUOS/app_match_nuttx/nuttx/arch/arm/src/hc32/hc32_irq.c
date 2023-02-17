@@ -40,6 +40,7 @@
 #endif
 #include "arm_internal.h"
 #include "hc32f4a0.h"
+#include "hc32f4a0_interrupts.h"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -166,53 +167,85 @@ static void hc32_dumpnvic(const char *msg, int irq)
 static int hc32_nmi(int irq, FAR void *context, FAR void *arg)
 {
   up_irq_save();
+#ifdef CONFIG_DEBUG_FEATURES
   _err("PANIC!!! NMI received\n");
   PANIC();
+#endif
+  NMI_Handler();
+  return 0;
+}
+
+#ifdef CONFIG_ARM_MPU
+
+static int hc32_memfault(int irq, FAR void *context, FAR void *arg)
+{
+  up_irq_save();
+#ifdef CONFIG_DEBUG_FEATURES
+  _err("PANIC!!! MemFault received\n");
+  PANIC();
+#endif
+  MemManage_Handler();
   return 0;
 }
 
 static int hc32_busfault(int irq, FAR void *context, FAR void *arg)
 {
   up_irq_save();
+#ifdef CONFIG_DEBUG_FEATURES
   _err("PANIC!!! Bus fault received: %08" PRIx32 "\n",
        getreg32(NVIC_CFAULTS));
   PANIC();
+#endif
+  BusFault_Handler();
   return 0;
 }
 
 static int hc32_usagefault(int irq, FAR void *context, FAR void *arg)
 {
   up_irq_save();
+#ifdef CONFIG_DEBUG_FEATURES
   _err("PANIC!!! Usage fault received: %08" PRIx32 "\n",
        getreg32(NVIC_CFAULTS));
   PANIC();
+#endif
+  UsageFault_Handler();
   return 0;
 }
 
 static int hc32_pendsv(int irq, FAR void *context, FAR void *arg)
 {
   up_irq_save();
+#ifdef CONFIG_DEBUG_FEATURES
   _err("PANIC!!! PendSV received\n");
   PANIC();
+#endif
+  PendSV_Handler();
   return 0;
 }
 
 static int hc32_dbgmonitor(int irq, FAR void *context, FAR void *arg)
 {
   up_irq_save();
+#ifdef CONFIG_DEBUG_FEATURES
   _err("PANIC!!! Debug Monitor received\n");
   PANIC();
+#endif
+  DebugMon_Handler();
   return 0;
 }
 
 static int hc32_reserved(int irq, FAR void *context, FAR void *arg)
 {
   up_irq_save();
+#ifdef CONFIG_DEBUG_FEATURES
   _err("PANIC!!! Reserved interrupt\n");
   PANIC();
+#endif
   return 0;
 }
 #endif
+#endif
+
 
 /****************************************************************************
  * Name: hc32_prioritize_syscall
@@ -315,7 +348,7 @@ void up_irqinitialize(void)
     }
 
   /* The standard location for the vector table is at the beginning of FLASH
-   * at address 0x0800:0000.  If we are using the STMicro DFU bootloader,
+   * at address 0x0000:0000.  If we are using the HC32 bootloader,
    * then the vector table will be offset to a different location in FLASH
    * and we will need to set the NVIC vector location to this alternative
    * location.
@@ -388,7 +421,7 @@ void up_irqinitialize(void)
    */
 
 #ifdef CONFIG_ARM_MPU
-  irq_attach(HC32_IRQ_MEMFAULT, arm_memfault, NULL);
+  irq_attach(HC32_IRQ_MEMFAULT, hc32_memfault, NULL);
   up_enable_irq(HC32_IRQ_MEMFAULT);
 #endif
 
@@ -403,7 +436,7 @@ void up_irqinitialize(void)
 #ifdef CONFIG_DEBUG_FEATURES
   irq_attach(HC32_IRQ_NMI, hc32_nmi, NULL);
 #ifndef CONFIG_ARM_MPU
-  irq_attach(HC32_IRQ_MEMFAULT, arm_memfault, NULL);
+  irq_attach(HC32_IRQ_MEMFAULT, hc32_memfault, NULL);
 #endif
   irq_attach(HC32_IRQ_BUSFAULT, hc32_busfault, NULL);
   irq_attach(HC32_IRQ_USAGEFAULT, hc32_usagefault, NULL);
@@ -502,6 +535,7 @@ void up_enable_irq(int irq)
 
 void arm_ack_irq(int irq)
 {
+    NVIC_ClearPendingIRQ(irq);
 }
 
 /****************************************************************************

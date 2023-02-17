@@ -36,7 +36,7 @@
 #include <assert.h>
 #include <fcntl.h>
 #include <nuttx/ioexpander/gpio.h>
-#include "k210_uart_16550.h"
+#include "k210_uart.h"
 
 #define ERR_USB_UNKNOWN  0xFA
 

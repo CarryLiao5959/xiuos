@@ -1,6 +1,9 @@
 #include "json_parser.h"
 
-#include <fcntl.h>
+// #include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <transform.h>
 
 #include "cJSON.h"
 
@@ -31,9 +34,9 @@ yolov2_params_t param_parse(char *json_file_path)
     } else {
         printf("Reading config from: %s\n", json_file_path);
     }
+
     read(fin, buffer, sizeof(buffer));
     close(fin);
-
     // read json string
     json_obj = cJSON_Parse(buffer);
     // free(buffer);

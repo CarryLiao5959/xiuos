@@ -58,7 +58,7 @@ __isr_vector:
     .long   IsrEntry                                /* Debug Monitor Handler*/
     .long   0                                               /* Reserved*/
     .long   PendSV_Handler                                  /* PendSV Handler*/
-    .long   IsrEntry                                 /* SysTick Handler*/
+    .long   SysTick_Handler                                 /* SysTick Handler*/
 
                                                             /* External Interrupts*/
     .long   IsrEntry                           /* DMA channel 0/16 transfer complete*/

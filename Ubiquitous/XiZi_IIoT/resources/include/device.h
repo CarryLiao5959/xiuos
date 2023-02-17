@@ -106,4 +106,14 @@ HardwareDevType ObtainConsole(void);
 #include <dev_dac.h>
 #endif
 
+#ifdef RESOURCES_CAMERA
+#include <bus_camera.h>
+#include <dev_camera.h>
+#endif
+
+#ifdef RESOURCES_KPU
+#include <bus_kpu.h>
+#include <dev_kpu.h>
+#endif
+
 #endif

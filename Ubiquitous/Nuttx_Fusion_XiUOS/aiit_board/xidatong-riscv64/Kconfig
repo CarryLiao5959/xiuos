@@ -8,8 +8,8 @@ if ARCH_BOARD_XIDATONG_RISCV64
 menuconfig BSP_USING_CH376
     bool "Using CH376 device"
     default n
-    select K210_16550_UART
-    select K210_16550_UART3
+    select K210_UART
+    select K210_UART3
     
 if BSP_USING_CH376
 
@@ -40,8 +40,8 @@ menuconfig BSP_USING_TOUCH
     default n
 
 menuconfig BSP_USING_CAN
-    select K210_16550_UART
-    select K210_16550_UART1
+    select K210_UART
+    select K210_UART1
     bool "Using CAN device"
     default n
 

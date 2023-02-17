@@ -6,28 +6,23 @@
 #define NULL_PARAMETER 0
 
 static uint16_t pinval=0;
+static uint16_t pin_fd=0;
 
 void ledflip(void *parameter)
 {
-    int tmp_fd = *(int*)parameter;
     struct PinStat pin_led;
     pin_led.pin = BSP_LED_PIN;
     pin_led.val = !pinval;
     pinval = !pinval;
-    PrivWrite(tmp_fd,&pin_led,NULL_PARAMETER);
-    printf("Timer has callback once\n");
+    PrivWrite(pin_fd,&pin_led,NULL_PARAMETER);
+    // printf("Timer has callback once:%d\n",pinval);
 }
 
-void TestHwTimer(int argc, char *argv[])
+void TestHwTimer(void)
 {
     x_ticks_t period = 100;//uint:10ms
-
-    if(argc>1){
-        period = (x_ticks_t)atoi(argv[1]);
-    }
-
     
-    int pin_fd = PrivOpen(HWTIMER_PIN_DEV_DRIVER, O_RDWR);
+    pin_fd = PrivOpen(HWTIMER_PIN_DEV_DRIVER, O_RDWR);
     if(pin_fd<0){
         printf("open pin fd error:%d\n",pin_fd);
         return;
@@ -52,10 +47,6 @@ void TestHwTimer(int argc, char *argv[])
     int32 timer_handle = KCreateTimer("LED on and off by 1s",&ledflip,&pin_fd,period,TIMER_TRIGGER_PERIODIC);
     
     KTimerStartRun(timer_handle);
-    PrivTaskDelay(10000);
-    KTimerQuitRun(timer_handle);
-    
-    KDeleteTimer(timer_handle);
     
 }
 

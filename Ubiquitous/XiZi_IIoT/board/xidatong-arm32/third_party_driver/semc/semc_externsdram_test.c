@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 #include "board.h"
+#include <shell.h>
 
 #define EXAMPLE_SEMC_START_ADDRESS (0x80000000U)
 

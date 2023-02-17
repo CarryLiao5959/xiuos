@@ -61,21 +61,21 @@ Modification:
 #define SPI6_UNIT                        (CM_SPI6)
 #define SPI6_CLK                         (FCG1_PERIPH_SPI6)
 
-/* SS = PI01 */
-#define SPI6_SS_PORT                     (GPIO_PORT_I)
-#define SPI6_SS_PIN                      (GPIO_PIN_01)
-/* SCK = PH14 */
-#define SPI6_SCK_PORT                    (GPIO_PORT_H)
-#define SPI6_SCK_PIN                     (GPIO_PIN_14)
-#define SPI6_SCK_FUNC                    (GPIO_FUNC_40)
-/* MOSI = PI00 */
-#define SPI6_MOSI_PORT                   (GPIO_PORT_I)
-#define SPI6_MOSI_PIN                    (GPIO_PIN_00)
-#define SPI6_MOSI_FUNC                   (GPIO_FUNC_41)
-/* MISO = PH15 */
-#define SPI6_MISO_PORT                   (GPIO_PORT_H)
-#define SPI6_MISO_PIN                    (GPIO_PIN_15)
-#define SPI6_MISO_FUNC                   (GPIO_FUNC_42)
+/* SS = PE02 */
+#define SPI6_SS_PORT                     (GPIO_PORT_E)
+#define SPI6_SS_PIN                      (GPIO_PIN_02)
+/* SCK = PE03 */
+#define SPI6_SCK_PORT                    (GPIO_PORT_E)
+#define SPI6_SCK_PIN                     (GPIO_PIN_03)
+#define SPI6_SCK_FUNC                    (GPIO_FUNC_46)
+/* MOSI = PE04 */
+#define SPI6_MOSI_PORT                   (GPIO_PORT_E)
+#define SPI6_MOSI_PIN                    (GPIO_PIN_04)
+#define SPI6_MOSI_FUNC                   (GPIO_FUNC_47)
+/* MISO = PE05 */
+#define SPI6_MISO_PORT                   (GPIO_PORT_E)
+#define SPI6_MISO_PIN                    (GPIO_PIN_05)
+#define SPI6_MISO_FUNC                   (GPIO_FUNC_48)
 
 #define SPI6_DEVICE_SLAVE_ID_0 0
 

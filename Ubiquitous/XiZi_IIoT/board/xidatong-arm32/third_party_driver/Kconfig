@@ -49,6 +49,7 @@ menuconfig BSP_USING_SDIO
     if BSP_USING_SDIO
         source "$BSP_DIR/third_party_driver/sdio/Kconfig"
     endif
+
 menuconfig BSP_USING_LCD
     bool "Using LCD device"
     default n
@@ -56,6 +57,7 @@ menuconfig BSP_USING_LCD
     if BSP_USING_LCD
         source "$BSP_DIR/third_party_driver/lcd/Kconfig"
     endif
+    
 menuconfig BSP_USING_TOUCH
     bool "Using TOUCH device"
     default n

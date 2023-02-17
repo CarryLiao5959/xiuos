@@ -2,7 +2,7 @@ include $(KERNEL_ROOT)/.config
 
 ifeq ($(CONFIG_ADD_NUTTX_FETURES),y)
     include $(APPDIR)/Make.defs
-    CSRCS += framework_init.c
+    CSRCS +=
     include $(APPDIR)/Application.mk
 endif
 
@@ -10,7 +10,7 @@ endif
 ifeq ($(CONFIG_ADD_XIZI_FETURES),y)
     SRC_DIR := general_functions app_test 
 
-    SRC_FILES := main.c framework_init.c 
+    SRC_FILES := main.c
     ifeq ($(CONFIG_LIB_LV),y)
         SRC_DIR += lv_app
     endif

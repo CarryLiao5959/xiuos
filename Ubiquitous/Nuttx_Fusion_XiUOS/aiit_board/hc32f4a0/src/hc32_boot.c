@@ -38,6 +38,7 @@
  ****************************************************************************/
 
 extern int hc32_bringup(void);
+extern int hc32_spidev_initialized;
 
 /****************************************************************************
  * Name: hc32_boardinitialize
@@ -52,57 +53,57 @@ extern int hc32_bringup(void);
 
 void hc32_boardinitialize(void)
 {
-//#ifdef CONFIG_SCHED_CRITMONITOR
-//  /* Enable ITM and DWT resources, if not left enabled by debugger. */
-//
-//  modifyreg32(NVIC_DEMCR, 0, NVIC_DEMCR_TRCENA);
-//
-//  /* Make sure the high speed cycle counter is running.  It will be started
-//   * automatically only if a debugger is connected.
-//   */
-//
-//  putreg32(0xc5acce55, ITM_LAR);
-//  modifyreg32(DWT_CTRL, 0, DWT_CTRL_CYCCNTENA_MASK);
-//#endif
-//
-//#if defined(CONFIG_HC32_SPI1) || defined(CONFIG_HC32_SPI2) || defined(CONFIG_HC32_SPI3)
-//  /* Configure SPI chip selects if 1) SPI is not disabled, and 2) the weak
-//   * function hc32_spidev_initialize() has been brought into the link.
-//   */
-//
-//  if (hc32_spidev_initialize)
-//    {
-//      hc32_spidev_initialize();
-//    }
-//#endif
-//
-//#ifdef CONFIG_HC32_OTGFS
-//  /* Initialize USB if the 1) OTG FS controller is in the configuration and
-//   * 2) disabled, and 3) the weak function hc32_usbinitialize() has been
-//   * brought into the build. Presumably either CONFIG_USBDEV or
-//   * CONFIG_USBHOST is also selected.
-//   */
-//
-//  if (hc32_usbinitialize)
-//    {
-//      hc32_usbinitialize();
-//    }
-//#endif
-//
-//#ifdef HAVE_NETMONITOR
-//  /* Configure board resources to support networking. */
-//
-//  if (hc32_netinitialize)
-//    {
-//      hc32_netinitialize();
-//    }
-//#endif
-//
-//#ifdef CONFIG_ARCH_LEDS
-//  /* Configure on-board LEDs if LED support has been selected. */
-//
-//  board_autoled_initialize();
-//#endif
+#ifdef CONFIG_SCHED_CRITMONITOR
+  /* Enable ITM and DWT resources, if not left enabled by debugger. */
+
+  modifyreg32(NVIC_DEMCR, 0, NVIC_DEMCR_TRCENA);
+
+  /* Make sure the high speed cycle counter is running.  It will be started
+   * automatically only if a debugger is connected.
+   */
+
+  putreg32(0xc5acce55, ITM_LAR);
+  modifyreg32(DWT_CTRL, 0, DWT_CTRL_CYCCNTENA_MASK);
+#endif
+
+#if defined(CONFIG_HC32_SPI1) || defined(CONFIG_HC32_SPI2) || defined(CONFIG_HC32_SPI3)
+  /* Configure SPI chip selects if 1) SPI is not disabled, and 2) the weak
+   * function hc32_spidev_initialize() has been brought into the link.
+   */
+
+  if (hc32_spidev_initialized)
+    {
+      hc32_spidev_initialize();
+    }
+#endif
+
+#ifdef CONFIG_HC32_OTGFS
+  /* Initialize USB if the 1) OTG FS controller is in the configuration and
+   * 2) disabled, and 3) the weak function hc32_usbinitialize() has been
+   * brought into the build. Presumably either CONFIG_USBDEV or
+   * CONFIG_USBHOST is also selected.
+   */
+
+  if (hc32_usbinitialize)
+    {
+      hc32_usbinitialize();
+    }
+#endif
+
+#ifdef HAVE_NETMONITOR
+  /* Configure board resources to support networking. */
+
+  if (hc32_netinitialize)
+    {
+      hc32_netinitialize();
+    }
+#endif
+
+#ifdef CONFIG_ARCH_LEDS
+  /* Configure on-board LEDs if LED support has been selected. */
+
+  board_autoled_initialize();
+#endif
 }
 
 /****************************************************************************

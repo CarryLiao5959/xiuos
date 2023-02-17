@@ -68,6 +68,34 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
     return result;
 }
 
+
+static int PinOpen(void){
+    int pin_fd = PrivOpen(SENSOR_DEVICE_QS_FS_PIN_DEV, O_RDWR);
+    if (pin_fd < 0) {
+        printf("open %s error\n", SENSOR_DEVICE_QS_FS_PIN_DEV);
+        return -1;
+    }
+
+    //config led pin in board
+    struct PinParam pin_parameter;
+    memset(&pin_parameter, 0, sizeof(struct PinParam));
+    pin_parameter.cmd = GPIO_CONFIG_MODE;
+    pin_parameter.pin = SENSOR_DEVICE_QS_FS_PIN_NUMBER;
+    pin_parameter.mode = GPIO_CFG_OUTPUT;
+
+    struct PrivIoctlCfg ioctl_cfg;
+    ioctl_cfg.ioctl_driver_type = PIN_TYPE;
+    ioctl_cfg.args =  (void *)&pin_parameter;
+
+    if (0 != PrivIoctl(pin_fd, OPE_CFG, &ioctl_cfg)) {
+        printf("ioctl pin fd error %d\n", pin_fd);
+        PrivClose(pin_fd);
+        return -1;
+    }    
+
+    return pin_fd;
+}
+
 /**
  * @description: Read sensor device
  * @param sdev - sensor device pointer
@@ -76,12 +104,27 @@ static int SensorDeviceOpen(struct SensorDevice *sdev)
  */
 static int SensorDeviceRead(struct SensorDevice *sdev, size_t len)
 {
+    int pin_fd=PinOpen();
+    struct PinStat pin_dir;
+    pin_dir.pin = SENSOR_DEVICE_QS_FS_PIN_NUMBER;
+
+    pin_dir.val = GPIO_HIGH;
+    if (PrivWrite(pin_fd,&pin_dir,0) < 0)   // pull-up pin to configure as tx mode
+        return -1;
+    PrivTaskDelay(20);
     if (PrivWrite(sdev->fd, instructions, sizeof(instructions)) < 0)
         return -1;
+    PrivTaskDelay(20);
+    
+    
+    pin_dir.val = GPIO_LOW;
+    if (PrivWrite(pin_fd,&pin_dir,0) < 0)   // pull-down pin to configure as rx mode
+        return -1;        
     
     if (PrivRead(sdev->fd, sdev->buffer, len) < 0)
         return -1;
 
+    PrivClose(pin_fd);
     return 0;
 }
 

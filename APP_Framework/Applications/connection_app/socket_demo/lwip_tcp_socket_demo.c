@@ -21,7 +21,7 @@
 #include <transform.h>
 
 #ifdef ADD_XIZI_FETURES
-#include "sys_arch.h"
+#include <sys_arch.h>
 #include <lwip/sockets.h>
 #include "lwip/sys.h"
 #endif
@@ -33,9 +33,17 @@
 #include "stdio.h"
 #endif
 
-#define TCP_DEMO_BUF_SIZE 65535
+#define TCP_DEMO_BUF_SIZE                    65535
+#define TCP_DEMO_SEND_TIMES                  20
+#define LWIP_TCP_DEMO_TASK_STACK_SIZE        4096
+#define LWIP_TCP_DEMO_TASK_PRIO              20
 
-char tcp_socket_ip[] = {192, 168, 250, 252};
+static pthread_t tcp_client_task;
+static pthread_t tcp_server_task;
+
+static char tcp_demo_ipaddr[] = {192, 168, 131, 77};
+static char tcp_demo_netmask[] = {255, 255, 254, 0};
+static char tcp_demo_gwaddr[] = {192, 168, 131, 1};
 
 #ifdef ADD_NUTTX_FETURES
 #define lw_print printf
@@ -46,8 +54,8 @@ char tcp_socket_ip[] = {192, 168, 250, 252};
 #define LWIP_TARGET_PORT 4840
 #endif
 
-uint16_t tcp_socket_port = LWIP_TARGET_PORT;
-char tcp_ip_str[128] = {0};
+static uint16_t tcp_socket_port = 8888;
+static char tcp_ip_str[128] = {0};
 
 /******************************************************************************/
 void TcpSocketConfigParam(char *ip_str)
@@ -55,35 +63,23 @@ void TcpSocketConfigParam(char *ip_str)
     int ip1, ip2, ip3, ip4, port = 0;
 
     if(ip_str == NULL)
-    {
         return;
-    }
 
-    if(sscanf(ip_str, "%d.%d.%d.%d:%d", &ip1, &ip2, &ip3, &ip4, &port))
-    {
+    if(sscanf(ip_str, "%d.%d.%d.%d:%d", &ip1, &ip2, &ip3, &ip4, &port)) {
         printf("config ip %s port %d\n", ip_str, port);
         strcpy(tcp_ip_str, ip_str);
-        tcp_socket_ip[0] = ip1;
-        tcp_socket_ip[1] = ip2;
-        tcp_socket_ip[2] = ip3;
-        tcp_socket_ip[3] = ip4;
         if(port)
             tcp_socket_port = port;
         return;
     }
 
-    if(sscanf(ip_str, "%d.%d.%d.%d", &ip1, &ip2, &ip3, &ip4))
-    {
+    if(sscanf(ip_str, "%d.%d.%d.%d", &ip1, &ip2, &ip3, &ip4)) {
         printf("config ip %s\n", ip_str);
-        tcp_socket_ip[0] = ip1;
-        tcp_socket_ip[1] = ip2;
-        tcp_socket_ip[2] = ip3;
-        tcp_socket_ip[3] = ip4;
         strcpy(tcp_ip_str, ip_str);
     }
 }
 
-static void TcpSocketRecvTask(void *arg)
+static void *TcpSocketRecvTask(void *arg)
 {
     int fd = -1, clientfd;
     int recv_len;
@@ -91,18 +87,15 @@ static void TcpSocketRecvTask(void *arg)
     struct sockaddr_in tcp_addr;
     socklen_t addr_len;
 
-    while(1)
-    {
+    while(1) {
         recv_buf = (char *)malloc(TCP_DEMO_BUF_SIZE);
-        if (recv_buf == NULL)
-        {
+        if (recv_buf == NULL) {
             lw_error("No memory\n");
             continue;
         }
 
         fd = socket(AF_INET, SOCK_STREAM, 0);
-        if (fd < 0)
-        {
+        if (fd < 0) {
             lw_error("Socket error\n");
             free(recv_buf);
             continue;
@@ -113,8 +106,7 @@ static void TcpSocketRecvTask(void *arg)
         tcp_addr.sin_port = htons(tcp_socket_port);
         memset(&(tcp_addr.sin_zero), 0, sizeof(tcp_addr.sin_zero));
 
-        if (bind(fd, (struct sockaddr *)&tcp_addr, sizeof(struct sockaddr)) == -1)
-        {
+        if (bind(fd, (struct sockaddr *)&tcp_addr, sizeof(struct sockaddr)) == -1) {
             lw_error("Unable to bind\n");
             close(fd);
             free(recv_buf);
@@ -125,8 +117,7 @@ static void TcpSocketRecvTask(void *arg)
         lw_notice("\nLocal Port:%d\n", tcp_socket_port);
 
         // setup socket fd as listening mode
-        if (listen(fd, 5) != 0 )
-        {
+        if (listen(fd, 5) != 0 ) {
             lw_error("Unable to listen\n");
             close(fd);
             free(recv_buf);
@@ -137,13 +128,11 @@ static void TcpSocketRecvTask(void *arg)
         clientfd = accept(fd, (struct sockaddr *)&tcp_addr, (socklen_t*)&addr_len);
         lw_notice("client %s connected\n", inet_ntoa(tcp_addr.sin_addr));
 
-        while(1)
-        {
+        while(1) {
             memset(recv_buf, 0, TCP_DEMO_BUF_SIZE);
             recv_len = recvfrom(clientfd, recv_buf, TCP_DEMO_BUF_SIZE, 0,
                 (struct sockaddr *)&tcp_addr, &addr_len);
-            if(recv_len > 0)
-            {
+            if(recv_len > 0) {
                 lw_notice("Receive from : %s\n", inet_ntoa(tcp_addr.sin_addr));
                 lw_notice("Receive data : %d - %s\n\n", recv_len, recv_buf);
             }
@@ -157,26 +146,33 @@ static void TcpSocketRecvTask(void *arg)
 
 void TcpSocketRecvTest(int argc, char *argv[])
 {
-    if(argc >= 2)
-    {
+    if(argc >= 2) {
         lw_print("lw: [%s] target ip %s\n", __func__, argv[1]);
         TcpSocketConfigParam(argv[1]);
     }
 
 #ifdef ADD_XIZI_FETURES
-    lwip_config_tcp(lwip_ipaddr, lwip_netmask, tcp_socket_ip);
-    sys_thread_new("TcpSocketRecvTask", TcpSocketRecvTask, NULL, LWIP_TASK_STACK_SIZE, LWIP_DEMO_TASK_PRIO);
+    lwip_config_tcp(0, tcp_demo_ipaddr, tcp_demo_netmask, tcp_demo_gwaddr);
+
+    pthread_attr_t attr;
+    attr.schedparam.sched_priority = LWIP_TCP_DEMO_TASK_PRIO;
+    attr.stacksize = LWIP_TCP_DEMO_TASK_STACK_SIZE;
 #endif
 
 #ifdef ADD_NUTTX_FETURES
-    TcpSocketRecvTask(NULL);
+    pthread_attr_t attr = PTHREAD_ATTR_INITIALIZER;
+    attr.priority = LWIP_TCP_DEMO_TASK_PRIO;
+    attr.stacksize = LWIP_TCP_DEMO_TASK_STACK_SIZE;
 #endif
+
+    PrivTaskCreate(&tcp_server_task, &attr, &TcpSocketRecvTask, NULL);
+    PrivTaskStartup(&tcp_server_task);
 }
 PRIV_SHELL_CMD_FUNCTION(TcpSocketRecvTest, a tcp receive sample, PRIV_SHELL_CMD_MAIN_ATTR);
 
-static void TcpSocketSendTask(void *arg)
+static void *TcpSocketSendTask(void *arg)
 {
-    int cnt = LWIP_DEMO_TIMES;
+    int cnt = TCP_DEMO_SEND_TIMES;
     int fd = -1;
     int ret;
     char send_msg[128];
@@ -186,10 +182,9 @@ static void TcpSocketSendTask(void *arg)
 
     memset(send_msg, 0, sizeof(send_msg));
     fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd < 0)
-    {
+    if (fd < 0) {
         lw_print("Socket error\n");
-        return;
+        return NULL;
     }
 
     struct sockaddr_in tcp_sock;
@@ -200,17 +195,15 @@ static void TcpSocketSendTask(void *arg)
     memset(&(tcp_sock.sin_zero), 0, sizeof(tcp_sock.sin_zero));
 
     ret = connect(fd, (struct sockaddr *)&tcp_sock, sizeof(struct sockaddr));
-    if (ret)
-    {
-        lw_print("Unable to connect %s = %d\n", tcp_ip_str, ret);
+    if (ret < 0) {
+        lw_print("Unable to connect %s:%d = %d\n", tcp_ip_str, tcp_socket_port, ret);
         close(fd);
-        return;
+        return NULL;
     }
 
     lw_print("TCP connect %s:%d success, start to send.\n", tcp_ip_str, tcp_socket_port);
 
-    while (cnt --)
-    {
+    while (cnt --) {
         lw_print("Lwip client is running.\n");
         snprintf(send_msg, sizeof(send_msg), "TCP test package times %d\r\n", cnt);
         send(fd, send_msg, strlen(send_msg), 0);
@@ -219,24 +212,31 @@ static void TcpSocketSendTask(void *arg)
     }
 
     close(fd);
-    return;
+    return NULL;
 }
 
 void TcpSocketSendTest(int argc, char *argv[])
 {
-    if(argc >= 2)
-    {
+    if(argc >= 2) {
         lw_print("lw: [%s] target ip %s\n", __func__, argv[1]);
         TcpSocketConfigParam(argv[1]);
     }
 
 #ifdef ADD_XIZI_FETURES
-    lwip_config_tcp(lwip_ipaddr, lwip_netmask, tcp_socket_ip);
-    sys_thread_new("Tcp Socket Send", TcpSocketSendTask, NULL, LWIP_TASK_STACK_SIZE, LWIP_DEMO_TASK_PRIO);
+    lwip_config_tcp(0, tcp_demo_ipaddr, tcp_demo_netmask, tcp_demo_gwaddr);
+
+    pthread_attr_t attr;
+    attr.schedparam.sched_priority = LWIP_TCP_DEMO_TASK_PRIO;
+    attr.stacksize = LWIP_TCP_DEMO_TASK_STACK_SIZE;
 #endif
 #ifdef ADD_NUTTX_FETURES
-    TcpSocketSendTask(NULL);
+    pthread_attr_t attr = PTHREAD_ATTR_INITIALIZER;
+    attr.priority = LWIP_TCP_DEMO_TASK_PRIO;
+    attr.stacksize = LWIP_TCP_DEMO_TASK_STACK_SIZE;
 #endif
+
+    PrivTaskCreate(&tcp_client_task, &attr, &TcpSocketSendTask, NULL);
+    PrivTaskStartup(&tcp_client_task);
 }
 PRIV_SHELL_CMD_FUNCTION(TcpSocketSendTest, a tcp send sample, PRIV_SHELL_CMD_MAIN_ATTR);
 

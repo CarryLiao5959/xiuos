@@ -232,7 +232,7 @@ RISC-V架构系列的开发板有
 ### 依赖包安装：
 
 ```
-$ sudo apt install build-essential pkg-config  git
+$ sudo apt install build-essential pkg-config  git dos2unix
 $ sudo apt install gcc make libncurses5-dev openssl libssl-dev bison flex libelf-dev autoconf libtool gperf libc6-dev
 ```
 

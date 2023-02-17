@@ -33,6 +33,8 @@ extern "C"
  ******************************************************************************/
 #include "hc32_common.h"
 #include "ddl_config.h"
+#include <arch/irq.h>
+#include <nuttx/irq.h>
 
 /**
  * @addtogroup HC32F4A0_DDL_Driver

@@ -137,6 +137,8 @@ typedef struct
 #define GPIO_PORT_SHIFT             16
 
 #define GPIO_PINSET(_port, _pin) ((uint32_t)(_port << GPIO_PORT_SHIFT) | _pin)
+#define GPIO_PIN(_pinset) ((_pinset >> GPIO_PIN_SHIFT) & GPIO_PIN_MASK)
+#define GPIO_PORT(_pinset) ((_pinset >> GPIO_PORT_SHIFT) & GPIO_PORT_MASK)
 
 /**
  * @}

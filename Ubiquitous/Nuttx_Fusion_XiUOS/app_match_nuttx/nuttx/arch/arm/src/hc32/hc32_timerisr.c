@@ -95,6 +95,11 @@ static int hc32_timerisr(int irq, uint32_t *regs, void *arg)
 }
 #endif
 
+void SysTick_IrqHandler(void)
+{
+  nxsched_process_timer();
+}
+
 /****************************************************************************
  * Public Functions
  ****************************************************************************/

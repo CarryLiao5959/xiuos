@@ -27,7 +27,6 @@
 
 #include <nuttx/config.h>
 #include <nuttx/serial/serial.h>
-
 #include "chip.h"
 
 #define CONSOLE_UART 6
@@ -43,9 +42,35 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-/* Make sure that we have not enabled more U[S]ARTs than are supported by the
- * device.
+typedef enum en_uart_state
+{
+    UART_STATE_IDLE  = 0U,  /*!< No data */
+    UART_STATE_RXEND = 1U,  /*!< UART RX End */
+} uart_state_t;
+
+/**
+ * @brief  Ring buffer structure definition
  */
+typedef struct
+{
+    uint16_t u16Capacity;
+    volatile uint16_t u16UsedSize;
+    uint16_t u16InIdx;
+    uint16_t u16OutIdx;
+    uint8_t  au8Buf[50];
+} uart_ring_buffer_t;
+
+
+/* UART multiple processor ID definition */
+#define UART_MASTER_STATION_ID          (0x20U)
+#define UART_SLAVE_STATION_ID           (0x21U)
+
+/* Ring buffer size */
+#define IS_RING_BUFFER_EMPTY(x)         (0U == ((x)->u16UsedSize))
+
+/* Multi-processor silence mode */
+#define DBG_UART_NORMAL_MODE          (0U)
+#define DBG_UART_SILENCE_MODE         (1U)
 
 /****************************************************************************
  * Public Types
@@ -80,7 +105,9 @@ extern "C"
 
 FAR uart_dev_t *hc32_serial_get_uart(int uart_num);
 
-void hc32_print(const char *fmt, ...);
+int hc32_print(const char *fmt, ...);
+
+void hc32_console_handle(char *buf);
 
 #undef EXTERN
 #if defined(__cplusplus)

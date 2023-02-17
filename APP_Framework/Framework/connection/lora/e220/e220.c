@@ -263,7 +263,7 @@ static int E220SetRegisterParam(struct Adapter *adapter, uint16 address, uint8 c
     uint8 baud_rate_bit = E220BaudRateSwitch(baud_rate);
 
     E220LoraModeConfig(CONFIGURE_MODE_MODE);
-    PrivTaskDelay(30);
+    PrivTaskDelay(2000);
 
     buffer[0] = 0xC0;                   //write register order
     buffer[1] = 0x00;                   //register start-address
@@ -286,6 +286,7 @@ static int E220SetRegisterParam(struct Adapter *adapter, uint16 address, uint8 c
         printf("E220SetRegisterParam send failed %d!\n", ret);
     }
 
+    PrivTaskDelay(2000);
 
     PrivRead(adapter->fd, buffer, 11);
 	E220LoraModeConfig(DATA_TRANSFER_MODE);

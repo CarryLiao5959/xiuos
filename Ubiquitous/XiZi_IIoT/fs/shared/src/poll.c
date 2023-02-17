@@ -86,7 +86,7 @@ static int PollWaitTimeout(struct poll_table *pt, int msec)
 
     thread = pt->polling_thread;
 
-    timeout = CalculteTickFromTimeMs(msec);
+    timeout = CalculateTickFromTimeMs(msec);
 
     level = CriticalAreaLock();
 

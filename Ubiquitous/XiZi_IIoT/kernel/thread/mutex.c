@@ -83,7 +83,7 @@ static int32 _MutexObtain(struct Mutex *mutex, int32 msec)
     NULL_PARAM_CHECK(mutex);
 
     task = GetKTaskDescriptor();
-    wait_time = CalculteTickFromTimeMs(msec);
+    wait_time = CalculateTickFromTimeMs(msec);
     lock = CriticalAreaLock();
 
     SYS_KDEBUG_LOG(KDBG_IPC,

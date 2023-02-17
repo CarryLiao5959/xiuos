@@ -40,7 +40,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <nuttx/ioexpander/gpio.h>
-#include "k210_uart_16550.h"
+#include "k210_uart.h"
 #include "k210_fpioa.h"
 #include "k210_gpiohs.h"
 #include "k210_gpio_common.h"

@@ -57,7 +57,7 @@ CHIP_CSRCS  = k210_allocateheap.c k210_clockconfig.c
 CHIP_CSRCS += k210_irq.c k210_irq_dispatch.c k210_systemreset.c
 CHIP_CSRCS += k210_lowputc.c k210_serial.c k210_fpioa.c fpioa.c
 CHIP_CSRCS += k210_start.c k210_timerisr.c k210_gpiohs.c k210_gpio.c
-CHIP_CSRCS += k210_sysctl.c k210_uart_16550.c
+CHIP_CSRCS += k210_sysctl.c k210_uart.c
 
 ifeq ($(CONFIG_BUILD_PROTECTED),y)
 CMN_CSRCS  += riscv_task_start.c riscv_pthread_start.c

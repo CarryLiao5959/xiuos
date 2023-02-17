@@ -224,7 +224,7 @@ static void get_region_boxes(region_layer_t *rl, float *predictions, float **pro
     correct_region_boxes(rl, boxes);
 }
 
-static int nms_comparator(void *pa, void *pb)
+static int nms_comparator(const void *pa,const void *pb)
 {
     sortable_box_t a = *(sortable_box_t *)pa;
     sortable_box_t b = *(sortable_box_t *)pb;

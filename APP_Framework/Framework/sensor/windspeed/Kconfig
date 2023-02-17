@@ -19,8 +19,16 @@ config SENSOR_QS_FS
 
                         config SENSOR_DEVICE_QS_FS_DEV
                                 string "qs-fx device name"
-                                default "/dev/uart2_dev2"
+                                default "/dev/uart1_dev1"
                                 depends on !SENSOR_QS_FS_DRIVER_EXTUART
+
+                        config SENSOR_DEVICE_QS_FS_PIN_DEV
+                                string "qs-fx pin device name"
+                                default "/dev/pin_dev"
+
+                        config SENSOR_DEVICE_QS_FS_PIN_NUMBER
+                                int "qs-fs pin device number"
+                                default 24
 
                         if SENSOR_QS_FS_DRIVER_EXTUART
                                 config SENSOR_DEVICE_QS_FS_DEV

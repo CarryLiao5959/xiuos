@@ -41,7 +41,7 @@ USER_LIBGCC = "${shell "$(CC)" $(ARCHCPUFLAGS) -print-libgcc-file-name}"
 
 # Source files
 
-CSRCS = stm32_userspace.c
+CSRCS = hc32_userspace.c
 COBJS = $(CSRCS:.c=$(OBJEXT))
 OBJS  = $(COBJS)
 

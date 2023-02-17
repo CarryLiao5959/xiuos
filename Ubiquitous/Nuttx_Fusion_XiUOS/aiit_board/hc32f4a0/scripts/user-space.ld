@@ -48,16 +48,16 @@ SECTIONS
         _sinit = ABSOLUTE(.);
         *(.init_array .init_array.*)
         _einit = ABSOLUTE(.);
-    } > kflash
+    } > uflash
 
     .ARM.extab : {
         *(.ARM.extab*)
-    } > kflash
+    } > uflash
 
     __exidx_start = ABSOLUTE(.);
     .ARM.exidx : {
         *(.ARM.exidx*)
-    } > kflash
+    } > uflash
 
     __exidx_end = ABSOLUTE(.);
 
@@ -70,7 +70,7 @@ SECTIONS
         CONSTRUCTORS
         . = ALIGN(4);
         _edata = ABSOLUTE(.);
-    } > ksram AT > kflash
+    } > usram AT > uflash
 
     .bss : {
         _sbss = ABSOLUTE(.);
@@ -79,7 +79,7 @@ SECTIONS
         *(COMMON)
         . = ALIGN(4);
         _ebss = ABSOLUTE(.);
-    } > ksram
+    } > usram
 
     /* Stabs debugging sections */
 

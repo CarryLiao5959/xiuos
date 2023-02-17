@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32/aiit-arm32-board/scripts/kernel-space.ld
+ * boards/arm/hc32/hc32f4a0/scripts/kernel-space.ld
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with

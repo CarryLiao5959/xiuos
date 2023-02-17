@@ -97,7 +97,7 @@ static int32 _SemaphoreObtain(struct Semaphore *sem, int32 msec)
     if(WAITING_FOREVER == msec)
         wait_time = WAITING_FOREVER;
     else
-        wait_time = CalculteTickFromTimeMs(msec);
+        wait_time = CalculateTickFromTimeMs(msec);
     lock = CriticalAreaLock();
 
     SYS_KDEBUG_LOG(KDBG_IPC, ("obtain semaphore: id %d, value %d, by task %s\n",

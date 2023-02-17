@@ -26,7 +26,7 @@
 
 x_ticks_t CurrentTicksGain(void);
 void TickAndTaskTimesliceUpdate(void);
-x_ticks_t  CalculteTickFromTimeMs(uint32 ms);
-uint32 CalculteTimeMsFromTick(x_ticks_t ticks);
+x_ticks_t  CalculateTickFromTimeMs(uint32 ms);
+uint32 CalculateTimeMsFromTick(x_ticks_t ticks);
 
 #endif

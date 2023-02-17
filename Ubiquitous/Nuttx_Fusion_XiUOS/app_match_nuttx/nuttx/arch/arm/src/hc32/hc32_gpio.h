@@ -39,6 +39,8 @@
 /****************************************************************************
  * Pre-Processor Declarations
  ****************************************************************************/
+typedef uint32_t gpio_pinset_t;
+
 #define GPIO_OUTPUT_SET               (1 << 25)                   /* Bit 8: If output, initial value of output */
 #define GPIO_OUTPUT_CLEAR             (0)
 

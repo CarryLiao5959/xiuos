@@ -26,6 +26,10 @@ ifeq ($(CONFIG_ARCH_LEDS),y)
 CSRCS +=
 endif
 
+ifeq ($(CONFIG_STM32_ROMFS),y)
+CSRCS += hc32_romfs_initialize.c
+endif
+
 DEPPATH += --dep-path board
 VPATH += :board
 CFLAGS += $(shell $(INCDIR) "$(CC)" $(TOPDIR)$(DELIM)arch$(DELIM)$(CONFIG_ARCH)$(DELIM)src$(DELIM)board$(DELIM)board)

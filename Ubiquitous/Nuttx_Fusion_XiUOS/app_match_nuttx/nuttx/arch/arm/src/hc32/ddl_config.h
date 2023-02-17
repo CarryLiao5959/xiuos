@@ -89,7 +89,7 @@ extern "C"
 #define DDL_RTC_ENABLE                              (DDL_OFF)
 #define DDL_SDIOC_ENABLE                            (DDL_OFF)
 #define DDL_SMC_ENABLE                              (DDL_OFF)
-#define DDL_SPI_ENABLE                              (DDL_OFF)
+#define DDL_SPI_ENABLE                              (DDL_ON)
 #define DDL_SRAM_ENABLE                             (DDL_ON)
 #define DDL_SWDT_ENABLE                             (DDL_OFF)
 #define DDL_TMR0_ENABLE                             (DDL_OFF)
@@ -134,7 +134,7 @@ extern "C"
 #define BSP_OV5640_ENABLE                           (BSP_OFF)
 #define BSP_S29GL064N90TFI03_ENABLE                 (BSP_OFF)
 #define BSP_TCA9539_ENABLE                          (BSP_OFF)
-#define BSP_W25QXX_ENABLE                           (BSP_ON)
+#define BSP_W25QXX_ENABLE                           (BSP_OFF)
 #define BSP_WM8731_ENABLE                           (BSP_OFF)
 
 /**

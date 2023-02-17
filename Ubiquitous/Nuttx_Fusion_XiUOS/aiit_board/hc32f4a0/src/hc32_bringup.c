@@ -31,6 +31,8 @@
 
 #include <nuttx/fs/fs.h>
 
+#include <hc32_common.h>
+
 /****************************************************************************
  * Name: hc32_bringup
  *
@@ -48,6 +50,26 @@
 int hc32_bringup(void)
 {
   int ret = 0;
-  printf("start %s\n", __func__);
+
+#ifdef CONFIG_FS_PROCFS
+  /* Mount the procfs file system */
+
+  ret = nx_mount(NULL, HC32_PROCFS_MOUNTPOINT, "procfs", 0, NULL);
+  if (ret < 0)
+  {
+  serr("ERROR: Failed to mount procfs at %s: %d\n",
+       HC32_PROCFS_MOUNTPOINT, ret);
+  }
+#endif
+
+#ifdef CONFIG_HC32_ROMFS
+  ret = hc32_romfs_initialize();
+  if (ret < 0)
+  {
+  serr("ERROR: Failed to mount romfs at %s: %d\n",
+       CONFIG_HC32_ROMFS_MOUNTPOINT, ret);
+  }
+#endif
+
   return ret;
 }

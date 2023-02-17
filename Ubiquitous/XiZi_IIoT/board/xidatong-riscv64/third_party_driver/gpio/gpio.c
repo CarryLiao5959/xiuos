@@ -26,6 +26,7 @@
 #include "utils.h"
 #include "fpioa.h"
 #include "sysctl.h"
+#include <xs_base.h>
 #define GPIO_MAX_PINNO 8
 
 volatile gpio_t* const gpio = (volatile gpio_t*)GPIO_BASE_ADDR;

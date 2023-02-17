@@ -22,6 +22,10 @@
 #include <stdio.h>
 #include "include/pthread.h"
 
+#define DEFAULT_STACK_SIZE  2048
+#define DEFAULT_PRIORITY    (KTASK_PRIORITY_MAX/2 + KTASK_PRIORITY_MAX/4)
+
+
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
                    void *(*start_routine)(void *), void *arg)
 {
@@ -53,6 +57,28 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
 
     return ret;
 
+}
+
+int pthread_attr_init(pthread_attr_t *attr)
+{
+    return 0;
+}
+
+int pthread_attr_setschedparam(pthread_attr_t           *attr,
+                               struct sched_param const *param)
+{
+    NULL_PARAM_CHECK(attr != NULL);
+    NULL_PARAM_CHECK(param != NULL);
+
+    attr->schedparam.sched_priority = param->sched_priority;
+
+    return 0;
+}
+
+int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stack_size)
+{
+    attr->stacksize = stack_size;
+    return 0;
 }
 
 void pthread_exit(void *value_ptr){

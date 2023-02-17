@@ -407,6 +407,19 @@ KERNELPATHS += \
 	-I$(BSP_ROOT)/third_party_driver/usb/hc32_usb_driver/usb_host_lib/host_class/msc \
 	-I$(BSP_ROOT)/third_party_driver/usb/hc32_usb_driver/usb_host_lib/host_core \
 	-I$(KERNEL_ROOT)/include #
+
+ifeq ($(CONFIG_RESOURCES_LWIP),y)
+KERNELPATHS += \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/compat \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/netif \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/apps \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/priv \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/include/lwip/prot \
+	-I$(KERNEL_ROOT)/resources/ethernet/LwIP/arch 
+endif 
 endif
 
 KERNELPATHS += -I$(KERNEL_ROOT)/arch \
@@ -440,6 +453,7 @@ endif
 
 endif
 
+KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Applications/general_functions/circular_area #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Applications/general_functions/list #
 
 ifeq ($(CONFIG_SUPPORT_SENSOR_FRAMEWORK), y)
@@ -461,6 +475,9 @@ KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/knowing/tensorflow
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/knowing/tensorflow-lite/tensorflow-lite-for-mcu/source/third_party/gemmlowp #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/knowing/tensorflow-lite/tensorflow-lite-for-mcu/source/third_party/flatbuffers/include #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/knowing/tensorflow-lite/tensorflow-lite-for-mcu/source/third_party/ruy #
+KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/knowing/kpu/k210_yolov2_detect_procedure #
+KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/knowing/kpu/yolov2 #
+KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/knowing/kpu/yolov2_json #
 endif
 
 ifeq ($(CONFIG_LIB_LV),y)
@@ -472,13 +489,19 @@ ifeq ($(CONFIG_SUPPORT_CONTROL_FRAMEWORK), y)
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/shared #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/ipc_protocol #
+KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/ipc_protocol/include #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/ipc_protocol/modbus_tcp #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/ipc_protocol/modbus_uart #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/plc_protocol #
+KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/plc_protocol/include #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/plc_protocol/fins #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/plc_protocol/melsec #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/plc_protocol/opcua #
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/Framework/control/plc_protocol/s7 #
+endif
+
+
+ifeq ($(CONFIG_LIB_USING_CJSON), y)
 KERNELPATHS += -I$(KERNEL_ROOT)/../../APP_Framework/lib/cJSON
 endif
 

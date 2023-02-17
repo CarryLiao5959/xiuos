@@ -342,7 +342,7 @@ static void DrvLcdRectUpdate(uint16_t x1, uint16_t y1, uint16_t width, uint16_t 
     }
 }
 
-x_err_t DrvLcdInit(Lcd8080DeviceType dev)
+static x_err_t DrvLcdInit(Lcd8080DeviceType dev)
 {
     x_err_t ret = EOK;
     aiit_lcd = (Lcd8080DeviceType)dev;
@@ -365,6 +365,8 @@ x_err_t DrvLcdInit(Lcd8080DeviceType dev)
     DrvLcdCmd(PIXEL_FORMAT_SET);
     data = 0x55;
     DrvLcdDataByte(&data, 1);
+
+    DrvLcdCmd(INVERSION_DISPALY_ON);
 
     /* set direction */
     DrvLcdSetDirection(DIR_YX_RLUD);
@@ -476,7 +478,6 @@ static uint32 LcdWrite(void *dev, struct BusBlockWriteParam *write_param)
     } 
     else if(1 == show->type)   //output dot
     {
-        // DrvLcdSetPixel(show->pixel_info.x_pos, show->pixel_info.y_pos, show->pixel_info.pixel_color);
         DrvLcdSetPixelDot(show->pixel_info.x_startpos,show->pixel_info.y_startpos, show->pixel_info.x_endpos, show->pixel_info.y_endpos,show->pixel_info.pixel_color);
         return  EOK;
     } 
@@ -549,7 +550,7 @@ static int BoardLcdDevBend(struct LcdHardwareDevice *lcd_device, void *param, co
 
     return  ret;
 }
-
+static int flag = 1;
 int HwLcdInit(void)
 {
     x_err_t ret = EOK;
@@ -613,7 +614,11 @@ int HwLcdInit(void)
 
     KPrintf("LCD driver inited ...\r\n");
 
-    DrvLcdInit(lcd_dev);
+    if(flag){
+        DrvLcdInit(lcd_dev);
+        flag = 0;        
+    }
+
 
     return ret;
 }

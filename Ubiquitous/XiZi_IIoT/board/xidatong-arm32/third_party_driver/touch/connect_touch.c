@@ -359,7 +359,8 @@ static uint32 TouchRead(void *dev, struct BusBlockReadParam *read_param)
     result = KSemaphoreObtain(touch_sem, 1000);
     if (EOK == result)
     {
-        if(GetTouchEvent(&touch_point, &touch_event))
+        ret = GetTouchEvent(&touch_point, &touch_event);
+        if(ret > 0)
         {
             data->x = abs(LCD_WIDTH - touch_point.X);
             data->y = abs(LCD_HEIGHT - touch_point.Y);
@@ -369,6 +370,11 @@ static uint32 TouchRead(void *dev, struct BusBlockReadParam *read_param)
 
             read_param->read_length = read_param->size;
             ret = EOK;
+        } 
+        else 
+        {
+          ret = -ERROR;
+          read_param->read_length = -ERROR; 
         }
         SemReleaseFlag = 0;
     }

@@ -37,6 +37,15 @@ extern "C"
 #define HC32F4A0 1
 #define USE_DDL_DRIVER 1
 
+#ifdef CONFIG_FS_PROCFS
+#  ifdef CONFIG_NSH_PROC_MOUNTPOINT
+#    define HC32_PROCFS_MOUNTPOINT CONFIG_NSH_PROC_MOUNTPOINT
+#  else
+#    define HC32_PROCFS_MOUNTPOINT "/proc"
+#  endif
+#endif
+
+
 #define getreg32(a)      (*(volatile uint32_t *)(a))
 #define putreg32(v,a)    (*(volatile uint32_t *)(a) = (v))
 #define getreg16(a)      (*(volatile uint16_t *)(a))

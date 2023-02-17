@@ -364,6 +364,32 @@ status_t BOARD_Camera_I2C_ReceiveSCCB(
 #endif /* SDK_I2C_BASED_COMPONENT_USED */
 #endif
 
+void ImxrtMsDelay(uint32 ms)
+{
+    uint64 ticks = 0;
+    uint32 told, tnow, tcnt = 0;
+    uint32 reload = SysTick->LOAD;
+
+    ticks = ((uint64)ms * ((uint64)reload + 1) * TICK_PER_SECOND) / 1000;
+    told = SysTick->VAL;
+
+    //KPrintf("%s reload %u ms %u ticks %u told %u\n", __func__, reload, ms, ticks, told);
+
+    while (1) {
+        tnow = SysTick->VAL;
+        if (tnow != told) {
+            if (tnow < told) {
+                tcnt += told - tnow;
+            } else {
+                tcnt += reload - tnow + told;
+            }
+            told = tnow;
+            if (tcnt >= ticks) {
+                break;
+            }
+        }
+    }
+}
 
 void BOARD_SD_Pin_Config(uint32_t speed, uint32_t strength)
 {
@@ -574,7 +600,6 @@ void SysTick_Handler(int irqn, void *arg)
 {
     TickAndTaskTimesliceUpdate();
 }
-DECLARE_HW_IRQ(SYSTICK_IRQN, SysTick_Handler, NONE);
 
 #ifdef BSP_USING_LPUART
 void imxrt_uart_pins_init(void)

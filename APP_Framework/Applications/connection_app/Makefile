@@ -1,6 +1,3 @@
-
-ifeq ($(CONFIG_SOCKET_DEMO),y)
-
 include $(KERNEL_ROOT)/.config
 
 ifeq ($(CONFIG_ADD_NUTTX_FETURES),y)
@@ -10,6 +7,10 @@ endif
 
 ifeq ($(CONFIG_ADD_XIZI_FETURES),y)
 
+	ifeq ($(CONFIG_CONNECTION_ADAPTER_4G),y)
+		SRC_DIR += 4g_app
+	endif
+
 	ifeq ($(CONFIG_RESOURCES_LWIP),y)
 		SRC_DIR += socket_demo
 	endif
@@ -17,4 +18,3 @@ ifeq ($(CONFIG_ADD_XIZI_FETURES),y)
     include $(KERNEL_ROOT)/compiler.mk
 endif
 
-endif

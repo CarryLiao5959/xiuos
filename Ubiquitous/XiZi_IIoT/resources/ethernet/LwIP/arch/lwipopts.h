@@ -269,7 +269,7 @@ typedef unsigned int nfds_t;
 #define MEMP_LIB_MALLOC                 1
 #define MEMP_MEM_MALLOC                 1
 
-#define lw_print //KPrintf
+#define lw_print KPrintf
 #define lw_error KPrintf
 #define lw_notice KPrintf
 

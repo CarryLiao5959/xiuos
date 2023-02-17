@@ -44,7 +44,6 @@ CMN_ASRCS += arm_lazyexception.S
 else
 CMN_ASRCS += arm_exception.S
 endif
-CMN_CSRCS += arm_vectors.c
 
 ifeq ($(CONFIG_ARCH_RAMVECTORS),y)
 CMN_CSRCS += arm_ramvec_initialize.c arm_ramvec_attach.c
@@ -77,12 +76,21 @@ ifeq ($(CONFIG_SCHED_THREAD_LOCAL),y)
 CMN_CSRCS += arm_tls.c
 endif
 
+CMN_CSRCS += hc32_vectors.c
+
 CHIP_CSRCS  = hc32_allocateheap.c hc32_gpio.c
 CHIP_CSRCS += hc32_irq.c hc32_idle.c hc32_mpuinit.c
 CHIP_CSRCS += hc32_rcc.c hc32_start.c hc32_serial.c
 CHIP_CSRCS += hc32_pm.c hc32_timerisr.c hc32_lowputc.c
+CHIP_CSRCS += hc32_console.c
 
 CHIP_CSRCS += hc32f4a0_clk.c hc32f4a0_efm.c hc32f4a0_gpio.c
 CHIP_CSRCS += hc32f4a0_interrupts.c hc32f4a0_usart.c hc32f4a0_utility.c
-CHIP_CSRCS += hc32f4a0_sram.c hc32f4a0_pwc.c
+CHIP_CSRCS += hc32f4a0_sram.c hc32f4a0_pwc.c hc32f4a0_i2c.c
+
+CHIP_CSRCS += hc32f4a0_spi.c
+
+CHIP_CSRCS += hc32_spiflash.c hc32_spi.c
+
+CHIP_CSRCS += hc32_i2c.c
 

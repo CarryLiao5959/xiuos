@@ -22,6 +22,14 @@ config SENSOR_QS_FX
                                 default "/dev/uart2_dev2"
                                 depends on !SENSOR_QS_FX_DRIVER_EXTUART
 
+                        config SENSOR_DEVICE_QS_FX_PIN_DEV
+                                string "qs-fx pin device name"
+                                default "/dev/pin_dev"
+
+                        config SENSOR_DEVICE_QS_FX_PIN_NUMBER
+                                int "qs-fx pin device number"
+                                default 24
+
                         if SENSOR_QS_FX_DRIVER_EXTUART
                                 config SENSOR_DEVICE_QS_FX_DEV
                                         string "qs-fx device extra uart path"

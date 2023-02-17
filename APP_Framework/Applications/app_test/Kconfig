@@ -105,6 +105,8 @@ menu "test app"
             menuconfig USER_TEST_HWTIMER
                 select BSP_USING_HWTIMER
                 select BSP_USING_GPIO
+                select RESOURCES_PIN
+                select BSP_USING_LED
                 bool "Config test hwtimer"
                 default n
                 if USER_TEST_HWTIMER
@@ -139,6 +141,21 @@ menu "test app"
                     endif
                 endif
 
+            menuconfig USER_TEST_TOUCH
+                select BSP_USING_TOUCH
+                bool "Config test touch"
+                default n
+                if USER_TEST_TOUCH
+                    if ADD_XIZI_FETURES
+                        config TOUCH_DEV_DRIVER
+                            string "Set touch dev path"
+                            default "/dev/touch_dev"
+                        config TOUCH_LCD_DEV_DRIVER
+                            string "Set lcd dev path"
+                            default "/dev/lcd_dev"
+                    endif
+                endif
+
             menuconfig USER_TEST_I2C
                 select BSP_USING_I2C
                 bool "Config test i2c"
@@ -151,6 +168,22 @@ menu "test app"
                     endif
                 endif
 
+            menuconfig USER_TEST_CAMERA
+                select BSP_USING_CAMERA
+                select BSP_USING_LCD
+                bool "Config test camera with lcd"
+                default n
+                if USER_TEST_CAMERA
+                    if ADD_XIZI_FETURES
+                        config CAMERA_DEV_DRIVER
+                            string "Set camera dev path"
+                            default "/dev/camera_dev"
+                        config CAMERA_LCD_DEV_DRIVER
+                            string "Set lcd dev path"
+                            default "/dev/lcd_dev"
+                    endif
+                endif
+
             config USER_TEST_SEMC
                 bool "Config test semc sdram"
                 default n
@@ -159,6 +192,23 @@ menu "test app"
                 bool "Config test lcd device"
                 default n
 
+            menuconfig USER_TEST_ETHERNET
+                bool "Config test ethernet only for edu-riscv64"
+                default n
+                if USER_TEST_ETHERNET
+                    if ADD_XIZI_FETURES
+                        choice 
+                            prompt "set ethernet role as client or server"
+                            default ETHERNET_AS_SERVER
+
+                            config ETHERNET_AS_SERVER
+                            bool "test as server"
+
+                            config ETHERNET_AS_CLIENT
+                            bool "test as client"
+                        endchoice
+                    endif
+                endif
                 
         endif
 endmenu

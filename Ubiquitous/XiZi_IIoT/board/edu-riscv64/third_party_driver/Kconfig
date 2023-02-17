@@ -112,3 +112,28 @@ menuconfig BSP_USING_WDT
     if BSP_USING_WDT
         source "$BSP_DIR/third_party_driver/watchdog/Kconfig"
     endif
+
+menuconfig BSP_USING_WIZCHIP
+    bool "Using w5500 as network device"
+    default n
+    select RESOURCES_WIZCHIP
+    if BSP_USING_WIZCHIP
+        source "$BSP_DIR/third_party_driver/ethernet/Kconfig"
+    endif
+
+menuconfig BSP_USING_CAMERA
+    bool "Using camera device"
+    default n
+    select RESOURCES_CAMERA
+    if BSP_USING_CAMERA
+        source "$BSP_DIR/third_party_driver/dvp/Kconfig"
+    endif
+
+menuconfig BSP_USING_KPU
+    bool "Using kpu device"
+    default n
+    select RESOURCES_KPU
+    if BSP_USING_KPU
+        source "$BSP_DIR/third_party_driver/kpu/Kconfig"
+    endif
+

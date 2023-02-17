@@ -220,7 +220,7 @@ x_err_t _MdelayKTask(KTaskDescriptorType task, uint32 ms)
         return -EINVALED;
     }
 
-    ticks = CalculteTickFromTimeMs(ms);
+    ticks = CalculateTickFromTimeMs(ms);
 
     return  _DelayKTask(task, ticks);
 }

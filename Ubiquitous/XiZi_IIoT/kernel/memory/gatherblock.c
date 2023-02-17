@@ -304,7 +304,7 @@ void *AllocBlockMemGather(GatherMemType gm_handler, int32 msec)
 
     /* get descriptor of task */
     task = GetKTaskDescriptor();
-    wait_time = CalculteTickFromTimeMs(msec);
+    wait_time = CalculateTickFromTimeMs(msec);
 
     critical_value = CriticalAreaLock();
     /* no free gatherblock*/

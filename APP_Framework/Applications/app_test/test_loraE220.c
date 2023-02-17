@@ -67,7 +67,6 @@ void TestLora(int argc, char *argv[])
 
     printf("pin configure success\n");
     struct SerialDataCfg uart_cfg;
-    memset(&uart_cfg, 0, sizeof(struct SerialDataCfg));
 
     // loraE220 support only 9600bps with 8N1 during initializing
     uart_cfg.serial_baud_rate = BAUD_RATE_9600;
@@ -96,7 +95,8 @@ void TestLora(int argc, char *argv[])
     printf("lora configure into sleep(configure) mode\n");
 
     // send configure data, and receive the same length of data
-    char sendbuff[] = {0xC0, 0x00, 0x05, 0x19, 0x49, 0xE6, 0x00, 0x17}; // config as address 1949 CH17 36.8kps
+    // configure loraE220 as address 1949 CH17 36.8kps
+    char sendbuff[] = {0xC0, 0x00, 0x05, 0x19, 0x49, 0xE6, 0x00, 0x17}; 
 
     PrivTaskDelay(2000);
 

@@ -150,8 +150,18 @@ enum IoctlDriverType
     DAC_TYPE,
     WDT_TYPE,
     RTC_TYPE,
+    CAMERA_TYPE,
+    KPU_TYPE,
     DEFAULT_TYPE,
 };
+
+
+struct DvpRegConfigureInfo
+{
+    uint8_t device_addr;
+    uint16_t reg_addr;
+    uint8_t reg_value;
+} ;
 
 struct PrivIoctlCfg
 {
@@ -180,6 +190,18 @@ typedef struct
     void* pixel_color;
 }LcdPixelParam;
 
+struct CameraCfg
+{
+    uint16_t window_w;
+    uint16_t window_h;
+    uint16_t window_xoffset;
+    uint16_t window_yoffset;
+    uint16_t output_w;
+    uint16_t output_h;
+    uint8_t gain;
+    uint8_t gain_manu_enable;
+};
+
 typedef struct 
 {
     char type; // 0:write string;1:write dot
@@ -194,11 +216,47 @@ typedef struct
     uint16_t press;
 }TouchDataParam;
 
+struct TouchDataStandard
+{
+    uint16 x;
+    uint16 y;
+};
+
 struct RtcDrvConfigureParam
 {
     int rtc_operation_cmd;
     time_t *time;
 };
+
+typedef struct 
+{
+    uintptr_t pdata; 
+    uint32_t length;
+}_ioctl_shoot_para;
+
+typedef struct 
+{
+    uint32_t width;         // width   The width  of image
+    uint32_t height;        // height  The height of image
+}_ioctl_set_reso;
+
+typedef struct 
+{
+    uintptr_t r_addr;
+    uintptr_t g_addr;
+    uintptr_t b_addr;
+}RgbAddress;
+
+enum TCP_OPTION {
+    SEND_DATA = 0,
+    RECV_DATA,
+};
+
+typedef struct
+{
+    uint8_t *buffer;
+    size_t length;
+}KpuOutputBuffer;
 
 #define PRIV_SYSTICK_GET (CurrentTicksGain())
 #define PRIV_LCD_DEV "/dev/lcd_dev"
@@ -209,6 +267,35 @@ struct RtcDrvConfigureParam
 #define MY_INDEV_X BSP_LCD_Y_MAX
 #define MY_INDEV_Y BSP_LCD_X_MAX
 
+#define LCD_STRING_TYPE 0
+#define LCD_DOT_TYPE 1
+#define LCD_SIZE 320
+#define IMAGE_HEIGHT 240
+#define IMAGE_WIDTH 320
+#define NULL_PARAMETER 0
+
+#define REG_SCCB_READ 0xA2U
+#define REG_SCCB_WRITE 0xA3U
+#define SCCB_REG_LENGTH 0x08U
+
+#define SET_DISPLAY_ADDR (0xD1)
+#define SET_AI_ADDR (0xD2)
+#define FLAG_CHECK (0xD4)
+
+#define LOAD_KMODEL 0xA0
+#define RUN_KMODEL 0xA1
+#define GET_OUTPUT 0xA2
+#define WAIT_FLAG 0xA3
+
+#define IOCTRL_CAMERA_START_SHOT            (22)     // start shoot
+#define IOCTRL_CAMERA_OUT_SIZE_RESO (23)
+#define IOCTRL_CAMERA_SET_WINDOWS_SIZE      (21)     // user set specific windows outsize
+#define IOCTRL_CAMERA_SET_LIGHT             (24)     //set light mode
+#define IOCTRL_CAMERA_SET_COLOR             (25)     //set color saturation
+#define IOCTRL_CAMERA_SET_BRIGHTNESS        (26)     //set color brightness
+#define IOCTRL_CAMERA_SET_CONTRAST          (27)     //set contrast
+#define IOCTRL_CAMERA_SET_EFFECT            (28)     //set effect
+#define IOCTRL_CAMERA_SET_EXPOSURE          (29)     //set auto exposure
 /*********************shell***********************/
 //for int func(int argc, char *agrv[])
 #define PRIV_SHELL_CMD_MAIN_ATTR (SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN))

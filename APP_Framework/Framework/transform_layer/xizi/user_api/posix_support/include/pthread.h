@@ -73,6 +73,12 @@ typedef int   pid_t;
 int       pthread_atfork(void (*prepare)(void), void (*parent)(void), void (*child)(void));
 int       pthread_create(pthread_t *thread, const pthread_attr_t *attr,
                          void *(*start_routine)(void *), void *arg);
+int pthread_attr_init(pthread_attr_t *attr);
+int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stack_size);
+int pthread_attr_setschedparam(pthread_attr_t *attr,struct sched_param const *param);
+int pthread_attr_setstack(pthread_attr_t *attr,
+                          void           *stack_base,
+                          size_t          stack_size);
 void      pthread_exit(void *value_ptr);
 int       pthread_detach(pthread_t thread);
 int       pthread_join(pthread_t thread, void **retval);

@@ -56,5 +56,16 @@ ifeq ($(CONFIG_BSP_USING_WDT),y)
   SRC_DIR += watchdog
 endif
 
+ifeq ($(CONFIG_BSP_USING_WIZCHIP),y)
+  SRC_DIR += ethernet
+endif
+
+ifeq ($(CONFIG_BSP_USING_CAMERA),y)
+  SRC_DIR += dvp
+endif
+
+ifeq ($(CONFIG_BSP_USING_KPU),y)
+  SRC_DIR += kpu
+endif
 
 include $(KERNEL_ROOT)/compiler.mk

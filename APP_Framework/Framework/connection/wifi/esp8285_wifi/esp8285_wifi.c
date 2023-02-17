@@ -205,16 +205,16 @@ static int Esp8285WifiSetUp(struct Adapter *adapter)
     PrivTaskDelay(2000);
     /* connect the router */
     memset(cmd,0,sizeof(cmd));
-    strncpy(cmd,"AT+CWJAP=",strlen("AT+CWJAP="));
-    strncat(cmd,"\"",1);
-    strncat(cmd,param->wifi_ssid,strlen(param->wifi_ssid));
+    strcat(cmd,"AT+CWJAP=");
+    strcat(cmd,"\"");
+    strcat(cmd,param->wifi_ssid);
 
-    strncat(cmd,"\"",1);
-    strncat(cmd,",",1);
-    strncat(cmd,"\"",1);
-    strncat(cmd,param->wifi_pwd,strlen(param->wifi_pwd));
+    strcat(cmd,"\"");
+    strcat(cmd,",");
+    strcat(cmd,"\"");
+    strcat(cmd,param->wifi_pwd);
 
-    strncat(cmd,"\"",1);
+    strcat(cmd,"\"");
     strcat(cmd,"\r\n");
 
     ret = AtCmdConfigAndCheck(agent, cmd, "OK");
@@ -279,17 +279,17 @@ static int Esp8285WifiSetAddr(struct Adapter *adapter, const char *ip, const cha
     /* e.g. AT+CIPSTA_DEF="192.168.6.100","192.168.6.1","255.255.255.0" */
     memset(cmd,0,sizeof(cmd));
     strncpy(cmd,"AT+CIPAP_DEF=",strlen(" AT+CIPAP_DEF="));
-    strncat(cmd,"\"",1);
-    strncat(cmd,ip,strlen(ip));
-    strncat(cmd,"\"",1);
-    strncat(cmd,",",1);
-    strncat(cmd,"\"",1);
-    strncat(cmd,gateway,strlen(gateway));
-    strncat(cmd,"\"",1);
-    strncat(cmd,",",1);
-    strncat(cmd,"\"",1);
-    strncat(cmd,netmask,strlen(netmask));
-    strncat(cmd,"\"",1);
+    strcat(cmd,"\"");
+    strcat(cmd,ip);
+    strcat(cmd,"\"");
+    strcat(cmd,",");
+    strcat(cmd,"\"");
+    strcat(cmd,gateway);
+    strcat(cmd,"\"");
+    strcat(cmd,",");
+    strcat(cmd,"\"");
+    strcat(cmd,netmask);
+    strcat(cmd,"\"");
     strcat(cmd,"\r\n");
 
     ret = AtCmdConfigAndCheck(adapter->agent, cmd, "OK");
@@ -314,9 +314,9 @@ static int Esp8285WifiPing(struct Adapter *adapter, const char *destination)
 
     memset(cmd,0,sizeof(cmd));
     strncpy(cmd,"AT+PING=",strlen("AT+PING="));
-    strncat(cmd,"\"",1);
-    strncat(cmd,destination,strlen(destination));
-    strncat(cmd,"\"",1);
+    strcat(cmd,"\"");
+    strcat(cmd,destination);
+    strcat(cmd,"\"");
     strcat(cmd,"\r\n");
 
     ret = AtCmdConfigAndCheck(adapter->agent, cmd, "OK"); ///< config as softAP+station mode
@@ -387,15 +387,15 @@ static int Esp8285WifiConnect(struct Adapter *adapter, enum NetRoleType net_role
     {
         //e.g. AT+CIPSTART="TCP","192.168.3.116",8080 protocol, server IP and port
         strncpy(cmd,"AT+CIPSTART=",strlen("AT+CIPSTART="));
-        strncat(cmd,"\"",1);
-        strncat(cmd,"TCP",strlen("TCP"));
-        strncat(cmd,"\"",1);
-        strncat(cmd, ",", 1);
-        strncat(cmd,"\"",1);
-        strncat(cmd, ip, strlen(ip));
-        strncat(cmd, "\"", 1);
-        strncat(cmd, ",", 1);
-        strncat(cmd, port, strlen(port));
+        strcat(cmd,"\"");
+        strcat(cmd,"TCP");
+        strcat(cmd,"\"");
+        strcat(cmd, ",");
+        strcat(cmd,"\"");
+        strcat(cmd, ip);
+        strcat(cmd, "\"");
+        strcat(cmd, ",");
+        strcat(cmd, port);
         strcat(cmd,"\r\n");
 
         ret = AtCmdConfigAndCheck(agent, cmd, "OK");
@@ -408,19 +408,19 @@ static int Esp8285WifiConnect(struct Adapter *adapter, enum NetRoleType net_role
     {
         //e.g. AT+CIPSTART="UDP","192.168.3.116",8080,2233,0  UDP protocol, server IP, port,local port,udp mode
         strncpy(cmd,"AT+CIPSTART=",strlen("AT+CIPSTART="));
-        strncat(cmd,"\"",1);
-        strncat(cmd,"UDP",strlen("UDP"));
-        strncat(cmd,"\"",1);
-        strncat(cmd, ",", 1);
-        strncat(cmd,"\"",1);
-        strncat(cmd, ip, strlen(ip));
-        strncat(cmd, "\"", 1);
-        strncat(cmd, ",", 1);
-        strncat(cmd, port, strlen(port));
-        strncat(cmd, ",", 1);
-        strncat(cmd, "2233", strlen("2233")); ///< local port
-        strncat(cmd, ",", 1);
-        strncat(cmd, "0", 1); ///< udp transparent transmission mode must be 0
+        strcat(cmd,"\"");
+        strcat(cmd,"UDP");
+        strcat(cmd,"\"");
+        strcat(cmd, ",");
+        strcat(cmd,"\"");
+        strcat(cmd, ip);
+        strcat(cmd, "\"");
+        strcat(cmd, ",");
+        strcat(cmd, port);
+        strcat(cmd, ",");
+        strcat(cmd, "2233"); ///< local port
+        strcat(cmd, ",");
+        strcat(cmd, "0"); ///< udp transparent transmission mode must be 0
         strcat(cmd,"\r\n");
 
         ret = AtCmdConfigAndCheck(agent, cmd, "OK");
@@ -523,15 +523,15 @@ static int Esp8285WifiIoctl(struct Adapter *adapter, int cmd, void *args)
             itoa(baud_rate, baud_str, 10);
 
             strncpy(at_cmd, "AT+UART_DEF=", strlen("AT+UART_DEF="));
-            strncat(at_cmd, baud_str, strlen(baud_str));
-            strncat(at_cmd, ",", 1);
-            strncat(at_cmd, "8", 1);
-            strncat(at_cmd, ",", 1);
-            strncat(at_cmd, "1", 1);
-            strncat(at_cmd, ",", 1);
-            strncat(at_cmd, "0", 1);
-            strncat(at_cmd, ",", 1);
-            strncat(at_cmd, "3", 1);
+            strcat(at_cmd, baud_str);
+            strcat(at_cmd, ",");
+            strcat(at_cmd, "8");
+            strcat(at_cmd, ",");
+            strcat(at_cmd, "1");
+            strcat(at_cmd, ",");
+            strcat(at_cmd, "0");
+            strcat(at_cmd, ",");
+            strcat(at_cmd, "3");
             strcat(at_cmd,"\r\n");
 
             ret = AtCmdConfigAndCheck(adapter->agent, at_cmd, "OK");

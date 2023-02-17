@@ -479,7 +479,7 @@ static x_err_t I2cBitSendAddress(struct I2cBus *bus, struct I2cDataStandard *msg
 
     retries = ignore_nack ? 0 : msg->retries;
 
-    if (flags & I2C_ADDR_10BIT) {
+    if (flags & I2C_ADDR_10BIT_MODE) {
         addr1 = 0xf0 | ((msg->addr >> 7) & 0x06);
         addr2 = msg->addr & 0xff;
 

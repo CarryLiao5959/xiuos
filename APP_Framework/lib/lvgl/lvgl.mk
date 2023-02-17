@@ -1,6 +1,6 @@
-# include $(LVGL_DIR)/$(LVGL_DIR_NAME)/examples/examples.mk
-include $(LVGL_DIR)/$(LVGL_DIR_NAME)/porting/porting.mk
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/examples/examples.mk
 include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/extra/extra.mk
+
 include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/core/lv_core.mk
 include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/draw/lv_draw.mk
 include $(LVGL_DIR)/$(LVGL_DIR_NAME)/src/font/lv_font.mk

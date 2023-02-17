@@ -83,20 +83,20 @@
 
 /* The HC32 F4A0 have no CCM SRAM */
 
-#  if defined(CONFIG_HC32_HC32F4A0) 
+#  if defined(CONFIG_HC32_HC32F4A0)
 #    undef CONFIG_HC32_CCMEXCLUDE
 #    define CONFIG_HC32_CCMEXCLUDE 1
 #  endif
 
 /* Set the end of system SRAM */
 
-#define SRAM1_END 0x20073880
+#define SRAM1_END 0x1FFF0000
 
 
 /* Set the range of CCM SRAM as well (although we may not use it) */
 
-#define SRAM2_START 0x1FE00000
-#define SRAM2_END 0x20073880
+#define SRAM2_START 0x1FFF0000
+#define SRAM2_END   0x20070000
 
 
 /* There are 4 possible SRAM configurations:

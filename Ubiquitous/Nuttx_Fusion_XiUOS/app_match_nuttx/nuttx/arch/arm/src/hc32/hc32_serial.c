@@ -64,49 +64,7 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#define USART_CR1_USED_INTS    (USART_CR1_RIE | USART_CR1_TXEIE | USART_CR1_PCE | USART_CR1_TCIE)
-
-
-/* Some sanity checks *******************************************************/
-
-/* DMA configuration */
-
-/* If DMA is enabled on any USART, then very that other pre-requisites
- * have also been selected.
- */
-
-/* Power management definitions */
-
-#if defined(CONFIG_PM) && !defined(CONFIG_HC32_PM_SERIAL_ACTIVITY)
-#  define CONFIG_HC32_PM_SERIAL_ACTIVITY 10
-#endif
-#if defined(CONFIG_PM)
-#  define PM_IDLE_DOMAIN             0 /* Revisit */
-#endif
-
-/* Since RX DMA or TX DMA or both may be enabled for a given U[S]ART.
- * We need runtime detection in up_dma_setup and up_dma_shutdown
- * We use the default struct default init value of 0 which maps to
- * HC32_DMA_MAP(DMA1,DMA_STREAM0,DMA_CHAN0) which is not a U[S]ART.
- */
-
-#define INVALID_SERIAL_DMA_CHANNEL 0
-
-/* Keep track if a Break was set
- *
- * Note:
- *
- * 1) This value is set in the priv->ie but never written to the control
- *    register. It must not collide with USART_CR1_USED_INTS or USART_CR3_EIE
- * 2) USART_CR3_EIE is also carried in the up_dev_s ie member.
- *
- * See up_restoreusartint where the masking is done.
- */
-
-#ifdef CONFIG_HC32_SERIALBRK_BSDCOMPAT
-#  define USART_CR1_IE_BREAK_INPROGRESS_SHFTS 15
-#  define USART_CR1_IE_BREAK_INPROGRESS (1 << USART_CR1_IE_BREAK_INPROGRESS_SHFTS)
-#endif
+#define USART_CR1_USED_INTS    (USART_CR1_RIE | USART_CR1_RTOIE | USART_CR1_TXEIE | USART_CR1_PCE | USART_CR1_TCIE)
 
 #ifdef USE_SERIALDRIVER
 #ifdef HAVE_SERIALDRIVER
@@ -154,10 +112,21 @@ struct up_dev_s
 #endif
 
   const uint32_t    irq;       /* IRQ associated with this USART */
-  const uint32_t    apbclock;  /* PCLK 1 or 2 frequency */
+  const uint32_t    clk_gate;
   const uint32_t    usartbase; /* Base address of USART registers */
   const uint32_t    tx_gpio;   /* U[S]ART TX GPIO pin configuration */
+  const uint32_t    tx_func;
   const uint32_t    rx_gpio;   /* U[S]ART RX GPIO pin configuration */
+  const uint32_t    rx_func;
+  const uint32_t    rx_irq;
+  const uint32_t    tx_irq;
+  const uint32_t    txc_irq;
+  const uint32_t    err_irq;
+  const uint32_t    rxint_src;
+  const uint32_t    txint_src;
+  const uint32_t    txcint_src;
+  const uint32_t    errint_src;
+  const stc_usart_uart_init_t param; // U[S]ART parameter
 #ifdef CONFIG_SERIAL_IFLOWCONTROL
   const uint32_t    rts_gpio;  /* U[S]ART RTS GPIO pin configuration */
 #endif
@@ -175,7 +144,6 @@ struct up_dev_s
  * Private Function Prototypes
  ****************************************************************************/
 
-static void up_set_format(struct uart_dev_s *dev);
 static int  up_setup(struct uart_dev_s *dev);
 static void up_shutdown(struct uart_dev_s *dev);
 static int  up_attach(struct uart_dev_s *dev);
@@ -193,13 +161,6 @@ static void up_send(struct uart_dev_s *dev, int ch);
 static void up_txint(struct uart_dev_s *dev, bool enable);
 static bool up_txready(struct uart_dev_s *dev);
 
-
-#ifdef CONFIG_PM
-static void up_pm_notify(struct pm_callback_s *cb, int dowmin,
-                         enum pm_state_e pmstate);
-static int  up_pm_prepare(struct pm_callback_s *cb, int domain,
-                          enum pm_state_e pmstate);
-#endif
 
 /****************************************************************************
  * Private Data
@@ -557,35 +518,46 @@ static struct up_dev_s g_uart5priv =
 /* UART RX/TX Port/Pin definition */
 #define USART_RX_PORT                   (GPIO_PORT_H)   /* PH6: USART6_RX */
 #define USART_RX_PIN                    (GPIO_PIN_06)
-#define USART_RX_GPIO_FUNC              (GPIO_FUNC_37_USART6_RX)
+#define USART_RX_FUNC                   (GPIO_FUNC_37_USART6_RX)
 
 #define USART_TX_PORT                   (GPIO_PORT_E)   /* PE6: USART6_TX */
 #define USART_TX_PIN                    (GPIO_PIN_06)
-#define USART_TX_GPIO_FUNC              (GPIO_FUNC_36_USART6_TX)
+#define USART_TX_FUNC                   (GPIO_FUNC_36_USART6_TX)
 
 /* UART unit definition */
 #define USART_UNIT                      (M4_USART6)
-#define USART_FUNCTION_CLK_GATE         (PWC_FCG3_USART6)
+#define USART_CLK_GATE                  (PWC_FCG3_USART6)
 
 /* UART unit interrupt definition */
 #define USART_UNIT_ERR_INT_SRC          (INT_USART6_EI)
-#define USART_UNIT_ERR_INT_IRQn         (Int015_IRQn + HC32_IRQ_FIRST)
+#define USART_UNIT_ERR_INT_IRQn         (Int011_IRQn + HC32_IRQ_FIRST)
 
 #define USART_UNIT_RX_INT_SRC           (INT_USART6_RI)
-#define USART_UNIT_RX_INT_IRQn          (Int010_IRQn + HC32_IRQ_FIRST)
+#define USART_UNIT_RX_INT_IRQn          (Int012_IRQn + HC32_IRQ_FIRST)
 
 #define USART_UNIT_TX_INT_SRC           (INT_USART6_TI)
-#define USART_UNIT_TX_INT_IRQn          (Int102_IRQn + HC32_IRQ_FIRST)
+#define USART_UNIT_TX_INT_IRQn          (Int013_IRQn + HC32_IRQ_FIRST)
 
 #define USART_UNIT_TCI_INT_SRC          (INT_USART6_TCI)
-#define USART_UNIT_TCI_INT_IRQn         (Int099_IRQn + HC32_IRQ_FIRST)
+#define USART_UNIT_TCI_INT_IRQn         (Int014_IRQn + HC32_IRQ_FIRST)
 
-#define HC32_UART6_BASE 0x40020C00UL// M4_USART6
-#define HC32_IRQ_USART6 (Int010_IRQn + HC32_IRQ_FIRST)
 #define GPIO_USART6_TX GPIO_PINSET(USART_TX_PORT, USART_TX_PIN)
 #define GPIO_USART6_RX GPIO_PINSET(USART_RX_PORT, USART_RX_PIN)
 
-#define HC32_PCLK2_FREQUENCY 120000000
+
+const stc_usart_uart_init_t usart6config = {
+    .u32Baudrate = BSP_PRINTF_BAUDRATE,
+    .u32BitDirection = USART_LSB,
+    .u32StopBit = USART_STOPBIT_1BIT,
+    .u32Parity = USART_PARITY_NONE,
+    .u32DataWidth = USART_DATA_LENGTH_8BIT,
+    .u32ClkMode = USART_INTERNCLK_OUTPUT,
+    .u32PclkDiv = USART_PCLK_DIV64,
+    .u32OversamplingBits = USART_OVERSAMPLING_8BIT,
+    .u32NoiseFilterState = USART_NOISE_FILTER_DISABLE,
+    .u32SbDetectPolarity = USART_SB_DETECT_FALLING,
+};
+
 
 static struct up_dev_s g_usart6priv =
 {
@@ -608,15 +580,35 @@ static struct up_dev_s g_usart6priv =
       .priv     = &g_usart6priv,
     },
 
-  .irq            = HC32_IRQ_USART6,
-  .parity         = CONFIG_UART6_PARITY,
-  .bits           = CONFIG_UART6_BITS,
-  .stopbits2      = CONFIG_UART6_2STOP,
-  .baud           = CONFIG_UART6_BAUD,
-  .apbclock       = HC32_PCLK2_FREQUENCY,
-  .usartbase      = HC32_UART6_BASE,
+  .irq            = USART_UNIT_RX_INT_IRQn,
+  .rx_irq         = USART_UNIT_RX_INT_IRQn,
+  .tx_irq         = USART_UNIT_TX_INT_IRQn,
+  .txc_irq        = USART_UNIT_TCI_INT_IRQn,
+  .err_irq        = USART_UNIT_ERR_INT_IRQn,
+  .rxint_src      = USART_UNIT_RX_INT_SRC,
+  .txint_src      = USART_UNIT_TX_INT_SRC,
+  .txcint_src     = USART_UNIT_TCI_INT_SRC,
+  .errint_src     = USART_UNIT_ERR_INT_SRC,
+
+  .clk_gate       = USART_CLK_GATE,
+  .usartbase      = (uint32_t)USART_UNIT,
   .tx_gpio        = GPIO_USART6_TX,
+  .tx_func        = USART_TX_FUNC,
   .rx_gpio        = GPIO_USART6_RX,
+  .rx_func        = USART_RX_FUNC,
+  .param          =
+  {
+    .u32Baudrate = BSP_PRINTF_BAUDRATE,
+    .u32BitDirection = USART_LSB,
+    .u32StopBit = USART_STOPBIT_1BIT,
+    .u32Parity = USART_PARITY_NONE,
+    .u32DataWidth = USART_DATA_LENGTH_8BIT,
+    .u32ClkMode = USART_INTERNCLK_OUTPUT,
+    .u32PclkDiv = USART_PCLK_DIV64,
+    .u32OversamplingBits = USART_OVERSAMPLING_8BIT,
+    .u32NoiseFilterState = USART_NOISE_FILTER_DISABLE,
+    .u32SbDetectPolarity = USART_SB_DETECT_FALLING
+  },
 #if defined(CONFIG_SERIAL_OFLOWCONTROL) && defined(CONFIG_USART6_OFLOWCONTROL)
   .oflow          = true,
   .cts_gpio       = GPIO_USART6_CTS,
@@ -637,112 +629,7 @@ static struct up_dev_s g_usart6priv =
 };
 #endif
 
-/* This describes the state of the HC32 UART7 port. */
-
-#ifdef CONFIG_UART7_SERIALDRIVER
-static struct up_dev_s g_uart7priv =
-{
-  .dev =
-    {
-#if CONSOLE_UART == 7
-      .isconsole = true,
-#endif
-      .recv     =
-      {
-        .size   = CONFIG_UART7_RXBUFSIZE,
-        .buffer = g_uart7rxbuffer,
-      },
-      .xmit     =
-      {
-        .size   = CONFIG_UART7_TXBUFSIZE,
-        .buffer = g_uart7txbuffer,
-      },
-
-      .ops       = &g_uart_ops,
-      .priv     = &g_uart7priv,
-    },
-
-  .irq            = HC32_IRQ_UART7,
-  .parity         = CONFIG_UART7_PARITY,
-  .bits           = CONFIG_UART7_BITS,
-  .stopbits2      = CONFIG_UART7_2STOP,
-  .baud           = CONFIG_UART7_BAUD,
-  .apbclock       = HC32_PCLK1_FREQUENCY,
-  .usartbase      = HC32_UART7_BASE,
-  .tx_gpio        = GPIO_UART7_TX,
-  .rx_gpio        = GPIO_UART7_RX,
-#if defined(CONFIG_SERIAL_OFLOWCONTROL) && defined(CONFIG_UART7_OFLOWCONTROL)
-  .oflow          = true,
-  .cts_gpio       = GPIO_UART7_CTS,
-#endif
-#if defined(CONFIG_SERIAL_IFLOWCONTROL) && defined(CONFIG_UART7_IFLOWCONTROL)
-  .iflow          = true,
-  .rts_gpio       = GPIO_UART7_RTS,
-#endif
-
-#ifdef CONFIG_UART7_RS485
-  .rs485_dir_gpio = GPIO_UART7_RS485_DIR,
-#  if (CONFIG_UART7_RS485_DIR_POLARITY == 0)
-  .rs485_dir_polarity = false,
-#  else
-  .rs485_dir_polarity = true,
-#  endif
-#endif
-};
-#endif
-
-/* This describes the state of the HC32 UART8 port. */
-
-#ifdef CONFIG_UART8_SERIALDRIVER
-static struct up_dev_s g_uart8priv =
-{
-  .dev =
-    {
-#if CONSOLE_UART == 8
-      .isconsole = true,
-#endif
-      .recv     =
-      {
-        .size   = CONFIG_UART8_RXBUFSIZE,
-        .buffer = g_uart8rxbuffer,
-      },
-      .xmit     =
-      {
-        .size   = CONFIG_UART8_TXBUFSIZE,
-        .buffer = g_uart8txbuffer,
-      },
-      .ops       = &g_uart_ops,
-      .priv     = &g_uart8priv,
-    },
-
-  .irq            = HC32_IRQ_UART8,
-  .parity         = CONFIG_UART8_PARITY,
-  .bits           = CONFIG_UART8_BITS,
-  .stopbits2      = CONFIG_UART8_2STOP,
-  .baud           = CONFIG_UART8_BAUD,
-  .apbclock       = HC32_PCLK1_FREQUENCY,
-  .usartbase      = HC32_UART8_BASE,
-  .tx_gpio        = GPIO_UART8_TX,
-  .rx_gpio        = GPIO_UART8_RX,
-#if defined(CONFIG_SERIAL_OFLOWCONTROL) && defined(CONFIG_UART8_OFLOWCONTROL)
-  .oflow          = true,
-  .cts_gpio       = GPIO_UART8_CTS,
-#endif
-#if defined(CONFIG_SERIAL_IFLOWCONTROL) && defined(CONFIG_UART8_IFLOWCONTROL)
-  .iflow          = true,
-  .rts_gpio       = GPIO_UART8_RTS,
-#endif
-
-#ifdef CONFIG_UART8_RS485
-  .rs485_dir_gpio = GPIO_UART8_RS485_DIR,
-#  if (CONFIG_UART8_RS485_DIR_POLARITY == 0)
-  .rs485_dir_polarity = false,
-#  else
-  .rs485_dir_polarity = true,
-#  endif
-#endif
-};
-#endif
+static struct up_dev_s *g_uart_rx_dev = &g_usart6priv;
 
 /* This table lets us iterate over the configured USARTs */
 
@@ -774,35 +661,98 @@ static struct up_dev_s * const g_uart_devs[HC32_NUSART] =
 #endif
 };
 
-#ifdef CONFIG_PM
-static  struct pm_callback_s g_serialcb =
-{
-  .notify  = up_pm_notify,
-  .prepare = up_pm_prepare,
-};
-#endif
+static inline uint32_t up_serialin(struct up_dev_s *priv, int offset);
 
 /****************************************************************************
  * Private Functions
  ****************************************************************************/
 
-void hc32_print(const char *fmt, ...)
+void hc32_rx_irq_cb(void)
 {
-    int i;
+    up_interrupt(g_uart_rx_dev->rx_irq, NULL, g_uart_rx_dev);
+}
+
+void hc32_tx_irq_cb(void)
+{
+    up_interrupt(g_uart_rx_dev->tx_irq, NULL, g_uart_rx_dev);
+}
+
+void hc32_txc_irq_cb(void)
+{
+    up_interrupt(g_uart_rx_dev->txc_irq, NULL, g_uart_rx_dev);
+}
+
+void hc32_err_irq_cb(void)
+{
+    up_interrupt(g_uart_rx_dev->err_irq, NULL, g_uart_rx_dev);
+}
+
+
+static int hc32_err_irq_handler(int irq, FAR void *context, FAR void *arg)
+{
+    up_irq_save();
+    IRQ011_Handler();
+    return 0;
+}
+
+static int hc32_rx_irq_handler(int irq, FAR void *context, FAR void *arg)
+{
+    up_irq_save();
+    IRQ012_Handler();
+    return 0;
+}
+
+static int hc32_tx_irq_handler(int irq, FAR void *context, FAR void *arg)
+{
+    up_irq_save();
+    IRQ013_Handler();
+    return 0;
+}
+
+static int hc32_tci_irq_handler(int irq, FAR void *context, FAR void *arg)
+{
+    up_irq_save();
+    IRQ014_Handler();
+    return 0;
+}
+
+int hc32_print(const char *fmt, ...)
+{
+    int i, ret;
     va_list ap;
     char buf[256];
 
     memset(buf, 0, sizeof(buf));
     va_start(ap, fmt);
-    vsnprintf(buf, 255, fmt, ap);
+    ret = vsnprintf(buf, 255, fmt, ap);
     va_end(ap);
+    USART_FuncCmd(USART_UNIT, USART_RX | USART_TX, Enable);
 
-    USART_FuncCmd(USART_UNIT, USART_TX, Enable);
+    arm_lowputc('-');
+    arm_lowputc(' ');
 
     for (i = 0; i < strlen(buf); i++)
     {
-        while(Set != USART_GetStatus(USART_UNIT, USART_FLAG_TXE));
-        USART_SendData(USART_UNIT, (uint16_t)*(buf + i));
+        arm_lowputc((uint16_t)*(buf + i));
+    }
+    return ret;
+}
+
+/**
+ * @brief  Instal IRQ handler.
+ * @param  [in] pstcConfig      Pointer to struct @ref stc_irq_signin_config_t
+ * @param  [in] u32Priority     Interrupt priority
+ * @retval None
+ */
+static void hc32_serial_enableirq(const stc_irq_signin_config_t *pstcConfig,
+                                    uint32_t u32Priority)
+{
+    if (NULL != pstcConfig)
+    {
+        (void)INTC_IrqSignIn(pstcConfig);
+        NVIC_ClearPendingIRQ(pstcConfig->enIRQn);
+        NVIC_SetPriority(pstcConfig->enIRQn, u32Priority);
+        NVIC_EnableIRQ(pstcConfig->enIRQn);
     }
 }
 
@@ -825,6 +775,7 @@ static inline void up_serialout(struct up_dev_s *priv, int offset,
   putreg32(value, priv->usartbase + offset);
 }
 
+
 /****************************************************************************
  * Name: up_setusartint
  ****************************************************************************/
@@ -832,7 +783,6 @@ static inline void up_serialout(struct up_dev_s *priv, int offset,
 static inline void up_setusartint(struct up_dev_s *priv, uint16_t ie)
 {
   uint32_t cr;
-  M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
 
   /* Save the interrupt mask */
 
@@ -842,12 +792,12 @@ static inline void up_setusartint(struct up_dev_s *priv, uint16_t ie)
    * table above)
    */
 
-  cr  = up_serialin(priv, base->_CR1);
+  cr  = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR1));
   cr &= ~(USART_CR1_USED_INTS);
   cr |= (ie & (USART_CR1_USED_INTS));
-  up_serialout(priv, base->_CR1, cr);
-//
-//  cr  = up_serialin(priv, base->_CR3);
+  up_serialout(priv, offsetof(M4_USART_TypeDef, _CR1), cr);
+
+//  cr  = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR3));
 //  cr &= ~USART_CR3_EIE;
 //  cr |= (ie & USART_CR3_EIE);
 //  up_serialout(priv, base->_CR3, cr);
@@ -860,8 +810,6 @@ static inline void up_setusartint(struct up_dev_s *priv, uint16_t ie)
 static void up_restoreusartint(struct up_dev_s *priv, uint16_t ie)
 {
   irqstate_t flags;
-
-//  hc32_print("check %s line %d\n", __func__, __LINE__);
 
   flags = enter_critical_section();
 
@@ -877,7 +825,6 @@ static void up_restoreusartint(struct up_dev_s *priv, uint16_t ie)
 static void up_disableusartint(struct up_dev_s *priv, uint16_t *ie)
 {
   irqstate_t flags;
-  M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
 
   flags = enter_critical_section();
 
@@ -903,7 +850,7 @@ static void up_disableusartint(struct up_dev_s *priv, uint16_t *ie)
        * USART_CR3_CTSIE    USART_SR_CTS    CTS flag               (not used)
        */
 
-      cr1 = up_serialin(priv, base->_CR1);
+      cr1 = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR1));
       *ie = cr1 & (USART_CR1_USED_INTS);
     }
 
@@ -914,37 +861,6 @@ static void up_disableusartint(struct up_dev_s *priv, uint16_t *ie)
   leave_critical_section(flags);
 }
 
-/****************************************************************************
- * Name: up_set_format
- *
- * Description:
- *   Set the serial line format and speed.
- *
- ****************************************************************************/
-
-#ifndef CONFIG_SUPPRESS_UART_CONFIG
-static void up_set_format(struct uart_dev_s *dev)
-{
-
-}
-#endif /* CONFIG_SUPPRESS_UART_CONFIG */
-
-/****************************************************************************
- * Name: up_set_apb_clock
- *
- * Description:
- *   Enable or disable APB clock for the USART peripheral
- *
- * Input Parameters:
- *   dev - A reference to the UART driver state structure
- *   on  - Enable clock if 'on' is 'true' and disable if 'false'
- *
- ****************************************************************************/
-
-static void up_set_apb_clock(struct uart_dev_s *dev, bool on)
-{
-
-}
 
 /****************************************************************************
  * Name: up_setup
@@ -954,111 +870,109 @@ static void up_set_apb_clock(struct uart_dev_s *dev, bool on)
  *   first time that the serial port is opened.
  *
  ****************************************************************************/
-
 static int up_setup(struct uart_dev_s *dev)
 {
   struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
-  M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
-
-  hc32_print("%s irq %d\n", __func__, priv->irq);
 
 #ifndef CONFIG_SUPPRESS_UART_CONFIG
-  uint32_t regval;
+    uint32_t regval;
 
-  /* Note: The logic here depends on the fact that that the USART module
-   * was enabled in hc32_lowsetup().
-   */
+    /* Note: The logic here depends on the fact that that the USART module
+     * was enabled in stm32_lowsetup().
+     */
 
-  /* Enable USART APB1/2 clock */
+    /* Enable USART APB1/2 clock */
 
-  up_set_apb_clock(dev, true);
+//    up_set_apb_clock(dev, true);
 
-  /* Configure pins for USART use */
+    /* Configure pins for USART use */
 
-  hc32_configgpio(priv->tx_gpio);
-  hc32_configgpio(priv->rx_gpio);
+    hc32_configgpio(priv->tx_gpio);
+    hc32_configgpio(priv->rx_gpio);
 
 #ifdef CONFIG_SERIAL_OFLOWCONTROL
-  if (priv->cts_gpio != 0)
-    {
-      hc32_configgpio(priv->cts_gpio);
-    }
+    if (priv->cts_gpio != 0)
+      {
+        hc32_configgpio(priv->cts_gpio);
+      }
 #endif
 
 #ifdef CONFIG_SERIAL_IFLOWCONTROL
-  if (priv->rts_gpio != 0)
-    {
-      uint32_t config = priv->rts_gpio;
+    if (priv->rts_gpio != 0)
+      {
+        uint32_t config = priv->rts_gpio;
 
-#ifdef CONFIG_HC32_FLOWCONTROL_BROKEN
-      /* Instead of letting hw manage this pin, we will bitbang */
+#ifdef CONFIG_STM32_FLOWCONTROL_BROKEN
+        /* Instead of letting hw manage this pin, we will bitbang */
 
-      config = (config & ~GPIO_MODE_MASK) | GPIO_OUTPUT;
+        config = (config & ~GPIO_MODE_MASK) | GPIO_OUTPUT;
 #endif
-      hc32_configgpio(config);
-    }
+        hc32_configgpio(config);
+      }
 #endif
 
 #ifdef HAVE_RS485
-  if (priv->rs485_dir_gpio != 0)
-    {
-      hc32_configgpio(priv->rs485_dir_gpio);
-      hc32_gpiowrite(priv->rs485_dir_gpio, !priv->rs485_dir_polarity);
-    }
+    if (priv->rs485_dir_gpio != 0)
+      {
+        hc32_configgpio(priv->rs485_dir_gpio);
+        hc32_gpiowrite(priv->rs485_dir_gpio, !priv->rs485_dir_polarity);
+      }
 #endif
 
-  /* Configure CR2
-   * Clear STOP, CLKEN, CPOL, CPHA, LBCL, and interrupt enable bits
-   */
+    /* Configure CR2
+     * Clear STOP, CLKEN, CPOL, CPHA, LBCL, and interrupt enable bits
+     */
 
-  regval  = up_serialin(priv, base->_CR2);
+    regval  = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR2));
+    regval &= ~(USART_CR2_STOP | USART_CR2_CLKC | USART_CR2_WKUPIE |
+                USART_CR2_BEIE | USART_CR2_LBDIE | USART_CR2_LBDIE);
 
-  regval &= ~(USART_CR2_STOP | USART_CR2_CLKC | USART_CR2_WKUPE |
-              USART_CR2_SBKL | USART_CR2_LBDL | USART_CR2_LBDIE);
+    /* Configure STOP bits */
 
-  /* Configure STOP bits */
+    if (priv->stopbits2)
+      {
+        regval |= USART_CR2_STOP;
+      }
 
-  if (priv->stopbits2)
-    {
-      regval |= USART_CR2_STOP;
-    }
+    up_serialout(priv, offsetof(M4_USART_TypeDef, _CR2), regval);
 
-  up_serialout(priv, base->_CR2, regval);
+    /* Configure CR1
+     * Clear TE, REm and all interrupt enable bits
+     */
 
-  /* Configure CR1
-   * Clear TE, REm and all interrupt enable bits
-   */
+    regval  = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR1));
+    regval &= ~(USART_CR1_TE | USART_CR1_RE | USART_CR1_RTOE);
 
-  regval  = up_serialin(priv, base->_CR1);
-  regval &= ~(USART_CR1_TE | USART_CR1_RE | USART_CR1_USED_INTS);
+    up_serialout(priv, offsetof(M4_USART_TypeDef, _CR1), regval);
 
-  up_serialout(priv, base->_CR1, regval);
+    /* Configure CR3
+     * Clear CTSE, RTSE, and all interrupt enable bits
+     */
 
-  /* Configure CR3
-   * Clear CTSE, RTSE, and all interrupt enable bits
-   */
+    regval  = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR3));
+    regval &= ~(USART_CR3_CTSE | USART_CR3_RTSE );
 
-  regval  = up_serialin(priv, base->_CR3);
-  regval &= ~(USART_CR3_CTSE | USART_CR3_RTSE);
+    up_serialout(priv, offsetof(M4_USART_TypeDef, _CR3), regval);
 
-  up_serialout(priv, base->_CR3, regval);
+    /* Configure the USART line format and speed. */
 
-  /* Configure the USART line format and speed. */
+//    up_set_format(dev);
 
-  up_set_format(dev);
+    /* Enable Rx, Tx, and the USART */
 
-  /* Enable Rx, Tx, and the USART */
+    regval      = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR1));
 
-  regval      = up_serialin(priv, base->_CR1);
-  regval     |= (USART_CR1_TE | USART_CR1_RE | USART_CR1_USED_INTS);
+    regval     |= (USART_CR1_RTOE | USART_CR1_RTOIE | USART_CR1_TE |
+        USART_CR1_RE | USART_CR1_RIE | USART_CR1_TXEIE | USART_CR1_TCIE);
 
-  up_serialout(priv, base->_CR1, regval);
+    up_serialout(priv, offsetof(M4_USART_TypeDef, _CR1), regval);
 
 #endif /* CONFIG_SUPPRESS_UART_CONFIG */
 
+
   /* Set up the cached interrupt enables value */
 
-  priv->ie    = 0;
+  priv->ie = 0;
 
   /* Mark device as initialized. */
 
@@ -1079,10 +993,7 @@ static int up_setup(struct uart_dev_s *dev)
 static void up_shutdown(struct uart_dev_s *dev)
 {
   struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
-  M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
   uint32_t regval;
-
-  hc32_print("check %s line %d\n", __func__, __LINE__);
 
   /* Mark device as uninitialized. */
 
@@ -1092,15 +1003,11 @@ static void up_shutdown(struct uart_dev_s *dev)
 
   up_disableusartint(priv, NULL);
 
-  /* Disable USART APB1/2 clock */
-
-  up_set_apb_clock(dev, false);
-
   /* Disable Rx, Tx, and the UART */
 
-  regval  = up_serialin(priv, base->_CR1);
+  regval  = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR1));
   regval &= ~( USART_CR1_TE | USART_CR1_RE);
-  up_serialout(priv, base->_CR1, regval);
+  up_serialout(priv, offsetof(M4_USART_TypeDef, _CR1), regval);
 
   /* Release pins. "If the serial-attached device is powered down, the TX
    * pin causes back-powering, potentially confusing the device to the point
@@ -1154,21 +1061,39 @@ static void up_shutdown(struct uart_dev_s *dev)
 static int up_attach(struct uart_dev_s *dev)
 {
   struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
-  int ret;
+  stc_irq_signin_config_t cfg;
 
-  /* Attach and enable the IRQ */
+  memset(&cfg, 0, sizeof(cfg));
+  cfg.enIRQn = priv->rx_irq - HC32_IRQ_FIRST;
+  cfg.enIntSrc = priv->rxint_src;
+  cfg.pfnCallback = &hc32_rx_irq_cb;
+  hc32_serial_enableirq(&cfg, DDL_IRQ_PRIORITY_DEFAULT);
 
-  ret = irq_attach(priv->irq, up_interrupt, priv);
-  if (ret == OK)
-    {
-      /* Enable the interrupt (RX and TX interrupts are still disabled
-       * in the USART
-       */
+  memset(&cfg, 0, sizeof(cfg));
+  cfg.enIRQn = priv->tx_irq - HC32_IRQ_FIRST;
+  cfg.enIntSrc = priv->txint_src;
+  cfg.pfnCallback = &hc32_tx_irq_cb;
+  hc32_serial_enableirq(&cfg, DDL_IRQ_PRIORITY_DEFAULT);
 
-      up_enable_irq(priv->irq);
-    }
+  memset(&cfg, 0, sizeof(cfg));
+  cfg.enIRQn = priv->txc_irq - HC32_IRQ_FIRST;
+  cfg.enIntSrc = priv->txcint_src;
+  cfg.pfnCallback = &hc32_txc_irq_cb;
+  hc32_serial_enableirq(&cfg, DDL_IRQ_PRIORITY_DEFAULT);
 
-  return ret;
+  memset(&cfg, 0, sizeof(cfg));
+  cfg.enIRQn = priv->err_irq - HC32_IRQ_FIRST;
+  cfg.enIntSrc = priv->errint_src;
+  cfg.pfnCallback = &hc32_err_irq_cb;
+  hc32_serial_enableirq(&cfg, DDL_IRQ_PRIORITY_DEFAULT);
+
+  irq_attach(HC32_IRQ_SVCALL, arm_svcall, NULL);
+  irq_attach(HC32_IRQ_HARDFAULT, arm_hardfault, NULL);
+  irq_attach(USART_UNIT_ERR_INT_IRQn, hc32_err_irq_handler, NULL);
+  irq_attach(USART_UNIT_RX_INT_IRQn, hc32_rx_irq_handler, NULL);
+  irq_attach(USART_UNIT_TX_INT_IRQn, hc32_tx_irq_handler, NULL);
+  irq_attach(USART_UNIT_TCI_INT_IRQn, hc32_tci_irq_handler, NULL);
+  return OK;
 }
 
 /****************************************************************************
@@ -1184,10 +1109,14 @@ static int up_attach(struct uart_dev_s *dev)
 static void up_detach(struct uart_dev_s *dev)
 {
   struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
-  up_disable_irq(priv->irq);
-  irq_detach(priv->irq);
-
-  hc32_print("check %s line %d irq %d\n", __func__, __LINE__, priv->irq);
+  up_disable_irq(priv->rx_irq);
+  irq_detach(priv->rx_irq);
+  up_disable_irq(priv->tx_irq);
+  irq_detach(priv->tx_irq);
+  up_disable_irq(priv->txc_irq);
+  irq_detach(priv->txc_irq);
+  up_disable_irq(priv->err_irq);
+  irq_detach(priv->err_irq);
 }
 
 /****************************************************************************
@@ -1205,19 +1134,10 @@ static void up_detach(struct uart_dev_s *dev)
 static int up_interrupt(int irq, void *context, void *arg)
 {
   struct up_dev_s *priv = (struct up_dev_s *)arg;
-  M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
   int  passes;
   bool handled;
 
-  hc32_print("check %s irq %d come\n", __func__, irq);
-
   DEBUGASSERT(priv != NULL);
-
-  /* Report serial activity to the power management logic */
-
-#if defined(CONFIG_PM) && CONFIG_HC32_PM_SERIAL_ACTIVITY > 0
-  pm_activity(PM_IDLE_DOMAIN, CONFIG_HC32_PM_SERIAL_ACTIVITY);
-#endif
 
   /* Loop until there are no characters to be transferred or,
    * until we have been looping for a long time.
@@ -1230,7 +1150,7 @@ static int up_interrupt(int irq, void *context, void *arg)
 
       /* Get the masked USART status word. */
 
-      priv->sr = up_serialin(priv, base->SR);
+      priv->sr = up_serialin(priv, offsetof(M4_USART_TypeDef, SR));
 
       /* USART interrupts:
        *
@@ -1279,7 +1199,6 @@ static int up_interrupt(int irq, void *context, void *arg)
            * for RXNEIE:  We cannot call uart_recvchards of RX interrupts are
            * disabled.
            */
-
           uart_recvchars(&priv->dev);
           handled = true;
         }
@@ -1290,15 +1209,7 @@ static int up_interrupt(int irq, void *context, void *arg)
 
       else if ((priv->sr & (USART_SR_ORE | USART_SR_RXNE | USART_SR_FE)) != 0)
         {
-#if defined(CONFIG_HC32_HC32F30XX) || defined(CONFIG_HC32_HC32F33XX) || \
-    defined(CONFIG_HC32_HC32F37XX) || defined(CONFIG_HC32_HC32G4XXX)
-          /* These errors are cleared by writing the corresponding bit to the
-           * interrupt clear register (ICR).
-           */
 
-          up_serialout(priv, HC32_UART_ICR_OFFSET,
-                      (USART_ICR_NCF | USART_ICR_ORECF | USART_ICR_FECF));
-#else
           /* If an error occurs, read from DR to clear the error (data has
            * been lost).  If ORE is set along with RXNE then it tells you
            * that the byte *after* the one in the data register has been
@@ -1307,8 +1218,7 @@ static int up_interrupt(int irq, void *context, void *arg)
            * good byte will be lost.
            */
 
-          up_serialin(priv, base->DR); //RDR
-#endif
+          up_serialin(priv, offsetof(M4_USART_TypeDef, DR)); //RDR
         }
 
       /* Handle outgoing, transmit bytes */
@@ -1321,6 +1231,7 @@ static int up_interrupt(int irq, void *context, void *arg)
           uart_xmitchars(&priv->dev);
           handled = true;
         }
+
     }
 
   return OK;
@@ -1343,11 +1254,8 @@ static int up_ioctl(struct file *filep, int cmd, unsigned long arg)
 #endif
 #if defined(CONFIG_SERIAL_TERMIOS) || defined(CONFIG_HC32_SERIALBRK_BSDCOMPAT)
   struct up_dev_s   *priv  = (struct up_dev_s *)dev->priv;
-  M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
 #endif
   int                ret   = OK;
-
-  hc32_print("check %s line %d\n", __func__, __LINE__);
 
   switch (cmd)
     {
@@ -1374,7 +1282,7 @@ static int up_ioctl(struct file *filep, int cmd, unsigned long arg)
          * half-duplex mode.
          */
 
-        uint32_t cr = up_serialin(priv, base->_CR3);
+        uint32_t cr = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR3));
 
 #if defined(CONFIG_HC32_HC32F10XX)
         if ((arg & SER_SINGLEWIRE_ENABLED) != 0)
@@ -1509,9 +1417,7 @@ static int up_ioctl(struct file *filep, int cmd, unsigned long arg)
         /* Effect the changes immediately - note that we do not implement
          * TCSADRAIN / TCSAFLUSH
          */
-
-        up_set_format(dev);
-      }
+     }
       break;
 #endif /* CONFIG_SERIAL_TERMIOS */
 
@@ -1566,8 +1472,8 @@ static int up_ioctl(struct file *filep, int cmd, unsigned long arg)
         irqstate_t flags;
 
         flags = enter_critical_section();
-        cr1   = up_serialin(priv, base->_CR1);
-        up_serialout(priv, base->_CR1, cr1 | USART_CR1_SBK);
+        cr1   = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR1));
+        up_serialout(priv, offsetof(M4_USART_TypeDef, _CR1), cr1 | USART_CR1_SBK);
         leave_critical_section(flags);
       }
       break;
@@ -1578,8 +1484,8 @@ static int up_ioctl(struct file *filep, int cmd, unsigned long arg)
         irqstate_t flags;
 
         flags = enter_critical_section();
-        cr1   = up_serialin(priv, base->_CR1);
-        up_serialout(priv, base->_CR1, cr1 & ~USART_CR1_SBK);
+        cr1   = up_serialin(priv, offsetof(M4_USART_TypeDef, _CR1));
+        up_serialout(priv, offsetof(M4_USART_TypeDef, _CR1), cr1 & ~USART_CR1_SBK);
         leave_critical_section(flags);
       }
       break;
@@ -1606,10 +1512,19 @@ static int up_ioctl(struct file *filep, int cmd, unsigned long arg)
 
 static int up_receive(struct uart_dev_s *dev, unsigned int *status)
 {
+  int val;
   struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
   M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
 
-  return USART_RecData(base);
+  val = USART_RecData(base);
+
+  if (status)
+    {
+      *status  = priv->sr;
+      priv->sr = 0;
+    }
+
+  return val;
 }
 
 /****************************************************************************
@@ -1649,24 +1564,21 @@ static void up_rxint(struct uart_dev_s *dev, bool enable)
        * (or an Rx timeout occurs).
        */
 
-#ifndef CONFIG_SUPPRESS_SERIAL_INTS
-#ifdef CONFIG_USART_ERRINTS
-      ie |= (USART_CR1_RIE | USART_CR1_PCE);
-#else
-      ie |= USART_CR1_RIE;
-#endif
-#endif
+      ie |= USART_CR1_RIE | USART_CR1_RTOIE | USART_CR1_RTOE | USART_CR1_TE | USART_CR1_RE;
+
+      up_enable_irq(priv->irq);
     }
   else
     {
-//      ie &= ~(USART_CR1_RIE | USART_CR1_PCE );
-       ie &= ~(USART_CR1_RIE);
+      ie &= ~(USART_CR1_RIE | USART_CR1_RTOIE | USART_CR1_RTOE);
+      up_disable_irq(priv->irq);
     }
 
   /* Then set the new interrupt state */
 
   up_restoreusartint(priv, ie);
   leave_critical_section(flags);
+
 }
 
 /****************************************************************************
@@ -1676,17 +1588,12 @@ static void up_rxint(struct uart_dev_s *dev, bool enable)
  *   Return true if the receive register is not empty
  *
  ****************************************************************************/
-
-//#if defined(SERIAL_HAVE_TXDMA_OPS) || defined(SERIAL_HAVE_NODMA_OPS)
 static bool up_rxavailable(struct uart_dev_s *dev)
 {
-  hc32_print("check %s line %d\n", __func__, __LINE__);
-
   struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
   M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
-  return ((up_serialin(priv, base->SR) & USART_SR_RXNE) != 0);
+  return (Set == USART_GetStatus(base, USART_FLAG_RXNE));
 }
-//#endif
 
 /****************************************************************************
  * Name: up_rxflowcontrol
@@ -1796,8 +1703,9 @@ static bool up_rxflowcontrol(struct uart_dev_s *dev,
 
 static void up_send(struct uart_dev_s *dev, int ch)
 {
-    while(Set != USART_GetStatus(USART_UNIT, USART_FLAG_TXE));
-    USART_SendData(USART_UNIT, (uint16_t)(ch));
+    struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
+    while(Set != USART_GetStatus((const M4_USART_TypeDef *)priv->usartbase, USART_FLAG_TXE));
+    USART_SendData((M4_USART_TypeDef *)priv->usartbase, (uint16_t)(ch));
 }
 
 /****************************************************************************
@@ -1827,37 +1735,7 @@ static void up_txint(struct uart_dev_s *dev, bool enable)
     {
       /* Set to receive an interrupt when the TX data register is empty */
 
-#ifndef CONFIG_SUPPRESS_SERIAL_INTS
-      uint16_t ie = priv->ie | USART_CR1_TXEIE;
-
-      /* If RS-485 is supported on this U[S]ART, then also enable the
-       * transmission complete interrupt.
-       */
-
-#  ifdef HAVE_RS485
-      if (priv->rs485_dir_gpio != 0)
-        {
-          ie |= USART_CR1_TCIE;
-        }
-#  endif
-
-#  ifdef CONFIG_HC32_SERIALBRK_BSDCOMPAT
-      if (priv->ie & USART_CR1_IE_BREAK_INPROGRESS)
-        {
-          leave_critical_section(flags);
-          return;
-        }
-#  endif
-
-      up_restoreusartint(priv, ie);
-
-#else
-      /* Fake a TX interrupt here by just calling uart_xmitchars() with
-       * interrupts disabled (note this may recurse).
-       */
-
       uart_xmitchars(dev);
-#endif
     }
   else
     {
@@ -1879,115 +1757,13 @@ static void up_txint(struct uart_dev_s *dev, bool enable)
 
 static bool up_txready(struct uart_dev_s *dev)
 {
-  struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
-  M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
-  return ((up_serialin(priv, base->SR) & USART_SR_TXE) != 0);
+//  struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
+//  M4_USART_TypeDef *base = (M4_USART_TypeDef *)priv->usartbase;
+//  return((Set == USART_GetStatus(base, USART_FLAG_TXE))
+//      || (Set == USART_GetStatus(base, USART_FLAG_TC)));
+    return Set;
 }
 
-/****************************************************************************
- * Name: up_pm_notify
- *
- * Description:
- *   Notify the driver of new power state. This callback is  called after
- *   all drivers have had the opportunity to prepare for the new power state.
- *
- * Input Parameters:
- *
- *    cb - Returned to the driver. The driver version of the callback
- *         structure may include additional, driver-specific state data at
- *         the end of the structure.
- *
- *    pmstate - Identifies the new PM state
- *
- * Returned Value:
- *   None - The driver already agreed to transition to the low power
- *   consumption state when when it returned OK to the prepare() call.
- *
- *
- ****************************************************************************/
-
-#ifdef CONFIG_PM
-static void up_pm_notify(struct pm_callback_s *cb, int domain,
-                         enum pm_state_e pmstate)
-{
-  switch (pmstate)
-    {
-      case(PM_NORMAL):
-        {
-          /* Logic for PM_NORMAL goes here */
-        }
-        break;
-
-      case(PM_IDLE):
-        {
-          /* Logic for PM_IDLE goes here */
-        }
-        break;
-
-      case(PM_STANDBY):
-        {
-          /* Logic for PM_STANDBY goes here */
-        }
-        break;
-
-      case(PM_SLEEP):
-        {
-          /* Logic for PM_SLEEP goes here */
-        }
-        break;
-
-      default:
-        {
-          /* Should not get here */
-        }
-        break;
-    }
-}
-#endif
-
-/****************************************************************************
- * Name: up_pm_prepare
- *
- * Description:
- *   Request the driver to prepare for a new power state. This is a warning
- *   that the system is about to enter into a new power state. The driver
- *   should begin whatever operations that may be required to enter power
- *   state. The driver may abort the state change mode by returning a
- *   non-zero value from the callback function.
- *
- * Input Parameters:
- *
- *    cb - Returned to the driver. The driver version of the callback
- *         structure may include additional, driver-specific state data at
- *         the end of the structure.
- *
- *    pmstate - Identifies the new PM state
- *
- * Returned Value:
- *   Zero - (OK) means the event was successfully processed and that the
- *          driver is prepared for the PM state change.
- *
- *   Non-zero - means that the driver is not prepared to perform the tasks
- *              needed achieve this power setting and will cause the state
- *              change to be aborted. NOTE: The prepare() method will also
- *              be called when reverting from lower back to higher power
- *              consumption modes (say because another driver refused a
- *              lower power state change). Drivers are not permitted to
- *              return non-zero values when reverting back to higher power
- *              consumption modes!
- *
- *
- ****************************************************************************/
-
-#ifdef CONFIG_PM
-static int up_pm_prepare(struct pm_callback_s *cb, int domain,
-                         enum pm_state_e pmstate)
-{
-  /* Logic to prepare for a reduced power state goes here. */
-
-  return OK;
-}
-#endif
 #endif /* HAVE_SERIALDRIVER */
 #endif /* USE_SERIALDRIVER */
 
@@ -2075,17 +1851,6 @@ void arm_serialinit(void)
   char devname[16];
   unsigned i;
   unsigned minor = 0;
-#ifdef CONFIG_PM
-  int ret;
-#endif
-
-  /* Register to receive power management callbacks */
-
-#ifdef CONFIG_PM
-  ret = pm_register(&g_serialcb);
-  DEBUGASSERT(ret == OK);
-  UNUSED(ret);
-#endif
 
   /* Register the console */
 

@@ -49,6 +49,7 @@ enum E22LoraMode
 static void E22LoraModeConfig(enum E22LoraMode mode)
 {
     int m0_fd, m1_fd;
+    char value0, value1;
 
     //delay 1s , wait AUX ready
     PrivTaskDelay(1000);
@@ -68,23 +69,31 @@ static void E22LoraModeConfig(enum E22LoraMode mode)
     switch (mode)
     {
     case DATA_TRANSFER_MODE:
-        PrivIoctl(m1_fd, GPIOC_WRITE, (unsigned long)GPIO_LOW);
-        PrivIoctl(m0_fd, GPIOC_WRITE, (unsigned long)GPIO_LOW);
+        value1 = '0';
+        value0 = '0';
+        PrivWrite(m1_fd, &value1, 1);
+        PrivWrite(m0_fd, &value0, 1);
         break;
 
     case WOR_SEND_MODE:
-        PrivIoctl(m1_fd, GPIOC_WRITE, (unsigned long)GPIO_LOW);
-        PrivIoctl(m0_fd, GPIOC_WRITE, (unsigned long)GPIO_HIGH);
+        value1 = '0';
+        value0 = '1';
+        PrivWrite(m1_fd, &value1, 1);
+        PrivWrite(m0_fd, &value0, 1);
         break;
     
     case CONFIGURE_MODE:
-        PrivIoctl(m1_fd, GPIOC_WRITE, (unsigned long)GPIO_HIGH);
-        PrivIoctl(m0_fd, GPIOC_WRITE,(unsigned long)GPIO_LOW);
+        value1 = '1';
+        value0 = '0';
+        PrivWrite(m1_fd, &value1, 1);
+        PrivWrite(m0_fd, &value0, 1);
         break;
 
     case SLEEP_MODE:
-        PrivIoctl(m1_fd, GPIOC_WRITE, (unsigned long)GPIO_HIGH);
-        PrivIoctl(m0_fd, GPIOC_WRITE, (unsigned long)GPIO_HIGH);
+        value1 = '1';
+        value0 = '1';
+        PrivWrite(m1_fd, &value1, 1);
+        PrivWrite(m0_fd, &value0, 1);
         break;
     
     default:
@@ -246,8 +255,6 @@ static int E22GetRegisterParam(uint8 *buf)
  */
 static int E22Open(struct Adapter *adapter)
 {
-    int ret = 0;
-    struct termios cfg;
     /*step1: open e22 uart port*/
     adapter->fd = PrivOpen(ADAPTER_E22_DRIVER, O_RDWR);
     if (adapter->fd < 0) {
@@ -255,21 +262,52 @@ static int E22Open(struct Adapter *adapter)
         return -1;
     }
 
-    tcgetattr(adapter->fd, &cfg);
-    cfsetspeed(&cfg, BAUD_RATE_9600);
-    tcsetattr(adapter->fd, TCSANOW, &cfg);
+    struct SerialDataCfg cfg;
+    memset(&cfg, 0 ,sizeof(struct SerialDataCfg));
+
+    cfg.serial_baud_rate = BAUD_RATE_9600;
+    cfg.serial_data_bits = DATA_BITS_8;
+    cfg.serial_stop_bits = STOP_BITS_1;
+    cfg.serial_parity_mode = PARITY_NONE;
+    cfg.serial_bit_order = BIT_ORDER_LSB;
+    cfg.serial_invert_mode = NRZ_NORMAL;
+    cfg.serial_buffer_size = SERIAL_RB_BUFSZ;
+    cfg.is_ext_uart = 0;
+
+    /*aiit board use ch438, so it needs more serial configuration*/
+#ifdef ADAPTER_E22_DRIVER_EXTUART
+    cfg.is_ext_uart = 1;
+    cfg.ext_uart_no = ADAPTER_E22_DRIVER_EXT_PORT;
+    cfg.port_configure = PORT_CFG_INIT;
+#endif
+
+#ifdef AS_LORA_GATEWAY_ROLE
+    //serial receive timeout 10s
+    cfg.serial_timeout = 10000;
+#endif
+
+#ifdef AS_LORA_CLIENT_ROLE
+    //serial receive wait forever
+    cfg.serial_timeout = -1;
+#endif
+
+    struct PrivIoctlCfg ioctl_cfg;
+    ioctl_cfg.ioctl_driver_type = SERIAL_TYPE;
+    ioctl_cfg.args = &cfg;
+
+    PrivIoctl(adapter->fd, OPE_INT, &ioctl_cfg);
 
     E22SetRegisterParam(adapter, E22_ADDRESS, E22_CHANNEL, E22_UART_BAUD_RATE);
 
+    cfg.serial_baud_rate = E22_UART_BAUD_RATE;
+    ioctl_cfg.args = &cfg;
 
-    cfsetspeed(&cfg, E22_UART_BAUD_RATE);
-    tcsetattr(adapter->fd, TCSANOW, &cfg);
+    PrivIoctl(adapter->fd, OPE_INT, &ioctl_cfg);
 
     ADAPTER_DEBUG("E22Open done\n");
 
     return 0;
 }
-
 
 /**
  * @description: Close E22 uart function
@@ -351,7 +389,7 @@ static int E22Send(struct Adapter *adapter, const void *buf, size_t len)
  */
 static int E22Recv(struct Adapter *adapter, void *buf, size_t len)
 {
-    int recv_len, recv_len_continue;
+    int recv_len = 0, recv_len_continue = 0;
 
     uint8 *recv_buf = PrivMalloc(len);
 

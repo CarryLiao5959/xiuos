@@ -64,6 +64,10 @@ typedef enum _touch_event
 #define GTP_REG_CONFIG_DATA   0x8047
 #define GTP_REG_VERSION       0x8140
 
+#define LCD_SIZE 320
+#define TOUCH_WIDTH 1000
+#define TOUCH_HEIGHT 660
+
 #define CFG_GROUP_LEN(p_cfg_grp)  (sizeof(p_cfg_grp) / sizeof(p_cfg_grp[0]))
 
 int HwTouchInit(void);

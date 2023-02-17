@@ -384,6 +384,7 @@ static char *const bus_type_str[] =
     "SERIAL_BUS",
     "ADC_BUS",
     "DAC_BUS",
+    "CAMERA_BUS",
     "Unknown"
 };
 

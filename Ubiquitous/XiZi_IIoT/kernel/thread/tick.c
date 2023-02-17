@@ -96,7 +96,7 @@ void TickAndTaskTimesliceUpdate(void)
  */
 #define MIN_TICKS    1
 
-x_ticks_t CalculteTickFromTimeMs(uint32 ms)
+x_ticks_t CalculateTickFromTimeMs(uint32 ms)
 {
     uint32 tmp = 0;
     x_ticks_t ticks = 0;
@@ -121,7 +121,7 @@ x_ticks_t CalculteTickFromTimeMs(uint32 ms)
  * @param ticks ticks need to be converted
  * @return ms
  */
-uint32 CalculteTimeMsFromTick(x_ticks_t ticks)
+uint32 CalculateTimeMsFromTick(x_ticks_t ticks)
 {
     uint32 ms = 0;
 

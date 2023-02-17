@@ -81,14 +81,11 @@
 /*******************************************************************************
  * Code
  ******************************************************************************/
+extern void ImxrtMsDelay(uint32 ms);
 
-void enet_delay(void)
+void enet_delay(uint32 ms)
 {
-    volatile uint32_t i = 0;
-    for (i = 0; i < 1000000; ++i)
-    {
-        __asm("NOP"); /* delay */
-    }
+    ImxrtMsDelay(ms);
 }
 
 void Time_Update_LwIP(void)
@@ -112,7 +109,7 @@ void ethernetif_gpio_init(void)
     /* pull up the ENET_INT before RESET. */
     GPIO_WritePinOutput(GPIO1, 10, 1);
     GPIO_WritePinOutput(GPIO1, 3, 0);
-    enet_delay();
+    enet_delay(30);
     GPIO_WritePinOutput(GPIO1, 3, 1);
 }
 

@@ -95,7 +95,7 @@ int k210_bringup(void)
   board_touch_initialize();
 #endif
 
-#ifdef CONFIG_K210_16550_UART1
+#ifdef CONFIG_K210_UART1
 #ifdef CONFIG_ADAPTER_ESP8285_WIFI
   sysctl_clock_enable(SYSCTL_CLOCK_UART1);
   sysctl_reset(SYSCTL_RESET_UART1);
@@ -121,7 +121,7 @@ int k210_bringup(void)
 #endif
 #endif
 
-#ifdef CONFIG_K210_16550_UART2
+#ifdef CONFIG_K210_UART2
   sysctl_clock_enable(SYSCTL_CLOCK_UART2);
   sysctl_reset(SYSCTL_RESET_UART2);
 
@@ -129,7 +129,7 @@ int k210_bringup(void)
   fpioa_set_function(GPIO_EC200T_TXD, FPOA_USART2_TX);
 #endif
 
-#ifdef CONFIG_K210_16550_UART3
+#ifdef CONFIG_K210_UART3
   sysctl_clock_enable(SYSCTL_CLOCK_UART3);
   sysctl_reset(SYSCTL_RESET_UART3);
   

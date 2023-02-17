@@ -1,8 +1,4 @@
-SRC_FILES := control.c
-
-ifeq ($(CONFIG_MOUNT_SDCARD),y)
-	SRC_FILES += control_file.c
-endif
+SRC_FILES := control.c control_def.c control_io.c
 
 include $(KERNEL_ROOT)/compiler.mk
 

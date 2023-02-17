@@ -46,6 +46,7 @@ struct SerialDataCfg
     uint16 serial_buffer_size;
     int32 serial_timeout;
 
+    uint8 is_ext_uart;
     uint8 ext_uart_no;
     enum ExtSerialPortConfigure port_configure;
 };

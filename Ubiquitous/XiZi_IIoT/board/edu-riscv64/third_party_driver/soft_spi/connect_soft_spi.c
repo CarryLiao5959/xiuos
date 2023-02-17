@@ -12,7 +12,7 @@
 #include <dev_spi.h>
 #include <bus_spi.h>
 
-static x_err_t softSPIinit(struct SpiDriver *spi_drv, struct BusConfigureInfo *cfg)
+static x_err_t SoftSPIinit(struct SpiDriver *spi_drv, struct BusConfigureInfo *cfg)
 {
     NULL_PARAM_CHECK(spi_drv);
     NULL_PARAM_CHECK(cfg);
@@ -29,7 +29,7 @@ static x_err_t softSPIinit(struct SpiDriver *spi_drv, struct BusConfigureInfo *c
     return EOK;
 }
 
-static uint32 softSpiDrvConfigure(void *drv, struct BusConfigureInfo *configure_info)
+static uint32 SoftSpiDrvConfigure(void *drv, struct BusConfigureInfo *configure_info)
 {
     NULL_PARAM_CHECK(drv);
     NULL_PARAM_CHECK(configure_info);
@@ -41,7 +41,7 @@ static uint32 softSpiDrvConfigure(void *drv, struct BusConfigureInfo *configure_
     switch (configure_info->configure_cmd)
     {
     case OPE_INT:
-        softSPIinit(spi_drv, configure_info);
+        SoftSPIinit(spi_drv, configure_info);
         break;
 
     case OPE_CFG:
@@ -54,7 +54,7 @@ static uint32 softSpiDrvConfigure(void *drv, struct BusConfigureInfo *configure_
     return ret;
 }
 
-static void soft_spi_writebyte(struct SpiHardwareDevice *spi_dev, uint8_t data)
+static void SoftSpiWriteByte(struct SpiHardwareDevice *spi_dev, uint8_t data)
 {
     int8_t i = 0;
     uint8_t temp = 0;
@@ -79,7 +79,7 @@ static void soft_spi_writebyte(struct SpiHardwareDevice *spi_dev, uint8_t data)
 }
 
 /* 读一个字节 */
-static uint8_t soft_spi_readbyte(struct SpiHardwareDevice *spi_dev)
+static uint8_t SoftSpiReadbyte(struct SpiHardwareDevice *spi_dev)
 {
     uint8_t i = 0;
     uint8_t read_data = 0xFF;
@@ -100,7 +100,7 @@ static uint8_t soft_spi_readbyte(struct SpiHardwareDevice *spi_dev)
 
 /* 读写一个字节 */
 // this funcition is unverify until now!
-static uint8_t soft_spi_readwritebyte(struct SpiHardwareDevice *spi_dev, uint8_t data)
+static uint8_t SoftSpiReadWriteByte(struct SpiHardwareDevice *spi_dev, uint8_t data)
 {
     uint8_t i = 0;
     uint8_t temp = 0;
@@ -129,7 +129,7 @@ static uint8_t soft_spi_readwritebyte(struct SpiHardwareDevice *spi_dev, uint8_t
     return read_data;
 }
 
-static uint32 softSpiWriteData(struct SpiHardwareDevice *spi_dev, struct SpiDataStandard *spi_datacfg)
+static uint32 SoftSpiWriteData(struct SpiHardwareDevice *spi_dev, struct SpiDataStandard *spi_datacfg)
 {
     SpiDeviceParam *dev_param = (SpiDeviceParam *)(spi_dev->haldev.private_data);
 
@@ -148,7 +148,7 @@ static uint32 softSpiWriteData(struct SpiHardwareDevice *spi_dev, struct SpiData
 
     for (size_t i = 0; i < data_length; i++)
     {
-        soft_spi_writebyte(spi_dev, data_buff[i]);
+        SoftSpiWriteByte(spi_dev, data_buff[i]);
     }
 
     if (spi_datacfg->spi_cs_release)
@@ -160,7 +160,7 @@ static uint32 softSpiWriteData(struct SpiHardwareDevice *spi_dev, struct SpiData
     return EOK;
 }
 
-static uint32 softSpiReadData(struct SpiHardwareDevice *spi_dev, struct SpiDataStandard *spi_datacfg)
+static uint32 SoftSpiReadData(struct SpiHardwareDevice *spi_dev, struct SpiDataStandard *spi_datacfg)
 {
     SpiDeviceParam *dev_param = (SpiDeviceParam *)(spi_dev->haldev.private_data);
     uint8 cs_gpio_pin = dev_param->spi_slave_param->spi_cs_gpio_pin;
@@ -179,7 +179,7 @@ static uint32 softSpiReadData(struct SpiHardwareDevice *spi_dev, struct SpiDataS
 
     for (size_t i = 0; i < recv_length; i++)
     {
-        recv_buff[i] = soft_spi_readbyte(spi_dev);
+        recv_buff[i] = SoftSpiReadbyte(spi_dev);
     }
 
     if (spi_datacfg->spi_cs_release)
@@ -195,8 +195,8 @@ static uint32 softSpiReadData(struct SpiHardwareDevice *spi_dev, struct SpiDataS
 const struct SpiDevDone soft_spi_dev_done = {
     .dev_close = NONE,
     .dev_open = NONE,
-    .dev_read = softSpiReadData,
-    .dev_write = softSpiWriteData};
+    .dev_read = SoftSpiReadData,
+    .dev_write = SoftSpiWriteData};
 
 static int BoardSoftSpiBusInit(struct SpiBus *spi_bus, struct SpiDriver *spi_driver)
 {
@@ -275,7 +275,7 @@ int HwSoftSPIInit(void)
     static struct SpiDriver spi_driver;
     memset(&spi_driver, 0, sizeof(struct SpiDriver));
 
-    spi_driver.configure = &(softSpiDrvConfigure);
+    spi_driver.configure = &(SoftSpiDrvConfigure);
 
     ret = BoardSoftSpiBusInit(&spi_bus, &spi_driver);
     if (EOK != ret)

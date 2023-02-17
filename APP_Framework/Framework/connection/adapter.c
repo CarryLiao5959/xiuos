@@ -21,11 +21,8 @@
 #include <adapter.h>
 
 static DoublelistType adapter_list;
-#ifdef ADD_XIZI_FETURES
-static int adapter_list_lock;
-#else
 static pthread_mutex_t adapter_list_lock;
-#endif
+
 /**
  * @description: Init adapter framework
  * @return 0

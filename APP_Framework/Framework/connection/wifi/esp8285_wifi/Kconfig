@@ -13,3 +13,9 @@ if ADD_RTTHREAD_FETURES
                 string "ESP8285 device uart driver path"
                 default "/dev/uart1"
 endif
+if ADD_XIZI_FETURES
+        config ADAPTER_ESP8285_DRIVER
+                string "ESP8285 device uart driver path"
+                default "/dev/uart1_dev1"
+endif
+

@@ -702,6 +702,14 @@ config ARCH_BOARD_XIDATONG_RISCV64
 		This is the board configuration for the port of NuttX to the
 		xidatong-riscv64 board. This board features the RISC-V K210
 
+config ARCH_BOARD_EDU_RISCV64
+	bool "edu riscv64  board"
+	depends on ARCH_CHIP_K210
+	select ARCH_HAVE_LEDS if !K210_WITH_QEMU
+	---help---
+		This is the board configuration for the port of NuttX to the
+		edu-riscv64 board. This board features the RISC-V K210
+
 config ARCH_BOARD_SMARTL_C906
 	bool "smartl evaluation board for C906"
 	depends on ARCH_CHIP_C906
@@ -2502,6 +2510,7 @@ config ARCH_BOARD
 	default "maix-bit"                 if ARCH_BOARD_MAIX_BIT
 	default "aiit-riscv64-board"       if ARCH_BOARD_AIIT_RISCV64
 	default "xidatong-riscv64"         if ARCH_BOARD_XIDATONG_RISCV64
+	default "edu-riscv64"              if ARCH_BOARD_EDU_RISCV64
 	default "smartl-c906"              if ARCH_BOARD_SMARTL_C906
 	default "icicle"                   if ARCH_BOARD_ICICLE_MPFS
 	default "m100pfsevp"               if ARCH_BOARD_M100PFSEVP_MPFS
@@ -3337,6 +3346,9 @@ source "boards/risc-v/k210/aiit-riscv64-board/Kconfig"
 endif
 if ARCH_BOARD_XIDATONG_RISCV64
 source "boards/risc-v/k210/xidatong-riscv64/Kconfig"
+endif
+if ARCH_BOARD_EDU_RISCV64
+source "boards/risc-v/k210/edu-riscv64/Kconfig"
 endif
 if ARCH_BOARD_SMARTL_C906
 source "boards/risc-v/c906/smartl-c906/Kconfig"

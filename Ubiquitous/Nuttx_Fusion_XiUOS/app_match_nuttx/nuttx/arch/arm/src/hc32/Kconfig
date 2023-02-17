@@ -172,3 +172,43 @@ config HC32_UART8
 
 endmenu # HC32 U[S]ART Selection
 
+config HC32_SPI1
+	bool "SPI1"
+	default n
+	select SPI
+	select HC32_SPI
+
+config HC32_SPI2
+	bool "SPI2"
+	default n
+	select SPI
+	select HC32_SPI
+
+config HC32_I2C1
+	bool "I2C1"
+	default n
+	select I2C
+	select HC32_I2C
+
+config HC32_I2C2
+	bool "I2C2"
+	default n
+	select I2C
+	select HC32_I2C
+
+config HC32_I2C3
+	bool "I2C3"
+	default n
+	select I2C
+	select HC32_I2C
+
+
+config HC32_SPI
+	bool
+
+config HC32_I2C
+	bool
+
+config HC32_CAN
+	bool
+

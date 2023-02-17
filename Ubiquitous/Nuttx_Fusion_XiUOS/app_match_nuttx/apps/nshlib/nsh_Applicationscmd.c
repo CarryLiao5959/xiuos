@@ -425,6 +425,16 @@ int cmd_AdapterLoraTest(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
 }
 #endif
 
+#if defined(CONFIG_ARCH_BOARD_EDU_RISCV64) && defined(CONFIG_K210_UART2)
+extern void TestLora(void);
+int cmd_TestLora(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)
+{
+    nsh_output(vtbl, "Hello, world!\n");
+    TestLora();
+    return OK;
+}
+#endif
+
 #if defined(CONFIG_ADAPTER_4G_EC200T) && !defined(CONFIG_NSH_DISABLE_ADAPTER_4GTEST)
 extern int Adapter4GTest(void);
 int cmd_Adapter4GTest(FAR struct nsh_vtbl_s *vtbl, int argc, char **argv)

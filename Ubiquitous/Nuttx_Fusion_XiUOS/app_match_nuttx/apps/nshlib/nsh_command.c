@@ -700,6 +700,10 @@ static const struct cmdmap_s g_cmdmap[] =
   { "AdapterLoraTest",       cmd_AdapterLoraTest,       1, 1, "[Lora test.]" },
 #endif
 
+#if defined(CONFIG_ARCH_BOARD_EDU_RISCV64) && defined(CONFIG_K210_UART2)
+  { "TestLora",       cmd_TestLora,       1, 1, "[e220 Lora test.]" },
+#endif
+
 #if defined(CONFIG_ADAPTER_4G_EC200T) && !defined(CONFIG_NSH_DISABLE_ADAPTER_4GTEST)
   { "Adapter4GTest",       cmd_Adapter4GTest,       1, 1, "[4G ec200t test.]" },
 #endif
