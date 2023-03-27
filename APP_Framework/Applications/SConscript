@@ -4,12 +4,7 @@ Import('rtconfig')
 from building import *
 
 cwd = GetCurrentDir()
-
-SOURCES = ['framework_init.c']
-path =  [cwd]
 objs = []
-group = DefineGroup('sensor', SOURCES, depend = [], CPPPATH = [cwd])
-objs = objs + group
 list = os.listdir(cwd)
 
 for d in list:
