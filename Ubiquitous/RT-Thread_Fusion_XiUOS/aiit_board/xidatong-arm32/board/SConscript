@@ -18,8 +18,8 @@ if GetDepend('BSP_USING_SDCARD'):
 if GetDepend(['RT_USING_DFS_ROMFS']):
     src += ['ports/romfs.c']
     src += ['ports/mnt_romfs.c']
-if GetDepend('RT_USING_USB_HOST'):
-    src += ['usb/drv_usbh.c']
+# if GetDepend('RT_USING_USB_HOST'):
+#     src += ['usb/drv_usbh.c']
 if GetDepend('BSP_USING_LCD_XIDATONG'):
     src += ['ports/ok1052lcd.c']
     src += ['ports/drv_lcd.c']
