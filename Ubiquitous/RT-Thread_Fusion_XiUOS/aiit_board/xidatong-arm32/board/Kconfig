@@ -232,6 +232,10 @@ menu "Onboard Peripheral Drivers"
     config BSP_USB1_HOST
         bool "Enable USB1 Host"
         default n
+
+    config BSP_USING_USB_DEVICE
+        bool "Enable USB Device"
+        default n
     
     config BSP_USING_RT_THREAD_HC08
         bool "Enable Bluetooth"

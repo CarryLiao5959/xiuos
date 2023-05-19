@@ -339,7 +339,7 @@
               <MiscControls>--library_interface=armcc --library_type=standardlib --diag_suppress=66,1296,186</MiscControls>
               <Define>__RTTHREAD__, SKIP_SYSCLK_INIT, CPU_MIMXRT1052CVL5B, USE_RTOS, __CLK_TCK=RT_TICK_PER_SECOND, ENDIANNESS, FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL=1, XIP_EXTERNAL_FLASH=1, EVK_MCIMXRM, RT_USING_ARM_LIBC</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\APP_Framework\Applications\app_test;applications;..\..\..\..\APP_Framework\Applications\general_functions\circular_area;..\..\..\..\APP_Framework\lib\cJSON;..\..\rt-thread\components\libc\compilers\common;..\..\rt-thread\components\libc\compilers\common\extension;..\..\..\..\APP_Framework\Framework\connection;..\..\rt-thread\libcpu\arm\common;..\..\rt-thread\libcpu\arm\cortex-m7;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\drivers\include;board;board\MCUX_Config;board\ports;board\usb;..\..\rt-thread\bsp\imxrt\libraries\drivers;..\..\rt-thread\components\dfs\include;..\..\rt-thread\components\dfs\filesystems\devfs;..\..\rt-thread\components\dfs\filesystems\elmfat;..\..\rt-thread\components\finsh;..\..\..\..\APP_Framework\Framework;.;..\..\rt-thread\include;..\..\rt-thread\components\legacy;..\..\rt-thread\components\legacy\dfs;..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\CMSIS\Include;..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052;..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\drivers;..\..\..\..\APP_Framework\Applications\general_functions\list;..\..\..\..\APP_Framework\Framework\knowing\ota;..\..\rt-thread\components\libc\posix\delay;..\..\rt-thread\components\libc\posix\io\poll;..\..\rt-thread\components\libc\posix\io\stdio;..\..\rt-thread\components\libc\posix\ipc;..\..\rt-thread\components\libc\posix\pthreads;..\..\rt-thread\components\drivers\usb\usbhost;..\..\rt-thread\components\drivers\usb\usbhost\class;..\..\rt-thread\components\drivers\usb\usbhost\core;..\..\rt-thread\components\drivers\usb\usbhost\include;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\net\netdev\include;..\..\rt-thread\components\net\sal\include;..\..\rt-thread\components\net\sal\include\socket;..\..\rt-thread\components\net\sal\include\dfs_net;..\..\rt-thread\components\net\sal\include\socket\sys_socket;..\..\..\..\APP_Framework\Framework\sensor;..\..\..\..\APP_Framework\Framework\sensor\altitude\bmp180;..\..\..\..\APP_Framework\Framework\sensor\ch4\as830;..\..\..\..\APP_Framework\Framework\sensor\co2\g8s;..\..\..\..\APP_Framework\Framework\sensor\co2\zg09;..\..\..\..\APP_Framework\Framework\sensor\hcho\tb600b_wq_hcho1os;..\..\..\..\APP_Framework\Framework\sensor\humidity\hs300x_humi;..\..\..\..\APP_Framework\Framework\sensor\iaq\tb600b_iaq10;..\..\..\..\APP_Framework\Framework\sensor\pm\ps5308;..\..\..\..\APP_Framework\Framework\sensor\temperature\hs300x_temp;..\..\..\..\APP_Framework\Framework\sensor\tvoc\tb600b_tvoc10;..\..\..\..\APP_Framework\Framework\sensor\voice\d124;..\..\..\..\APP_Framework\Framework\sensor\winddirection\qs-fx;..\..\..\..\APP_Framework\Framework\sensor\windspeed\qs-fs;..\..\..\..\APP_Framework\Framework\transform_layer\rtthread;xip</IncludePath>
+              <IncludePath>..\..\..\..\APP_Framework\Applications\app_test;applications;..\..\..\..\APP_Framework\Applications\general_functions\circular_area;..\..\..\..\APP_Framework\lib\cJSON;..\..\rt-thread\components\libc\compilers\common;..\..\rt-thread\components\libc\compilers\common\extension;..\..\..\..\APP_Framework\Framework\connection;..\..\rt-thread\libcpu\arm\common;..\..\rt-thread\libcpu\arm\cortex-m7;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\drivers\include;..\..\rt-thread\components\drivers\include;board;board\MCUX_Config;board\ports;board\usb;..\..\rt-thread\bsp\imxrt\libraries\drivers;..\..\rt-thread\components\dfs\include;..\..\rt-thread\components\dfs\filesystems\devfs;..\..\rt-thread\components\dfs\filesystems\elmfat;..\..\rt-thread\components\finsh;..\..\..\..\APP_Framework\Framework;.;..\..\rt-thread\include;..\..\rt-thread\components\legacy;..\..\rt-thread\components\legacy\dfs;..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\CMSIS\Include;..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052;..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\drivers;..\..\..\..\APP_Framework\Applications\general_functions\list;..\..\..\..\APP_Framework\Framework\knowing\ota;..\..\rt-thread\components\libc\posix\delay;..\..\rt-thread\components\libc\posix\io\poll;..\..\rt-thread\components\libc\posix\io\stdio;..\..\rt-thread\components\libc\posix\ipc;..\..\rt-thread\components\libc\posix\pthreads;..\..\rt-thread\components\drivers\usb\usbdevice;..\..\rt-thread\components\net\netdev\include;..\..\rt-thread\components\net\sal\include;..\..\rt-thread\components\net\sal\include\socket;..\..\rt-thread\components\net\sal\include\dfs_net;..\..\rt-thread\components\net\sal\include\socket\sys_socket;..\..\..\..\APP_Framework\Framework\sensor;..\..\..\..\APP_Framework\Framework\sensor\altitude\bmp180;..\..\..\..\APP_Framework\Framework\sensor\ch4\as830;..\..\..\..\APP_Framework\Framework\sensor\co2\g8s;..\..\..\..\APP_Framework\Framework\sensor\co2\zg09;..\..\..\..\APP_Framework\Framework\sensor\hcho\tb600b_wq_hcho1os;..\..\..\..\APP_Framework\Framework\sensor\humidity\hs300x_humi;..\..\..\..\APP_Framework\Framework\sensor\iaq\tb600b_iaq10;..\..\..\..\APP_Framework\Framework\sensor\pm\ps5308;..\..\..\..\APP_Framework\Framework\sensor\temperature\hs300x_temp;..\..\..\..\APP_Framework\Framework\sensor\tvoc\tb600b_tvoc10;..\..\..\..\APP_Framework\Framework\sensor\voice\d124;..\..\..\..\APP_Framework\Framework\sensor\winddirection\qs-fx;..\..\..\..\APP_Framework\Framework\sensor\windspeed\qs-fs;..\..\..\..\APP_Framework\Framework\transform_layer\rtthread;xip</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -414,24 +414,24 @@
           <GroupName>Compiler</GroupName>
           <Files>
             <File>
-              <FileName>syscalls.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\compilers\armlibc\syscalls.c</FilePath>
-            </File>
-            <File>
               <FileName>syscall_mem.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\libc\compilers\armlibc\syscall_mem.c</FilePath>
             </File>
             <File>
-              <FileName>time.c</FileName>
+              <FileName>syscalls.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\compilers\common\time.c</FilePath>
+              <FilePath>..\..\rt-thread\components\libc\compilers\armlibc\syscalls.c</FilePath>
             </File>
             <File>
               <FileName>stdlib.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\libc\compilers\common\stdlib.c</FilePath>
+            </File>
+            <File>
+              <FileName>time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\compilers\common\time.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -439,14 +439,14 @@
           <GroupName>CPU</GroupName>
           <Files>
             <File>
-              <FileName>div0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\libcpu\arm\common\div0.c</FilePath>
-            </File>
-            <File>
               <FileName>showmem.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\libcpu\arm\common\showmem.c</FilePath>
+            </File>
+            <File>
+              <FileName>div0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\libcpu\arm\common\div0.c</FilePath>
             </File>
             <File>
               <FileName>backtrace.c</FileName>
@@ -454,9 +454,9 @@
               <FilePath>..\..\rt-thread\libcpu\arm\common\backtrace.c</FilePath>
             </File>
             <File>
-              <FileName>cpu_cache.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\libcpu\arm\cortex-m7\cpu_cache.c</FilePath>
+              <FileName>context_rvds.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\rt-thread\libcpu\arm\cortex-m7\context_rvds.S</FilePath>
             </File>
             <File>
               <FileName>cpuport.c</FileName>
@@ -464,9 +464,9 @@
               <FilePath>..\..\rt-thread\libcpu\arm\cortex-m7\cpuport.c</FilePath>
             </File>
             <File>
-              <FileName>context_rvds.S</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\rt-thread\libcpu\arm\cortex-m7\context_rvds.S</FilePath>
+              <FileName>cpu_cache.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\libcpu\arm\cortex-m7\cpu_cache.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -479,24 +479,9 @@
               <FilePath>..\..\rt-thread\components\drivers\cputime\cputime.c</FilePath>
             </File>
             <File>
-              <FileName>completion.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\ipc\completion.c</FilePath>
-            </File>
-            <File>
               <FileName>pipe.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\drivers\ipc\pipe.c</FilePath>
-            </File>
-            <File>
-              <FileName>dataqueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\ipc\dataqueue.c</FilePath>
-            </File>
-            <File>
-              <FileName>waitqueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\ipc\waitqueue.c</FilePath>
             </File>
             <File>
               <FileName>ringblk_buf.c</FileName>
@@ -504,9 +489,14 @@
               <FilePath>..\..\rt-thread\components\drivers\ipc\ringblk_buf.c</FilePath>
             </File>
             <File>
-              <FileName>workqueue.c</FileName>
+              <FileName>completion.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\ipc\workqueue.c</FilePath>
+              <FilePath>..\..\rt-thread\components\drivers\ipc\completion.c</FilePath>
+            </File>
+            <File>
+              <FileName>waitqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\drivers\ipc\waitqueue.c</FilePath>
             </File>
             <File>
               <FileName>ringbuffer.c</FileName>
@@ -514,34 +504,24 @@
               <FilePath>..\..\rt-thread\components\drivers\ipc\ringbuffer.c</FilePath>
             </File>
             <File>
+              <FileName>workqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\drivers\ipc\workqueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>dataqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\drivers\ipc\dataqueue.c</FilePath>
+            </File>
+            <File>
               <FileName>pin.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\drivers\misc\pin.c</FilePath>
             </File>
             <File>
-              <FileName>mmc.c</FileName>
+              <FileName>rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\sdio\mmc.c</FilePath>
-            </File>
-            <File>
-              <FileName>sd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\sdio\sd.c</FilePath>
-            </File>
-            <File>
-              <FileName>block_dev.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\sdio\block_dev.c</FilePath>
-            </File>
-            <File>
-              <FileName>sdio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\sdio\sdio.c</FilePath>
-            </File>
-            <File>
-              <FileName>mmcsd_core.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\sdio\mmcsd_core.c</FilePath>
+              <FilePath>..\..\rt-thread\components\drivers\rtc\rtc.c</FilePath>
             </File>
             <File>
               <FileName>serial.c</FileName>
@@ -553,11 +533,6 @@
         <Group>
           <GroupName>Drivers</GroupName>
           <Files>
-            <File>
-              <FileName>sdcard_port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>board\ports\sdcard_port.c</FilePath>
-            </File>
             <File>
               <FileName>pin_mux.c</FileName>
               <FileType>1</FileType>
@@ -579,24 +554,19 @@
               <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\drv_gpio.c</FilePath>
             </File>
             <File>
-              <FileName>usb_host_hci.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\usb\host\usb_host_hci.c</FilePath>
-            </File>
-            <File>
               <FileName>drv_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\drv_uart.c</FilePath>
             </File>
             <File>
-              <FileName>usb_host_framework.c</FileName>
+              <FileName>drv_usbd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\usb\host\usb_host_framework.c</FilePath>
+              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\drv_usbd.c</FilePath>
             </File>
             <File>
-              <FileName>drv_sdram.c</FileName>
+              <FileName>usb_device_dci.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\drv_sdram.c</FilePath>
+              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\usb\device\usb_device_dci.c</FilePath>
             </File>
             <File>
               <FileName>usb_phy.c</FileName>
@@ -604,24 +574,9 @@
               <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\usb\phy\usb_phy.c</FilePath>
             </File>
             <File>
-              <FileName>drv_sdio.c</FileName>
+              <FileName>usb_device_ehci.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\drv_sdio.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_host_ehci.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\usb\host\usb_host_ehci.c</FilePath>
-            </File>
-            <File>
-              <FileName>drv_usbh.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\drv_usbh.c</FilePath>
-            </File>
-            <File>
-              <FileName>usb_host_devices.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\usb\host\usb_host_devices.c</FilePath>
+              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\drivers\usb\device\usb_device_ehci.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -709,49 +664,9 @@
           <GroupName>Kernel</GroupName>
           <Files>
             <File>
-              <FileName>device.c</FileName>
+              <FileName>mempool.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\device.c</FilePath>
-            </File>
-            <File>
-              <FileName>memheap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\memheap.c</FilePath>
-            </File>
-            <File>
-              <FileName>idle.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\idle.c</FilePath>
-            </File>
-            <File>
-              <FileName>components.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\components.c</FilePath>
-            </File>
-            <File>
-              <FileName>ipc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\ipc.c</FilePath>
-            </File>
-            <File>
-              <FileName>scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>irq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\irq.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\clock.c</FilePath>
+              <FilePath>..\..\rt-thread\src\mempool.c</FilePath>
             </File>
             <File>
               <FileName>kservice.c</FileName>
@@ -759,19 +674,59 @@
               <FilePath>..\..\rt-thread\src\kservice.c</FilePath>
             </File>
             <File>
-              <FileName>object.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\object.c</FilePath>
-            </File>
-            <File>
               <FileName>thread.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\src\thread.c</FilePath>
             </File>
             <File>
-              <FileName>mempool.c</FileName>
+              <FileName>irq.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\src\mempool.c</FilePath>
+              <FilePath>..\..\rt-thread\src\irq.c</FilePath>
+            </File>
+            <File>
+              <FileName>idle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\idle.c</FilePath>
+            </File>
+            <File>
+              <FileName>clock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>memheap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\memheap.c</FilePath>
+            </File>
+            <File>
+              <FileName>ipc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\ipc.c</FilePath>
+            </File>
+            <File>
+              <FileName>object.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\object.c</FilePath>
+            </File>
+            <File>
+              <FileName>components.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\components.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>scheduler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\scheduler.c</FilePath>
+            </File>
+            <File>
+              <FileName>device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\src\device.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -807,16 +762,6 @@
               <FileName>fsl_lpuart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\drivers\fsl_lpuart.c</FilePath>
-            </File>
-            <File>
-              <FileName>fsl_usdhc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\drivers\fsl_usdhc.c</FilePath>
-            </File>
-            <File>
-              <FileName>fsl_semc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\drivers\fsl_semc.c</FilePath>
             </File>
             <File>
               <FileName>fsl_clock.c</FileName>
@@ -879,11 +824,6 @@
               <FilePath>..\..\rt-thread\components\libc\posix\delay\delay.c</FilePath>
             </File>
             <File>
-              <FileName>libc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\io\stdio\libc.c</FilePath>
-            </File>
-            <File>
               <FileName>mqueue.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\libc\posix\ipc\mqueue.c</FilePath>
@@ -894,24 +834,9 @@
               <FilePath>..\..\rt-thread\components\libc\posix\ipc\semaphore.c</FilePath>
             </File>
             <File>
-              <FileName>pthread_attr.c</FileName>
+              <FileName>pthread_rwlock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_attr.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread_barrier.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_barrier.c</FilePath>
-            </File>
-            <File>
-              <FileName>pthread_mutex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_mutex.c</FilePath>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_rwlock.c</FilePath>
             </File>
             <File>
               <FileName>pthread_spin.c</FileName>
@@ -924,9 +849,19 @@
               <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_cond.c</FilePath>
             </File>
             <File>
-              <FileName>sched.c</FileName>
+              <FileName>pthread_mutex.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\sched.c</FilePath>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_mutex.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread_attr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_attr.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread_barrier.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_barrier.c</FilePath>
             </File>
             <File>
               <FileName>pthread_tls.c</FileName>
@@ -934,34 +869,34 @@
               <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_tls.c</FilePath>
             </File>
             <File>
-              <FileName>pthread_rwlock.c</FileName>
+              <FileName>sched.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread_rwlock.c</FilePath>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\sched.c</FilePath>
+            </File>
+            <File>
+              <FileName>pthread.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\libc\posix\pthreads\pthread.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>rt_usbh</GroupName>
+          <GroupName>rt_usbd</GroupName>
           <Files>
             <File>
-              <FileName>hub.c</FileName>
+              <FileName>usbdevice_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\usb\usbhost\core\hub.c</FilePath>
+              <FilePath>..\..\rt-thread\components\drivers\usb\usbdevice\core\usbdevice_core.c</FilePath>
             </File>
             <File>
-              <FileName>usbhost.c</FileName>
+              <FileName>usbdevice.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\usb\usbhost\core\usbhost.c</FilePath>
+              <FilePath>..\..\rt-thread\components\drivers\usb\usbdevice\core\usbdevice.c</FilePath>
             </File>
             <File>
-              <FileName>usbhost_core.c</FileName>
+              <FileName>cdc_vcom.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\usb\usbhost\core\usbhost_core.c</FilePath>
-            </File>
-            <File>
-              <FileName>driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\drivers\usb\usbhost\core\driver.c</FilePath>
+              <FilePath>..\..\rt-thread\components\drivers\usb\usbdevice\class\cdc_vcom.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -979,16 +914,6 @@
               <FilePath>..\..\rt-thread\components\net\netdev\src\netdev.c</FilePath>
             </File>
             <File>
-              <FileName>sal_socket.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\net\sal\src\sal_socket.c</FilePath>
-            </File>
-            <File>
-              <FileName>net_sockets.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rt-thread\components\net\sal\socket\net_sockets.c</FilePath>
-            </File>
-            <File>
               <FileName>net_netdb.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\net\sal\socket\net_netdb.c</FilePath>
@@ -997,6 +922,16 @@
               <FileName>dfs_net.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\rt-thread\components\net\sal\dfs_net\dfs_net.c</FilePath>
+            </File>
+            <File>
+              <FileName>net_sockets.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\net\sal\socket\net_sockets.c</FilePath>
+            </File>
+            <File>
+              <FileName>sal_socket.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\rt-thread\components\net\sal\src\sal_socket.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1034,14 +969,5 @@
     <components/>
     <files/>
   </RTE>
-
-  <LayerInfo>
-    <Layers>
-      <Layer>
-        <LayName>project</LayName>
-        <LayPrjMark>1</LayPrjMark>
-      </Layer>
-    </Layers>
-  </LayerInfo>
 
 </Project>

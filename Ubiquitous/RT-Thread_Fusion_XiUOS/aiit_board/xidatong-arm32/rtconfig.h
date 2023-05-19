@@ -108,26 +108,23 @@
 #define RT_SERIAL_RB_BUFSZ 64
 #define RT_USING_CPUTIME
 #define RT_USING_PIN
-#define RT_USING_SDIO
-#define RT_SDIO_STACK_SIZE 512
-#define RT_SDIO_THREAD_PRIORITY 15
-#define RT_MMCSD_STACK_SIZE 1024
-#define RT_MMCSD_THREAD_PREORITY 22
-#define RT_MMCSD_MAX_PARTITION 16
-#define RT_SDIO_DEBUG
+#define RT_USING_RTC
 
 /* Using USB */
 
 #define RT_USING_USB
-#define RT_USING_USB_HOST
-#define RT_USBH_MSTORAGE
-#define UDISK_MOUNTPOINT "/"
 #define RT_USING_USB_DEVICE
 #define RT_USBD_THREAD_STACK_SZ 4096
 #define USB_VENDOR_ID 0x0FFE
 #define USB_PRODUCT_ID 0x0001
-#define _RT_USB_DEVICE_NONE
+#define RT_USB_DEVICE_COMPOSITE
+#define RT_USB_DEVICE_CDC
 #define RT_USB_DEVICE_NONE
+#define RT_VCOM_TASK_STK_SIZE 512
+#define RT_CDC_RX_BUFSIZE 128
+#define RT_VCOM_SERNO "32021919830108"
+#define RT_VCOM_SER_LEN 14
+#define RT_VCOM_TX_TIMEOUT 1000
 
 /* C/C++ and POSIX layer */
 
@@ -137,7 +134,6 @@
 
 #define RT_USING_POSIX_FS
 #define RT_USING_POSIX_DEVIO
-#define RT_USING_POSIX_STDIO
 #define RT_USING_POSIX_DELAY
 #define RT_USING_POSIX_CLOCK
 #define RT_USING_PTHREADS
@@ -180,13 +176,10 @@
 #define BSP_USING_GPIO
 #define BSP_USING_LPUART
 #define BSP_USING_LPUART1
-#define BSP_USING_SDIO
 
 /* Onboard Peripheral Drivers */
 
-#define BSP_USING_SDRAM
-#define BSP_USING_SDCARD
-#define BSP_USB1_HOST
+#define BSP_USING_USB_DEVICE
 
 /* MicroPython */
 
@@ -226,24 +219,6 @@
 
 /* sensor app */
 
-#define APP_USING_WEBNET
-#define WEBNET_PORT 80
-#define WEBNET_CONN_MAX 16
-#define WEBNET_ROOT "/webnet"
-
-/* Select supported modules */
-
-#define WEBNET_USING_LOG
-#define WEBNET_USING_AUTH
-#define WEBNET_USING_CGI
-#define WEBNET_USING_ASP
-#define WEBNET_USING_SSI
-#define WEBNET_USING_INDEX
-#define WEBNET_USING_ALIAS
-#define WEBNET_USING_DAV
-#define WEBNET_USING_UPLOAD
-#define WEBNET_USING_GZIP
-#define WEBNET_CACHE_LEVEL 0
 
 /* lib */
 
