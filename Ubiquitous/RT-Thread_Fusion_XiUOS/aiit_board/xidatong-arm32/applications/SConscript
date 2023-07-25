@@ -3,7 +3,13 @@ import rtconfig
 from building import *
 
 cwd = GetCurrentDir()
-src = Glob('*.c')
+src     = [
+    'main.c',
+    'rt_client.c',
+    'test_485.c',
+    'test_232.c',
+    'can_test.c'
+]
 CPPPATH = [cwd]
 
 # add for startup script 

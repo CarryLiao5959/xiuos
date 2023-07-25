@@ -1,0 +1,11 @@
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\system_MIMXRT1052.c
+.\build\keil\obj\system_mimxrt1052.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\fsl_device_registers.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\MIMXRT1052.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\CMSIS\Include\core_cm7.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\CMSIS\Include\cmsis_version.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\CMSIS\Include\cmsis_compiler.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\CMSIS\Include\cmsis_armcc.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\CMSIS\Include\mpu_armv7.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\system_MIMXRT1052.h
+.\build\keil\obj\system_mimxrt1052.o: ..\..\rt-thread\bsp\imxrt\libraries\MIMXRT1050\MIMXRT1052\MIMXRT1052_features.h

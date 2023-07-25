@@ -17,17 +17,30 @@
 #include "board/hardware/ch438/ch438.h"
 /* defined the LED pin: GPIO1_IO9 */
 #define LED0_PIN               GET_PIN(1,9)
+#define GPIO_AD_B0_01_PIN      GET_PIN(2,1)
 extern int FrameworkInit(void);
 int main(void)
-{   
+{
     /* set LED0 pin mode to output */
     rt_pin_mode(LED0_PIN, PIN_MODE_OUTPUT);
-    rt_kprintf("XIUOS xidatong build %s %s\n",__DATE__,__TIME__);
+
+    /* set GPIO_AD_B0_01_PIN pin mode to output */
+    rt_pin_mode(GPIO_AD_B0_01_PIN, PIN_MODE_OUTPUT);
+    /* write high level to GPIO_AD_B0_01_PIN */
+    //rt_pin_write(GPIO_AD_B0_01_PIN, PIN_HIGH);
+		rt_pin_write(GPIO_AD_B0_01_PIN, PIN_LOW);
+
+    int pin_state;
+    /* read and print GPIO_AD_B0_01_PIN level */
+    pin_state = rt_pin_read(GPIO_AD_B0_01_PIN);
+    rt_kprintf("GPIO_AD_B0_01_PIN level: %d\n", pin_state);
+
+    rt_kprintf("XIUOS xidatong build %s %s\n", __DATE__, __TIME__);
     FrameworkInit();
-	  while (1)
-    {    
+    while (1)
+    {
         rt_thread_mdelay(5000);
-     }
+    }
 }
 
 #ifdef BSP_USING_SDRAM

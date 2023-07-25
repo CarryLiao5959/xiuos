@@ -139,6 +139,34 @@ menu "On-chip Peripheral Drivers"
                         default 7
             
             
+            config BSP_USING_LPUART6
+                bool "Enable LPUART6"
+                default y
+
+                config BSP_LPUART6_RX_USING_DMA
+                    bool "Enable LPUART6 RX DMA"
+                    depends on BSP_USING_LPUART6
+                    select BSP_USING_DMA
+                    select RT_SERIAL_USING_DMA
+                    default n
+
+                    config BSP_LPUART6_RX_DMA_CHANNEL
+                        depends on BSP_LPUART6_RX_USING_DMA
+                        int "Set LPUART6 RX DMA channel (0-32)"
+                        default 8
+
+                config BSP_LPUART6_TX_USING_DMA
+                    bool "Enable LPUART6 TX DMA"
+                    depends on BSP_USING_LPUART6
+                    select BSP_USING_DMA
+                    select RT_SERIAL_USING_DMA
+                    default n
+
+                    config BSP_LPUART6_TX_DMA_CHANNEL
+                        depends on BSP_LPUART6_TX_USING_DMA
+                        int "Set LPUART6 TX DMA channel (0-32)"
+                        default 9
+
             config BSP_USING_LPUART8
                 bool "Enable LPUART8"
                 default y
@@ -153,7 +181,7 @@ menu "On-chip Peripheral Drivers"
                     config BSP_LPUART8_RX_DMA_CHANNEL
                         depends on BSP_LPUART8_RX_USING_DMA
                         int "Set LPUART8 RX DMA channel (0-32)"
-                        default 8
+                        default 10
 
                 config BSP_LPUART8_TX_USING_DMA
                     bool "Enable LPUART8 TX DMA"
@@ -165,7 +193,8 @@ menu "On-chip Peripheral Drivers"
                     config BSP_LPUART8_TX_DMA_CHANNEL
                         depends on BSP_LPUART8_TX_USING_DMA
                         int "Set LPUART8 TX DMA channel (0-32)"
-                        default 9
+                        default 11
+
 
         endif
     menuconfig BSP_USING_I2C

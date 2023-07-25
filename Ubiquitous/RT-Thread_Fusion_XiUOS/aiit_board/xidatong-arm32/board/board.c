@@ -189,6 +189,21 @@ void imxrt_uart_pins_init(void)
             IOMUXC_GPIO_B1_01_LPUART4_RX,
             0x10B0u);
 #endif
+#ifdef BSP_USING_LPUART6
+
+        IOMUXC_SetPinMux(
+            IOMUXC_GPIO_AD_B0_02_LPUART6_TX,
+            0U);
+        IOMUXC_SetPinMux(
+            IOMUXC_GPIO_AD_B0_03_LPUART6_RX,
+            0U);
+        IOMUXC_SetPinConfig(
+            IOMUXC_GPIO_AD_B0_02_LPUART6_TX,
+            0x10B0u);
+        IOMUXC_SetPinConfig(
+            IOMUXC_GPIO_AD_B0_03_LPUART6_RX,
+            0x10B0u);
+#endif
 
 #ifdef BSP_USING_LPUART8
 
@@ -788,12 +803,14 @@ void imxrt_semc_pins_init(void)
 void imxrt_enet_pins_init(void)
 {
     CLOCK_EnableClock(kCLOCK_Iomuxc);           /* iomuxc clock (iomuxc_clk_enable): 0x03u */
-   IOMUXC_SetPinMux(
-      IOMUXC_GPIO_AD_B0_03_GPIO1_IO03,        /* GPIO_AD_B0_09 is configured as GPIO1_IO09 */
+  IOMUXC_SetPinMux(
+      // IOMUXC_GPIO_AD_B0_03_GPIO1_IO03,        /* GPIO_AD_B0_09 is configured as GPIO1_IO09 */
+      IOMUXC_GPIO_AD_B0_09_JTAG_TDI,
       0U);                                    /* Software Input On Field: Input Path is determined by functionality */
 	
   IOMUXC_SetPinMux(
-      IOMUXC_GPIO_AD_B0_10_GPIO1_IO10,        /* GPIO_AD_B0_10 is configured as GPIO1_IO10 */
+      // IOMUXC_GPIO_AD_B0_10_GPIO1_IO10,        /* GPIO_AD_B0_10 is configured as GPIO1_IO10 */
+      IOMUXC_GPIO_AD_B0_10_JTAG_TDO,
       0U);                                    /* Software Input On Field: Input Path is determined by functionality */                          /* Software Input On Field: Input Path is determined by functionality */
   IOMUXC_SetPinMux(
       IOMUXC_GPIO_B1_04_ENET_RX_DATA00,       /* GPIO_B1_04 is configured as ENET_RX_DATA00 */
@@ -820,13 +837,16 @@ void imxrt_enet_pins_init(void)
       IOMUXC_GPIO_B1_11_ENET_RX_ER,           /* GPIO_B1_11 is configured as ENET_RX_ER */
       0U);                                    /* Software Input On Field: Input Path is determined by functionality */
   IOMUXC_SetPinMux(
-      IOMUXC_GPIO_EMC_40_ENET_MDC,            /* GPIO_EMC_40 is configured as ENET_MDC */
+      // IOMUXC_GPIO_EMC_40_ENET_MDC,            /* GPIO_EMC_40 is configured as ENET_MDC */
+      IOMUXC_GPIO_AD_B1_04_ENET_MDC,
       0U);                                    /* Software Input On Field: Input Path is determined by functionality */
   IOMUXC_SetPinMux(
-      IOMUXC_GPIO_EMC_41_ENET_MDIO,           /* GPIO_EMC_41 is configured as ENET_MDIO */
+      // IOMUXC_GPIO_EMC_41_ENET_MDIO,           /* GPIO_EMC_41 is configured as ENET_MDIO */
+      IOMUXC_GPIO_AD_B1_05_ENET_MDIO,
       0U);                                    /* Software Input On Field: Input Path is determined by functionality */
   IOMUXC_SetPinConfig(
-      IOMUXC_GPIO_AD_B0_03_GPIO1_IO03,        /* GPIO_AD_B0_09 PAD functional properties : */
+      // IOMUXC_GPIO_AD_B0_03_GPIO1_IO03,        /* GPIO_AD_B0_09 PAD functional properties : */
+      IOMUXC_GPIO_AD_B0_09_JTAG_TDI,
       0xB0A9u);                               /* Slew Rate Field: Fast Slew Rate
                                                  Drive Strength Field: R0/5
                                                  Speed Field: medium(100MHz)
@@ -837,7 +857,8 @@ void imxrt_enet_pins_init(void)
                                                  Hyst. Enable Field: Hysteresis Disabled */
 
   IOMUXC_SetPinConfig(
-      IOMUXC_GPIO_AD_B0_10_GPIO1_IO10,        /* GPIO_AD_B0_10 PAD functional properties : */
+      // IOMUXC_GPIO_AD_B0_10_GPIO1_IO10,        /* GPIO_AD_B0_10 PAD functional properties : */
+      IOMUXC_GPIO_AD_B0_10_JTAG_TDO,
       0xB0A9u);                               /* Slew Rate Field: Fast Slew Rate
                                                  Drive Strength Field: R0/5
                                                  Speed Field: medium(100MHz)
@@ -927,7 +948,8 @@ void imxrt_enet_pins_init(void)
                                                  Pull Up / Down Config. Field: 100K Ohm Pull Up
                                                  Hyst. Enable Field: Hysteresis Disabled */
   IOMUXC_SetPinConfig(
-      IOMUXC_GPIO_EMC_40_ENET_MDC,            /* GPIO_EMC_40 PAD functional properties : */
+      // IOMUXC_GPIO_EMC_40_ENET_MDC,            /* GPIO_EMC_40 PAD functional properties : */
+      IOMUXC_GPIO_AD_B1_04_ENET_MDC,
       0xB0E9u);                               /* Slew Rate Field: Fast Slew Rate
                                                  Drive Strength Field: R0/5
                                                  Speed Field: max(200MHz)
@@ -937,7 +959,8 @@ void imxrt_enet_pins_init(void)
                                                  Pull Up / Down Config. Field: 100K Ohm Pull Up
                                                  Hyst. Enable Field: Hysteresis Disabled */
   IOMUXC_SetPinConfig(
-      IOMUXC_GPIO_EMC_41_ENET_MDIO,           /* GPIO_EMC_41 PAD functional properties : */
+      // IOMUXC_GPIO_EMC_41_ENET_MDIO,           /* GPIO_EMC_41 PAD functional properties : */
+      IOMUXC_GPIO_AD_B1_05_ENET_MDIO,
       0xB829u);                               /* Slew Rate Field: Fast Slew Rate
                                                  Drive Strength Field: R0/5
                                                  Speed Field: low(50MHz)
@@ -1070,6 +1093,38 @@ void imxrt_can2_pins_init(void)
                                                  Hyst. Enable Field: Hysteresis Disabled */
   IOMUXC_SetPinConfig(
       IOMUXC_GPIO_AD_B0_15_FLEXCAN2_RX,       /* GPIO_AD_B0_15 PAD functional properties : */
+      0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
+                                                 Drive Strength Field: R0/6
+                                                 Speed Field: medium(100MHz)
+                                                 Open Drain Enable Field: Open Drain Disabled
+                                                 Pull / Keep Enable Field: Pull/Keeper Enabled
+                                                 Pull / Keep Select Field: Keeper
+                                                 Pull Up / Down Config. Field: 100K Ohm Pull Down
+                                                 Hyst. Enable Field: Hysteresis Disabled */
+}
+#endif
+
+#ifdef BSP_USING_CAN1
+void imxrt_can1_pins_init(void)
+{
+    IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_08_FLEXCAN1_TX,       /* GPIO_AD_B0_14 is configured as FLEXCAN2_TX */
+      1U);                                    /* Software Input On Field: Force input path of pad GPIO_AD_B0_14 */
+    IOMUXC_SetPinMux(
+      IOMUXC_GPIO_AD_B1_09_FLEXCAN1_RX,       /* GPIO_AD_B0_15 is configured as FLEXCAN2_RX */
+      1U);                                    /* Software Input On Field: Force input path of pad GPIO_AD_B0_15 */
+    IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_08_FLEXCAN1_TX,       /* GPIO_AD_B0_14 PAD functional properties : */
+      0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
+                                                 Drive Strength Field: R0/6
+                                                 Speed Field: medium(100MHz)
+                                                 Open Drain Enable Field: Open Drain Disabled
+                                                 Pull / Keep Enable Field: Pull/Keeper Enabled
+                                                 Pull / Keep Select Field: Keeper
+                                                 Pull Up / Down Config. Field: 100K Ohm Pull Down
+                                                 Hyst. Enable Field: Hysteresis Disabled */
+  IOMUXC_SetPinConfig(
+      IOMUXC_GPIO_AD_B1_09_FLEXCAN1_RX,       /* GPIO_AD_B0_15 PAD functional properties : */
       0x10B0u);                               /* Slew Rate Field: Slow Slew Rate
                                                  Drive Strength Field: R0/6
                                                  Speed Field: medium(100MHz)
@@ -1432,6 +1487,10 @@ void rt_hw_board_init()
 
 #ifdef BSP_USING_CAN2
     imxrt_can2_pins_init();
+#endif
+
+#ifdef BSP_USING_CAN1
+    imxrt_can1_pins_init();
 #endif
 
 #ifdef BSP_USING_LCD_XIDATONG

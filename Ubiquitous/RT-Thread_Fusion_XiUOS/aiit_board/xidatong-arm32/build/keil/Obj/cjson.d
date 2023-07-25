@@ -1,0 +1,10 @@
+.\build\keil\obj\cjson.o: ..\..\..\..\APP_Framework\lib\cJSON\cJSON.c
+.\build\keil\obj\cjson.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\string.h
+.\build\keil\obj\cjson.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\build\keil\obj\cjson.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\math.h
+.\build\keil\obj\cjson.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\stdlib.h
+.\build\keil\obj\cjson.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\limits.h
+.\build\keil\obj\cjson.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\ctype.h
+.\build\keil\obj\cjson.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\float.h
+.\build\keil\obj\cjson.o: ..\..\..\..\APP_Framework\lib\cJSON\cJSON.h
+.\build\keil\obj\cjson.o: D:\_kit\Keil\ARM\ARMCC\Bin\..\include\stddef.h
